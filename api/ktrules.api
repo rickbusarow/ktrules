@@ -1,0 +1,53 @@
+public final class com/rickbusarow/ktrules/KtRulesRuleSetProvider : com/pinterest/ktlint/core/RuleSetProviderV2 {
+	public fun <init> ()V
+	public fun getRuleProviders ()Ljava/util/Set;
+}
+
+public final class com/rickbusarow/ktrules/rules/KDocLeadingAsteriskRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/KDocWrappingRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
+	public fun <init> ()V
+	public fun beforeFirstNode (Ljava/util/Map;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun getEditorConfigProperties ()Ljava/util/List;
+	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;)Ljava/lang/Object;
+	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;Lcom/pinterest/ktlint/core/api/editorconfig/CodeStyleValue;)Ljava/lang/String;
+}
+
+public final class com/rickbusarow/ktrules/rules/NoDuplicateCopyrightHeaderRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/NoLeadingBlankLinesRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/NoSinceInKDocRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
+	public fun <init> ()V
+	public fun beforeFirstNode (Ljava/util/Map;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun getEditorConfigProperties ()Ljava/util/List;
+	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;)Ljava/lang/Object;
+	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;Lcom/pinterest/ktlint/core/api/editorconfig/CodeStyleValue;)Ljava/lang/String;
+}
+
+public final class com/rickbusarow/ktrules/rules/NoSpaceInTargetedAnnotationRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/NoTrailingSpacesInRawStringLiteralRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/NoUselessConstructorKeywordRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
