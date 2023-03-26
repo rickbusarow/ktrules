@@ -16,6 +16,7 @@
 import com.diffplug.gradle.spotless.GroovyGradleExtension
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessTask
+import com.github.javaparser.printer.concretesyntaxmodel.CsmElement.token
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import com.rickbusarow.docusync.gradle.DocusyncTask
@@ -38,6 +39,7 @@ import org.ec4j.core.model.Version
 import org.ec4j.core.parser.EditorConfigModelHandler
 import org.ec4j.core.parser.EditorConfigParser
 import org.ec4j.core.parser.ErrorHandler
+import org.gradle.internal.impldep.org.bouncycastle.asn1.x500.style.RFC4519Style.owner
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -51,12 +53,13 @@ import java.util.Properties as JavaProperties
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   alias(libs.plugins.detekt)
+  alias(libs.plugins.docusync)
   alias(libs.plugins.dokka)
+  alias(libs.plugins.github.release)
   alias(libs.plugins.google.ksp)
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.kotlinter)
   alias(libs.plugins.kotlinx.binaryCompatibility)
-  alias(libs.plugins.docusync)
   alias(libs.plugins.shadowJar)
   alias(libs.plugins.spotless)
   alias(libs.plugins.vanniktech.publish)
@@ -599,3 +602,59 @@ fun editorConfig(editorConfigFile: File): EditorConfig {
 
 fun File.toResource() = Resources.ofPath(toPath(), StandardCharsets.UTF_8)
 fun File.toResourcePaths() = ResourcePaths.ofPath(toPath(), StandardCharsets.UTF_8)
+
+githubRelease {
+
+  val versionString = version.toString()
+
+  token {
+    property("GITHUB_PERSONAL_ACCESS_TOKEN") as? String
+      ?: throw GradleException(
+        "In order to release, you must provide a GitHub Personal Access Token " +
+          "as a property named 'GITHUB_PAT'.  " +
+          "See https://squareup.github.io/kable/docs/next/contributing/items/releasing"
+      )
+  }
+  owner.set("rbusarow")
+
+  tagName { versionString }
+  releaseName { versionString }
+
+  generateReleaseNotes.set(false)
+
+  body {
+
+    if (versionString.endsWith("-SNAPSHOT")) {
+      throw GradleException(
+        "do not create a GitHub release for a snapshot. (version is $versionString)."
+      )
+    }
+
+    val escapedVersion = Regex.escape(versionString)
+
+    val dateSuffixRegex = """ +- +\d{4}-\d{2}-\d{2}.*""".toRegex()
+    val currentVersionRegex = """(?:^|\n)## \[$escapedVersion]$dateSuffixRegex""".toRegex()
+    val lastVersionRegex = """## \[(.*?)]$dateSuffixRegex""".toRegex()
+
+    // capture everything in between '## [<this version>]' and a new line which starts with '## '
+    val versionSectionRegex = """$currentVersionRegex\n([\s\S]*?)(?=\n+$lastVersionRegex)""".toRegex()
+
+    versionSectionRegex
+      .find(file("CHANGELOG.md").readText())
+      ?.groupValues
+      ?.getOrNull(1)
+      ?.trim()
+      ?.also { body ->
+        if (body.isBlank()) {
+          throw GradleException("The changelog for this version cannot be blank.")
+        }
+      }
+      ?: throw GradleException(
+        "could not find a matching change log for $versionSectionRegex"
+      )
+  }
+
+  overwrite.set(false)
+  dryRun.set(false)
+  draft.set(true)
+}
