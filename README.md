@@ -78,7 +78,7 @@ named `ktlint`. In this case, you would add the `ktrules` dependency to your pro
 ```kotlin
 // build.gradle.kts
 dependencies {
-  ktlint("com.rickbusarow.ktrules:ktrules:0.0.1-SNAPSHOT")
+  ktlint("com.rickbusarow.ktrules:ktrules:0.0.1")
 }
 ```
 
