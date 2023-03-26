@@ -107,7 +107,7 @@ docusync {
     })
     rule("maven-artifact") {
       regex = maven(group = "com\\.rickbusarow\\.ktrules")
-      replacement = "$1:$2:$version"
+      replacement = "$1:$2:${libs.versions.ktrules.stable.get()}"
     }
 
     rule("editorconfig-sample") {
@@ -135,7 +135,7 @@ tasks.withType<ConfigurableKtLintTask> {
     source(file("settings.gradle.kts"))
   }
   System.getProperties()
-    .setIfAbsent("ktrules.current_version") { libs.versions.ktrules.get() }
+    .setIfAbsent("ktrules.current_version") { libs.versions.ktrules.dev.get() }
 }
 
 fun JavaProperties.setIfAbsent(name: String, value: () -> String) {
@@ -174,7 +174,7 @@ tasks.test {
   maxParallelForks = Runtime.getRuntime().availableProcessors()
 }
 
-version = libs.versions.ktrules.get()
+version = libs.versions.ktrules.dev.get()
 
 kotlin {
   jvmToolchain {
@@ -337,7 +337,7 @@ configure<MavenPublishBaseExtension> {
   coordinates(
     groupId = "com.rickbusarow.ktrules",
     artifactId = "ktrules",
-    version = libs.versions.ktrules.get()
+    version = libs.versions.ktrules.dev.get()
   )
 
   publishToMavenCentral(SonatypeHost.DEFAULT, automaticRelease = true)

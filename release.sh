@@ -72,7 +72,7 @@ function parseVersionAndSyncDocs() {
 
   # Parse the 'docusync' version from libs.versions.toml
   # Removes the double quotes around the raw string value
-  VERSION_NAME=$(awk -F ' *= *' '$1=="ktrules"{print $2}' $VERSION_TOML | sed 's/\"//g')
+  VERSION_NAME=$(awk -F ' *= *' '$1=="ktrules-dev"{print $2}' $VERSION_TOML | sed 's/\"//g')
 
   # Add `@since ____` tags to any new KDoc
   progress "Add \`@since ____\` tags to any new KDoc"
