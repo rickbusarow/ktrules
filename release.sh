@@ -72,38 +72,30 @@ function parseVersionAndSyncDocs() {
 
   # Parse the 'docusync' version from libs.versions.toml
   # Removes the double quotes around the raw string value
-  VERSION_NAME=$(awk -F ' *= *' '$1=="docusync"{print $2}' $VERSION_TOML | sed 's/\"//g')
+  VERSION_NAME=$(awk -F ' *= *' '$1=="ktrules"{print $2}' $VERSION_TOML | sed 's/\"//g')
 
   # Add `@since ____` tags to any new KDoc
   progress "Add \`@since ____\` tags to any new KDoc"
   ./gradlew ktlintFormat
   maybeCommit "add @since tags to new KDoc for $VERSION_NAME"
 
+  # format docs
+  progress "format docs"
+  ./gradlew spotlessApply
+  maybeCommit "format docs"
+
   # update the version references in docs before versioning them
   progress "Update docs versions"
-  ./gradlew spotlessApply
+  ./gradlew docusync
   maybeCommit "update version references in docs to $VERSION_NAME"
-
-  # Copy the CHANGELOG from project root to the website dir and update its formatting
-  progress "update the website changelog"
-  ./gradlew updateWebsiteChangelog
-
-  # This adds a new version for the Dokka api docs and the markdown /docs docs.
-  progress "Create new website docs version"
-  ./gradlew versionDocs
-  maybeCommit "create new docs version for $VERSION_NAME"
 }
 
 # update all versions/docs for the release version
 parseVersionAndSyncDocs
 
-# Generate all api docs and make sure they're in ./dokka-archive/
-# Then ensure that all the new versioned api docs are tracked by Git
-progress "generate and copy Dokka api docs"
-./gradlew dokkaHtmlMultiModule syncDokkaToDokkaArchive
-
-# add the new version of Dokka archive to git and commit those files as their own commit.
-maybeCommit "add Dokka docs for ${VERSION_NAME} to the dokka-archive"
+# Generate all api docs
+progress "generate Dokka api docs"
+./gradlew dokkaHtml
 
 # One last chance to catch any bugs
 progress "run the check task"
@@ -111,10 +103,6 @@ progress "run the check task"
 
 progress "Publish Maven release"
 ./gradlew publish --no-configuration-cache
-
-# Publish to Gradle Plugin Portal
-# progress "Publish to Gradle Plugin Portal"
-./gradlew publishPlugins --no-configuration-cache
 
 # Create the "Releasing ______" commit and a new tag for the current `VERSION_NAME`
 progress "commit the release and tag"
