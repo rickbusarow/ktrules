@@ -433,11 +433,86 @@ class KDocWrappingRuleTest {
     """.trimIndent()
   }
 
+  @Test
+  fun `a code block which is exactly 4 spaces from the asterisk is not collapsed`() {
+
+    rules.format(
+      """
+      /**
+       * This is a comment.
+       *
+       *    data class Student(
+       *      val name: String
+       *    )
+       *
+       * This is also a comment.
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent(),
+      lineLength = 100
+    ) shouldBe """
+      /**
+       * This is a comment.
+       *
+       *    data class Student(
+       *      val name: String
+       *    )
+       *
+       * This is also a comment.
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `a code block which is exactly 5 spaces from the asterisk is not collapsed`() {
+
+    rules.format(
+      """
+      /**
+       * This is a comment.
+       *
+       *     data class Student(
+       *       val name: String
+       *     )
+       *
+       * This is also a comment.
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent(),
+      lineLength = 100
+    ) shouldBe """
+      /**
+       * This is a comment.
+       *
+       *     data class Student(
+       *       val name: String
+       *     )
+       *
+       * This is also a comment.
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
   private fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
+    lineLength: Int = 50,
     editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(MAX_LINE_LENGTH_PROPERTY to 50)
+      EditorConfigOverride.from(MAX_LINE_LENGTH_PROPERTY to lineLength)
   ): String = ktlintTestFormat(
     text = text,
     filePath = null,
@@ -448,8 +523,9 @@ class KDocWrappingRuleTest {
   private fun Set<RuleProvider>.lint(
     @Language("kotlin")
     text: String,
+    lineLength: Int = 50,
     editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(MAX_LINE_LENGTH_PROPERTY to 50)
+      EditorConfigOverride.from(MAX_LINE_LENGTH_PROPERTY to lineLength)
   ): List<LintError> = ktlintTestLint(
     text = text,
     editorConfigOverride = editorConfigOverride
