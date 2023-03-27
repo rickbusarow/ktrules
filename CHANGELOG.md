@@ -4,4 +4,4 @@
 
 Hello World
 
-[1.0.0]: https://github.com/squareup/ktrules/releases/tag/1.0.0
+[1.0.0]: https://github.com/rbusarow/ktrules/releases/tag/1.0.0

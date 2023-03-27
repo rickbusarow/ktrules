@@ -18,7 +18,6 @@
 import com.diffplug.gradle.spotless.GroovyGradleExtension
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessTask
-import com.github.jengelman.gradle.plugins.shadow.internal.RelocationUtil
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import com.rickbusarow.docusync.gradle.DocusyncTask
@@ -89,10 +88,11 @@ dependencies {
 
   compileOnly(libs.google.auto.service.annotations)
   compileOnly(libs.kotlin.compiler)
-  compileOnly(libs.ktlint.core)
 
-  shadow(libs.jetbrains.markdown)
-  shadow(libs.ec4j.core)
+  implementation(libs.ktlint.core)
+
+  implementation(libs.jetbrains.markdown)
+  implementation(libs.ec4j.core)
 
   detektPlugins(libs.detekt.rules.libraries)
 
@@ -501,16 +501,54 @@ val shadowJar = tasks.named("shadowJar", ShadowJar::class.java) {
 
   configurations = listOf(project.configurations.shadow.get())
 
-  RelocationUtil.configureRelocation(this, "$GROUP.")
+  listOf(
+    "org.intellij.markdown",
+    "org.ec4j.core",
+  ).forEach { relocate(it, "$GROUP.$it") }
+
+  // relocate("com.pinterest.ktlint", "$GROUP.com.pinterest.ktlint") {
+  //   exclude("com.pinterest.ktlint.core.RuleSetProviderV2")
+  // }
 
   archiveClassifier.convention("")
   archiveClassifier.set("")
 
-  transformers.add(ServiceFileTransformer())
+  transformers.add(
+    ServiceFileTransformer()
+    // .exclude("com.pinterest.ktlint.core.RuleSetProviderV2")
+  )
 
   exclude("**/*.kotlin_metadata")
   exclude("**/*.kotlin_module")
   exclude("META-INF/maven/**")
+}
+
+val foo by tasks.registering {
+
+  dependsOn(tasks.shadowJar)
+
+
+
+
+  doLast {
+
+    val providers = mutableSetOf<String>()
+
+    val servicePath = "META-INF/services/com.pinterest.ktlint.core.RuleSetProviderV2"
+
+    zipTree(tasks.shadowJar.flatMap { it.archiveFile }).visit {
+
+      if (relativePath.pathString == servicePath) {
+        providers.addAll(file.readLines().filter { it.isNotBlank() })
+      }
+
+    }
+
+    require(providers == setOf("com.rickbusarow.ktrules.KtRulesRuleSetProvider")) {
+      "The shadow jar does not contain the required service file of: $servicePath"
+    }
+
+  }
 }
 
 // By adding the task's output to archives, it's automatically picked up by Gradle's maven-publish
@@ -635,8 +673,7 @@ githubRelease {
     property("GITHUB_PERSONAL_ACCESS_TOKEN") as? String
       ?: throw GradleException(
         "In order to release, you must provide a GitHub Personal Access Token " +
-          "as a property named 'GITHUB_PAT'.  " +
-          "See https://squareup.github.io/kable/docs/next/contributing/items/releasing"
+          "as a property named 'GITHUB_PERSONAL_ACCESS_TOKEN'."
       )
   }
   owner.set("rbusarow")
