@@ -207,13 +207,21 @@ kotlin {
     }
   }
 
-  tasks.named("compileTestKotlin", KotlinCompile::class) {
-    kotlinOptions {
+  if (libs.versions.kotest.get() > "5.5.5") {
 
-      check(libs.versions.kotest.get() == "5.5.5") { "Remove the KotestInternal compiler arg" }
-
-      freeCompilerArgs += "-opt-in=io.kotest.common.KotestInternal"
+    tasks.named("compileTestKotlin", KotlinCompile::class) {
+      kotlinOptions {
+        freeCompilerArgs += "-opt-in=io.kotest.common.KotestInternal"
+      }
     }
+
+    // All this text will be automagically removed as soon as Kotest 5.5.6 is released.
+    val old = buildFile.readText()
+    val new = old.replace(
+      """\s+if \(libs\.versions\.kotest\.get\(\)[\s\S]+?buildFile\.writeText\(new\)\s*}""".toRegex(),
+      ""
+    )
+    buildFile.writeText(new)
   }
 
   tasks.withType<KotlinCompile> {
