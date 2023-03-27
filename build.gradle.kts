@@ -52,6 +52,22 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import kotlin.text.RegexOption.MULTILINE
 
+buildscript {
+  dependencies {
+    classpath(libs.rickBusarow.ktrules)
+    if (libs.versions.ktrules.released.get() > "1.0.0") {
+      // All this text will be automagically removed as soon as the next version is released.
+      val old = buildFile.readText()
+      val new = old.replace(
+        """\s+if \(libs\.versions\.ktrules[\s\S]+?}classpath\(libs\.jetbrains\.markdown\)""".toRegex(),
+        ""
+      )
+      buildFile.writeText(new)
+    }
+    classpath(libs.jetbrains.markdown)
+  }
+}
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   alias(libs.plugins.dependencyAnalysis)
@@ -209,19 +225,20 @@ kotlin {
 
   if (libs.versions.kotest.get() > "5.5.5") {
 
-    tasks.named("compileTestKotlin", KotlinCompile::class) {
-      kotlinOptions {
-        freeCompilerArgs += "-opt-in=io.kotest.common.KotestInternal"
-      }
-    }
-
     // All this text will be automagically removed as soon as Kotest 5.5.6 is released.
     val old = buildFile.readText()
     val new = old.replace(
-      """\s+if \(libs\.versions\.kotest\.get\(\)[\s\S]+?buildFile\.writeText\(new\)\s*}""".toRegex(),
+      ("\\s+if \\(libs\\.versions\\.kotest\\.get\\(\\)[\\s\\S]+?\\\"" +
+        "\\-opt\\-in\\=io\\.kotest\\.common\\.KotestInternal\\\"\\n    \\}\\n  \\}").toRegex(),
       ""
     )
     buildFile.writeText(new)
+  }
+
+  tasks.named("compileTestKotlin", KotlinCompile::class) {
+    kotlinOptions {
+      freeCompilerArgs += "-opt-in=io.kotest.common.KotestInternal"
+    }
   }
 
   tasks.withType<KotlinCompile> {
@@ -595,7 +612,6 @@ fun editorConfigKotlinProperties(
     .associate { it.name to it.sourceValue }
 }
 
-/** Parses an .editorconfig file at [editorConfigFile]. */
 fun editorConfig(editorConfigFile: File): EditorConfig {
 
   val parser = EditorConfigParser.builder().build()
