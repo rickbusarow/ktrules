@@ -19,14 +19,14 @@ include:
 # KtLint specific settings
 # noinspection EditorConfigKeyCorrectness
 [{*.kt,*.kts}]
-kt-rules_kdoc-leading-asterisk = enabled
-kt-rules_kdoc-wrapping = enabled
-kt-rules_no-duplicate-copyright-header = enabled
-kt-rules_no-leading-blank-lines = enabled
-kt-rules_no-since-in-kdoc = enabled
-kt-rules_no-space-in-annotation-with-target = enabled
-kt-rules_no-trailing-space-in-raw-string-literal = enabled
-kt-rules_no-useless-constructor-keyword = enabled
+ktlint_kt-rules_kdoc-leading-asterisk = enabled
+ktlint_kt-rules_kdoc-wrapping = enabled
+ktlint_kt-rules_no-duplicate-copyright-header = enabled
+ktlint_kt-rules_no-leading-blank-lines = enabled
+ktlint_kt-rules_no-since-in-kdoc = enabled
+ktlint_kt-rules_no-space-in-annotation-with-target = enabled
+ktlint_kt-rules_no-trailing-space-in-raw-string-literal = enabled
+ktlint_kt-rules_no-useless-constructor-keyword = enabled
 
 [{*.kt,*.kts}]
 # actual kotlin settings go here
