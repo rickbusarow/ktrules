@@ -125,6 +125,8 @@ ktlint-ruleset-experimental = { module = "com.pinterest.ktlint:ktlint-ruleset-ex
 ktlint-ruleset-standard = { module = "com.pinterest.ktlint:ktlint-ruleset-standard", version.ref = "ktlint-lib" }
 ktlint-test = { module = "com.pinterest.ktlint:ktlint-test", version.ref = "ktlint-lib" }
 
+rickBusarow-ktrules = { module = "com.rickbusarow.ktrules:ktrules", version.ref = "ktrules-released" }
+
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
