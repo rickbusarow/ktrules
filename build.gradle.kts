@@ -18,6 +18,7 @@
 import com.diffplug.gradle.spotless.GroovyGradleExtension
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessTask
+import com.github.jengelman.gradle.plugins.shadow.internal.RelocationUtil
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import com.rickbusarow.docusync.gradle.DocusyncTask
@@ -71,19 +72,18 @@ plugins {
 dependencies {
 
   compileOnly(libs.google.auto.service.annotations)
-  compileOnly(libs.jetbrains.markdown)
   compileOnly(libs.kotlin.compiler)
-  compileOnly(libs.kotlin.reflect)
   compileOnly(libs.ktlint.core)
-  compileOnly(libs.ktlint.ruleset.standard)
-  compileOnly(libs.ec4j.core)
-  compileOnly(libs.slf4j.api)
+
+  shadow(libs.jetbrains.markdown)
+  shadow(libs.ec4j.core)
 
   detektPlugins(libs.detekt.rules.libraries)
 
   ksp(libs.zacSweers.auto.service.ksp)
 
-  testImplementation(libs.google.auto.service.annotations)
+  testCompileOnly(libs.google.auto.service.annotations)
+
   testImplementation(libs.jetbrains.markdown)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.junit.jupiter.api)
@@ -478,27 +478,18 @@ tasks.withType(AbstractDokkaLeafTask::class.java) {
   }
 }
 
-val classifier = if (plugins.hasPlugin("java-gradle-plugin")) "" else "all"
-
 configurations.named("compileOnly") { extendsFrom(project.configurations.getByName("shadow")) }
 
 val shadowJar = tasks.named("shadowJar", ShadowJar::class.java) {
 
-  configurations = listOf(project.configurations.getByName("shadow"))
+  configurations = listOf(project.configurations.shadow.get())
 
-  listOf(
-    "org.intellij.markdown",
-    "org.snakeyaml",
-  ).forEach {
-    relocate(it, "$GROUP.$it")
-  }
+  RelocationUtil.configureRelocation(this, "$GROUP.")
 
-  archiveClassifier.convention(classifier)
-  archiveClassifier.set(classifier)
+  archiveClassifier.convention("")
+  archiveClassifier.set("")
 
   transformers.add(ServiceFileTransformer())
-
-  minimize()
 
   exclude("**/*.kotlin_metadata")
   exclude("**/*.kotlin_module")
