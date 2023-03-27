@@ -34,38 +34,16 @@ kt-rules_no-useless-constructor-keyword = enabled
 
 <!--/docusync-->
 
-### KDocLeadingAsteriskRule
-
-ensures that the leading asterisk in a KDoc comment is followed by a space
-
-### KDocWrappingRule
-
-ensures consistent wrapping of KDoc comments to improve readability
-
-### NoDuplicateCopyrightHeaderRule
-
-ensures that each file has only one copyright header
-
-### NoLeadingBlankLinesRule
-
-ensures that there are no leading blank lines in files
-
-### NoSinceInKDocRule
-
-ensures that there is no @since tag in KDoc comments
-
-### NoSpaceInTargetedAnnotationRule
-
-ensures that targeted annotations (annotations with a target specifier such as @get:, @set:, etc.) have
-no space before or after the colon
-
-### NoTrailingSpacesInRawStringLiteralRule
-
-ensures that there are no trailing spaces in raw string literals
-
-### NoUselessConstructorKeywordRule
-
-Removes the unnecessary constructor keyword from class constructors
+|                  Rule                  |                                                                Description                                                                 |
+| :------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
+|        KDocLeadingAsteriskRule         |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
+|            KDocWrappingRule            |                                    ensures consistent wrapping of KDoc comments to improve readability                                     |
+|     NoDuplicateCopyrightHeaderRule     |                                            ensures that each file has only one copyright header                                            |
+|        NoLeadingBlankLinesRule         |                                           ensures that there are no leading blank lines in files                                           |
+|           NoSinceInKDocRule            |                                            ensures that there is no @since tag in KDoc comments                                            |
+|    NoSpaceInTargetedAnnotationRule     | ensures that targeted annotations (annotations with a target specifier such as @get:, @set:, etc.) have no space before or after the colon |
+| NoTrailingSpacesInRawStringLiteralRule |                                      ensures that there are no trailing spaces in raw string literals                                      |
+|    NoUselessConstructorKeywordRule     |                                    removes the unnecessary constructor keyword from class constructors                                     |
 
 ## Gradle Usage
 
@@ -119,7 +97,7 @@ Copyright (C) 2023 Rick Busarow
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-     http://www.apache.org/licenses/LICENSE-2.0
+     https://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
