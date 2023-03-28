@@ -527,9 +527,6 @@ val foo by tasks.registering {
 
   dependsOn(tasks.shadowJar)
 
-
-
-
   doLast {
 
     val providers = mutableSetOf<String>()
@@ -541,13 +538,11 @@ val foo by tasks.registering {
       if (relativePath.pathString == servicePath) {
         providers.addAll(file.readLines().filter { it.isNotBlank() })
       }
-
     }
 
     require(providers == setOf("com.rickbusarow.ktrules.KtRulesRuleSetProvider")) {
       "The shadow jar does not contain the required service file of: $servicePath"
     }
-
   }
 }
 
