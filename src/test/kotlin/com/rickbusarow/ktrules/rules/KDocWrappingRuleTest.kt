@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test
 import com.pinterest.ktlint.test.format as ktlintTestFormat
 import com.pinterest.ktlint.test.lint as ktlintTestLint
 
+@Suppress("SpellCheckingInspection")
 class KDocWrappingRuleTest {
 
   val rules = setOf(
@@ -48,10 +49,10 @@ class KDocWrappingRuleTest {
       """.trimIndent()
     ) shouldBe """
       /**
-       * @property extercitatrekvsuion nostrud exerc
-       *   mco laboris nisteghi ut aliquip ex ea
-       *   desegrunt fugiat nulla pariatur. Excepteur
-       *   sint occaecat cupidatat
+       * @property extercitatrekvsuion nostrud
+       *   exerc mco laboris nisteghi ut aliquip
+       *   ex ea desegrunt fugiat nulla pariatur.
+       *   Excepteur sint occaecat cupidatat
        */
       data class Subject(
         val name: String,
@@ -61,7 +62,7 @@ class KDocWrappingRuleTest {
   }
 
   @Test
-  fun `@see tags are not flattened`() {
+  fun `@see tags have their extra white spaces removed but are not wrapped together`() {
 
     rules.format(
       """
@@ -226,6 +227,74 @@ class KDocWrappingRuleTest {
   }
 
   @Test
+  fun `a single line indented code block is treated as a code block`() {
+
+    rules.format(
+      """
+      /**
+       * a comment
+       *
+       *    object Foo
+       *
+       * @property name a name
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * a comment
+       *
+       *    object Foo
+       *
+       * @property name a name
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `an indented code block with a blank line in the middle does not have trailing spaces`() {
+
+    rules.format(
+      """
+      /**
+       * Some normal line.
+       *
+       *     object Foo
+       *
+       *     object Bar
+       *
+       * Another normal line
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * Some normal line.
+       *
+       *     object Foo
+       *
+       *     object Bar
+       *
+       * Another normal line
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
   fun `an indented tag comment is moved left`() {
 
     rules.format(
@@ -238,11 +307,7 @@ class KDocWrappingRuleTest {
        * @property name some name property
        *
        *                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-       *                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-       *                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-       *                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-       *                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-       *                culpa qui officia deserunt mollit anim id est laborum.
+       *                incididunt.
        * @property age some age property
        */
       data class Subject(
@@ -258,17 +323,9 @@ class KDocWrappingRuleTest {
        *
        * @property name some name property
        *
-       *   Lorem ipsum dolor sit amet, consectetur
-       *   adipiscing elit, sed do eiusmod tempor
-       *   incididunt ut labore et dolore magna aliqua.
-       *   Ut enim ad minim veniam, quis nostrud
-       *   exercitation ullamco laboris nisi ut aliquip
-       *   ex ea commodo consequat. Duis aute irure
-       *   dolor in reprehenderit in voluptate velit
-       *   esse cillum dolore eu fugiat nulla pariatur.
-       *   Excepteur sint occaecat cupidatat non
-       *   proident, sunt in culpa qui officia deserunt
-       *   mollit anim id est laborum.
+       *   Lorem ipsum dolor sit amet,
+       *   consectetur adipiscing elit, sed
+       *   do eiusmod tempor incididunt.
        * @property age some age property
        */
       data class Subject(
@@ -291,10 +348,7 @@ class KDocWrappingRuleTest {
        * @property name some name property
        *
        * Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-       * labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-       * laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-       * voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-       * non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+       * labore et dolore magna aliqua.
        * @property age some age property
        */
       data class Subject(
@@ -310,17 +364,10 @@ class KDocWrappingRuleTest {
        *
        * @property name some name property
        *
-       *   Lorem ipsum dolor sit amet, consectetur
-       *   adipiscing elit, sed do eiusmod tempor
-       *   incididunt ut labore et dolore magna aliqua.
-       *   Ut enim ad minim veniam, quis nostrud
-       *   exercitation ullamco laboris nisi ut aliquip
-       *   ex ea commodo consequat. Duis aute irure
-       *   dolor in reprehenderit in voluptate velit
-       *   esse cillum dolore eu fugiat nulla pariatur.
-       *   Excepteur sint occaecat cupidatat non
-       *   proident, sunt in culpa qui officia deserunt
-       *   mollit anim id est laborum.
+       *   Lorem ipsum dolor sit amet,
+       *   consectetur adipiscing elit, sed
+       *   do eiusmod tempor incididunt ut
+       *   labore et dolore magna aliqua.
        * @property age some age property
        */
       data class Subject(
@@ -338,7 +385,7 @@ class KDocWrappingRuleTest {
       /**
        * a comment
        *
-       * @property name Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+       * @property name Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
        * @property age some age property
        */
       data class Subject(
@@ -350,10 +397,9 @@ class KDocWrappingRuleTest {
       /**
        * a comment
        *
-       * @property name Lorem ipsum dolor sit amet,
-       *   consectetur adipiscing elit, sed do eiusmod
-       *   tempor incididunt ut labore et dolore magna
-       *   aliqua.
+       * @property name Lorem ipsum dolor
+       *   sit amet, consectetur adipiscing
+       *   elit, sed do eiusmod tempor.
        * @property age some age property
        */
       data class Subject(
@@ -373,10 +419,8 @@ class KDocWrappingRuleTest {
        *
        * A new paragraph.
        *
-       * @property name Lorem ipsum dolor sit amet,
-       *   consectetur adipiscing elit, sed do eiusmod
-       *   tempor incididunt ut labore et dolore magna
-       *   aliqua.
+       * @property name Lorem ipsum
+       *   dolor sit amet, consectetur.
        * @property age some age property
        */
       data class Subject(
@@ -507,12 +551,137 @@ class KDocWrappingRuleTest {
     """.trimIndent()
   }
 
+  @Test
+  fun `a fenced code block with 4+ indented spaces does not have its indentation changed`() {
+
+    rules.format(
+      """
+      /**
+       * One two three four five six
+       *
+       * ```
+       * sequence {
+       *     yield(5)
+       * }
+       * ```
+       */
+      class Subject
+      """.trimIndent(),
+      lineLength = 25
+    ) shouldBe """
+      /**
+       * One two three
+       * four five six
+       *
+       * ```
+       * sequence {
+       *     yield(5)
+       * }
+       * ```
+       */
+      class Subject
+    """.trimIndent()
+  }
+
+  @Test
+  fun `minimum raggedness wrapping with maximum line length`() {
+
+    rules.format(
+      text = """
+        /**
+         * This is a test with some verylongwordsthatexceedthelinelimit and `text wrapped in backticks`.
+         *
+         * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
+         */
+        class TestClass
+      """.trimIndent(),
+      wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
+      lineLength = 27
+    ) shouldBe """
+      /**
+       * This is a test with some
+       * verylongwordsthatexceedthelinelimit
+       * and
+       * `text wrapped in backticks`.
+       *
+       * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
+       */
+      class TestClass
+    """.trimIndent()
+  }
+
+  @Test
+  fun `greedy wrapping with short line length`() {
+
+    rules.format(
+      text = """
+        /**
+         * This is a test with some verylongwordsthatexceedthelinelimit and `text wrapped in backticks`.
+         *
+         * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
+         */
+        class TestClass
+      """.trimIndent(),
+      wrappingStyle = WrappingStyle.GREEDY,
+      lineLength = 7
+    ) shouldBe """
+      /**
+       * This
+       * is a
+       * test
+       * with
+       * some
+       * verylongwordsthatexceedthelinelimit
+       * and
+       * `text wrapped in backticks`.
+       *
+       * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
+       */
+      class TestClass
+    """.trimIndent()
+  }
+
+  @Test
+  fun `minimum raggedness wrapping with short line length`() {
+
+    rules.format(
+      text = """
+        /**
+         * This is a test with some verylongwordsthatexceedthelinelimit and `text wrapped in backticks`.
+         *
+         * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
+         */
+        class TestClass
+      """.trimIndent(),
+      wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
+      lineLength = 7
+    ) shouldBe """
+      /**
+       * This
+       * is a
+       * test
+       * with
+       * some
+       * verylongwordsthatexceedthelinelimit
+       * and
+       * `text wrapped in backticks`.
+       *
+       * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
+       */
+      class TestClass
+    """.trimIndent()
+  }
+
   private fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
+    wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,
     lineLength: Int = 50,
     editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(MAX_LINE_LENGTH_PROPERTY to lineLength)
+      EditorConfigOverride.from(
+        MAX_LINE_LENGTH_PROPERTY to lineLength,
+        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
+      )
   ): String = ktlintTestFormat(
     text = text,
     filePath = null,
@@ -523,9 +692,13 @@ class KDocWrappingRuleTest {
   private fun Set<RuleProvider>.lint(
     @Language("kotlin")
     text: String,
+    wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,
     lineLength: Int = 50,
     editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(MAX_LINE_LENGTH_PROPERTY to lineLength)
+      EditorConfigOverride.from(
+        MAX_LINE_LENGTH_PROPERTY to lineLength,
+        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
+      )
   ): List<LintError> = ktlintTestLint(
     text = text,
     editorConfigOverride = editorConfigOverride

@@ -15,10 +15,12 @@
 
 package com.rickbusarow.ktrules
 
+import com.rickbusarow.ktrules.rules.ALL_PROPERTIES
+import com.rickbusarow.ktrules.rules.RULES_PREFIX
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class KtRulesRuleSetProviderTest {
+class EditorConfigPropertiesTest {
 
   class Environment {
 
@@ -29,7 +31,10 @@ class KtRulesRuleSetProviderTest {
       KtRulesRuleSetProvider().getRuleProviders()
     }
 
-    val ids by lazy { ruleProviders.map { it.createNewRuleInstance().id } }
+    val ids by lazy {
+      ruleProviders.map { it.createNewRuleInstance().id }
+        .plus(ALL_PROPERTIES.map { it.name.removePrefix("${RULES_PREFIX}_") })
+    }
 
     @Suppress("EditorConfigEmptySection")
     val defaultConfig =
@@ -47,6 +52,9 @@ class KtRulesRuleSetProviderTest {
       ktlint_kt-rules_no-trailing-space-in-raw-string-literal = enabled
       ktlint_kt-rules_no-useless-constructor-keyword = enabled
 
+      ktlint_kt-rules_project_version = 1.0.0
+      ktlint_kt-rules_wrapping_style = equal
+
       [{*.kt,*.kts}]
       # actual kotlin settings go here
       """.trimIndent()
@@ -55,7 +63,7 @@ class KtRulesRuleSetProviderTest {
   @Test
   fun `defaultConfig property matches all defined rule IDs`() = test {
 
-    val ruleReg = """kt-rules_(.*?) ?=.*""".toRegex()
+    val ruleReg = """ktlint_kt-rules_(.*?) ?=.*""".toRegex()
 
     defaultConfig
       .lines()

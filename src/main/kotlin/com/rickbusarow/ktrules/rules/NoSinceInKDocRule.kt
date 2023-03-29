@@ -28,8 +28,6 @@ import com.pinterest.ktlint.core.ast.children
 import com.pinterest.ktlint.core.ast.nextSibling
 import com.pinterest.ktlint.core.ast.prevLeaf
 import com.rickbusarow.ktrules.rules.internal.findIndent
-import org.ec4j.core.model.PropertyType.LowerCasingPropertyType
-import org.ec4j.core.model.PropertyType.PropertyValueParser
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafElement
@@ -40,51 +38,27 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
 import org.jetbrains.kotlin.psi.psiUtil.collectDescendantsOfType
 
-private val currentVersionPropertyType = LowerCasingPropertyType<String>(
-  /* name = */
-  "project_version",
-  /* description = */
-  "the current project version as a literal string",
-  /* parser = */
-  PropertyValueParser.IDENTITY_VALUE_PARSER
-)
-
-internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> =
-  EditorConfigProperty(
-    name = currentVersionPropertyType.name,
-    type = currentVersionPropertyType,
-    defaultValue = null,
-    defaultAndroidValue = null,
-    propertyMapper = { property, _ ->
-      property?.sourceValue?.trim('"', '\'')
-    },
-  )
-
 /** Finds Kdoc comments which don't have a `@since <version>` annotation. */
 class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
   UsesEditorConfigProperties {
 
-  private lateinit var currentVersion: String
+  private var currentVersion: String? = null
 
   override val editorConfigProperties: List<EditorConfigProperty<*>>
     get() = listOf(PROJECT_VERSION_PROPERTY)
 
   private val skipAll by lazy {
-    currentVersion.matches(".*?-.*$".toRegex())
+    currentVersion?.matches(".*?-.*$".toRegex()) == true
   }
 
   override fun beforeFirstNode(editorConfigProperties: EditorConfigProperties) {
 
     val version = editorConfigProperties.getEditorConfigValue(PROJECT_VERSION_PROPERTY)
-      ?: System.getProperty("ktrules.${currentVersionPropertyType.name}")
+      ?: System.getProperty("ktrules.project_version")
 
-    requireNotNull(version) {
-      "${NoSinceInKDocRule::class.java.simpleName} requires a version.  " +
-        "It may be set as an .editorconfig property named '${currentVersionPropertyType.name}' or " +
-        "as a System property with a name of 'ktrules.${currentVersionPropertyType.name}'. "
+    if (version != null) {
+      currentVersion = version
     }
-
-    currentVersion = version
   }
 
   override fun beforeVisitChildNodes(
@@ -93,7 +67,7 @@ class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    if (!skipAll && node.elementType == ElementType.KDOC_END) {
+    if (currentVersion != null && !skipAll && node.elementType == ElementType.KDOC_END) {
       visitKDoc(node, autoCorrect = autoCorrect, emit = emit)
     }
   }
@@ -112,7 +86,7 @@ class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
       emit(kdocNode.startOffset, "add `@since $currentVersion` to kdoc", true)
 
       if (autoCorrect) {
-        kdocNode.addSinceTag(currentVersion)
+        kdocNode.addSinceTag(currentVersion!!)
       }
       return
     }
@@ -128,7 +102,7 @@ class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
       )
 
       if (autoCorrect) {
-        tag.addVersionToSinceTag(currentVersion)
+        tag.addVersionToSinceTag(currentVersion!!)
       }
     }
   }

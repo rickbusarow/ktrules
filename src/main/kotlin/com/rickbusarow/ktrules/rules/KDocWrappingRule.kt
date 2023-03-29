@@ -25,19 +25,25 @@ import com.pinterest.ktlint.core.ast.ElementType.KDOC
 import com.pinterest.ktlint.core.ast.ElementType.KDOC_LEADING_ASTERISK
 import com.pinterest.ktlint.core.ast.ElementType.KDOC_TEXT
 import com.pinterest.ktlint.core.ast.children
+import com.rickbusarow.ktrules.rules.StringWrapper.Companion.splitWords
+import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
+import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
 import com.rickbusarow.ktrules.rules.internal.findIndent
 import com.rickbusarow.ktrules.rules.internal.getAllTags
 import com.rickbusarow.ktrules.rules.internal.isKDocLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.isKDocTag
 import com.rickbusarow.ktrules.rules.internal.isKDocText
+import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.mapLines
 import com.rickbusarow.ktrules.rules.internal.remove
+import com.rickbusarow.ktrules.rules.internal.startOffset
+import com.rickbusarow.ktrules.rules.internal.trimLineEnds
 import org.intellij.markdown.MarkdownElementTypes.CODE_BLOCK
 import org.intellij.markdown.MarkdownElementTypes.PARAGRAPH
 import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
 import org.intellij.markdown.MarkdownTokenTypes.Companion.WHITE_SPACE
 import org.intellij.markdown.ast.getTextInNode
-import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
@@ -45,29 +51,41 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
  * Fixes wrapping inside KDoc comments.
  *
+ * [Markdown link](https://example.com)
  * @since 1.0.0
  */
 class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties {
 
-  private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY.copy(defaultValue = 103)
+  private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY
   private var maxLineLength: Int = maxLineLengthProperty.defaultValue
 
   private val markdownParser by lazy(NONE) {
-    MarkdownParser(GFMFlavourDescriptor())
+    MarkdownParser(CommonMarkFlavourDescriptor())
   }
 
   override val editorConfigProperties: List<EditorConfigProperty<*>>
-    get() = listOf(maxLineLengthProperty)
+    get() = listOf(maxLineLengthProperty, WRAPPING_STYLE_PROPERTY)
+
+  private var wrappingStyle: WrappingStyle = WRAPPING_STYLE_PROPERTY.defaultValue
+
+  private val wrapper by lazy(NONE) {
+    when (wrappingStyle) {
+      GREEDY -> GreedyWrapper()
+      MINIMUM_RAGGED -> MinimumRaggednessWrapper()
+    }
+  }
+
+  private val skipAll by lazy { maxLineLength < 0 }
 
   override fun beforeFirstNode(editorConfigProperties: EditorConfigProperties) {
 
     maxLineLength = editorConfigProperties.getEditorConfigValue(maxLineLengthProperty)
+    wrappingStyle = editorConfigProperties.getEditorConfigValue(WRAPPING_STYLE_PROPERTY)
     super.beforeFirstNode(editorConfigProperties)
   }
 
@@ -77,7 +95,7 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    if (node.elementType == ElementType.KDOC_START) {
+    if (!skipAll && node.elementType == ElementType.KDOC_START) {
       visitKDoc(node, autoCorrect = autoCorrect, emit = emit)
     }
   }
@@ -125,8 +143,15 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
 
           val wrappedLines = wrapped.lines()
 
+          var insideCodeBlock = false
+
           wrappedLines
             .forEachIndexed { i, line ->
+
+              if (line.trimStart().startsWith("```")) {
+                insideCodeBlock = !insideCodeBlock
+              }
+
               if (i != 0) {
                 tagNode.addChild(PsiWhiteSpaceImpl(newlineIndent), anchor)
                 tagNode.addChild(LeafPsiElement(KDOC_LEADING_ASTERISK, "*"), anchor)
@@ -135,12 +160,13 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
                 // asterisk and the first non-whitespace character.  BUT, if the line has at least
                 // three leading white spaces, leave it alone.  At 3 spaces, IntelliJ and Dokka start
                 // treating it as a code block.
-                if (line.isNotBlank() && !line.startsWith("   ")) {
+                if (line.isNotBlank() && (!line.startsWith("   ") || insideCodeBlock)) {
                   tagNode.addChild(PsiWhiteSpaceImpl(" "), anchor)
                 }
               }
 
               if (i == 0 && tag.parent == kdoc) {
+
                 tagNode.addChild(LeafPsiElement(KDOC_TEXT, " $line"), anchor)
               } else {
                 tagNode.addChild(LeafPsiElement(KDOC_TEXT, line), anchor)
@@ -175,17 +201,7 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
 
     val skip = setOf(WHITE_SPACE, EOL)
 
-    fun CharSequence.cleanWhitespaces() = replace("(\\S)\\s+".toRegex(), "$1 ").trim()
-
     val maxLength = maxLineLength - indentLength
-
-    fun wrappingRegex(extraLeadingSpaces: Int = 0): Regex {
-
-      val max = maxLength - extraLeadingSpaces
-
-      @Suppress("RegExpSimplifiable")
-      return """([^\n]{1,$max})(?:\s|$)""".toRegex()
-    }
 
     return markdownParser.buildMarkdownTreeFromString(sectionText)
       .children
@@ -193,53 +209,46 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
       .filterNot { it.type in skip }
       .mapIndexed { paragraphNumber: Int, markdownNode ->
 
-        val prefix = if (paragraphNumber == 0 && parent.node.elementType != KDOC) {
-          node.children()
-            .dropWhile { it.isKDocLeadingAsterisk() }
-            .takeWhile { !it.isKDocText() }
-            .joinToString("") { " ".repeat(it.text.length) }
+        val leadingIndent = if (parent.node.elementType != KDOC) {
+          if (paragraphNumber == 0) {
+            node.children()
+              .dropWhile { it.isKDocLeadingAsterisk() }
+              .takeWhile { !it.isKDocText() }
+              .joinToString("") { " ".repeat(it.text.length) }
+          } else {
+            "  "
+          }
         } else {
           ""
         }
 
-        val extraLeading = if (parent.node.elementType == KDOC) 0 else 2
+        val continuationIndentLength = if (parent.node.elementType == KDOC) 0 else 2
+        val continuationIndent = " ".repeat(continuationIndentLength)
 
         when (markdownNode.type) {
-          PARAGRAPH -> {
-
-            wrappingRegex(extraLeading)
-              .findAll(prefix + markdownNode.getTextInNode(sectionText).cleanWhitespaces())
-              .mapIndexed { i, mr ->
-                val perLine = if (i == 0 && paragraphNumber == 0) {
-                  ""
-                } else {
-                  " ".repeat(extraLeading)
-                }
-
-                "$perLine${mr.groupValues.first().trim()}"
-              }
-              .joinToString("\n")
-          }
-
-          CODE_BLOCK -> {
-            if (parent.node.elementType == KDOC) {
-              markdownNode.getTextInNode(sectionText).toString()
-                .also {
-                  println(
-                    "##################################################################### before"
-                  )
-                  println(it)
-                  println("#####################################################################")
-                }
-              // .replaceIndent("    ")
-            } else {
-              // If a CODE_BLOCK is top-level within a section/tag, that means it's not wrapped in
-              // three backticks.  Assume this means it's a multi-line description of a tag, and it's
-              // just indented.
-              wrappingRegex(extraLeading)
-                .findAll(prefix + markdownNode.getTextInNode(sectionText).cleanWhitespaces())
-                .joinToString("\n") { "  ${it.groupValues.first().trim()}" }
+          PARAGRAPH -> wrapper.wrap(
+            words = markdownNode.getTextInNode(sectionText).cleanWhitespaces().splitWords(),
+            maxLength = maxLength - continuationIndentLength,
+            leadingIndent = leadingIndent,
+            continuationIndent = continuationIndent
+          )
+            .letIf(paragraphNumber == 0 || parent.node.elementType == KDOC) {
+              trimStart()
             }
+
+          CODE_BLOCK -> if (parent.node.elementType == KDOC) {
+            markdownNode.getTextInNode(sectionText).toString()
+              .trimLineEnds()
+          } else {
+            // If a CODE_BLOCK is top-level within a section/tag, that means it's not wrapped in
+            // three backticks.  Assume this means it's a multi-line description of a tag, and it's
+            // just indented.
+            wrapper.wrap(
+              words = markdownNode.getTextInNode(sectionText).cleanWhitespaces().splitWords(),
+              maxLength = maxLength - continuationIndentLength,
+              leadingIndent = leadingIndent,
+              continuationIndent = continuationIndent
+            )
           }
 
           // code fences, headers, tables, etc. don't get wrapped
@@ -249,5 +258,9 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
         }
       }
       .joinToString("\n\n")
+  }
+
+  private fun CharSequence.cleanWhitespaces(): String {
+    return replace("(\\S)\\s+".toRegex(), "$1 ").trim()
   }
 }

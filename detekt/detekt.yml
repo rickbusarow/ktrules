@@ -676,8 +676,8 @@ style:
   ForbiddenImport:
     active: true
     imports:
-      - "com.android.build.*"
-      - "org.gradle.tooling.model.GradleProject"
+      - 'org.jetbrains.kotlin.psi.psiUtil.endOffset'
+      - 'org.jetbrains.kotlin.psi.psiUtil.startOffset'
     forbiddenPatterns: ""
     excludes: ["**/build-logic/**"]
   ForbiddenMethodCall:

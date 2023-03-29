@@ -11,6 +11,13 @@ The rules in ktrules cover a wide range of coding styles and best practices, fro
 indentation to naming conventions and documentation. Some of the specific areas covered by the rules
 include:
 
+This is a sentence before a bulleted list. It does not have a space after it.
+
+- Main point
+- another main point
+  - a sub point
+  - another one
+
 ## Rules
 
 <!--docusync editorconfig-sample-->
@@ -27,6 +34,9 @@ ktlint_kt-rules_no-since-in-kdoc = enabled
 ktlint_kt-rules_no-space-in-annotation-with-target = enabled
 ktlint_kt-rules_no-trailing-space-in-raw-string-literal = enabled
 ktlint_kt-rules_no-useless-constructor-keyword = enabled
+
+ktlint_kt-rules_project_version = 1.0.0
+ktlint_kt-rules_wrapping_style = equal
 
 [{*.kt,*.kts}]
 # actual kotlin settings go here
