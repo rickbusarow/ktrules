@@ -162,7 +162,7 @@ val updateEditorConfigVersion by tasks.registering {
   doLast {
     val oldText = file.readText()
 
-    val reg = """^(project_version *?= *?)\S*$""".toRegex(MULTILINE)
+    val reg = """^(ktlint_kt-rules_project_version *?= *?)\S*$""".toRegex(MULTILINE)
 
     val newText = oldText.replace(reg, "$1$VERSION_CURRENT")
 
