@@ -23,9 +23,9 @@ import com.rickbusarow.ktrules.rules.internal.isCopyrightHeader
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /**
- * Ensures that a file hasn't gotten into a wonky state where there are two consecutive copyright
- * headers, or a copyright header, then a package declaration or imports, then another copyright
- * header.
+ * Ensures that a file hasn't gotten into a wonky state where there
+ * are two consecutive copyright headers, or a copyright header, then
+ * a package declaration or imports, then another copyright header.
  *
  * This can happen somewhat reliably with build.gradle.kts files which have imports.
  *
