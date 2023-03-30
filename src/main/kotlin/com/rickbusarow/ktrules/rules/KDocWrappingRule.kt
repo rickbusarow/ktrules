@@ -244,7 +244,7 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
             // though getTextInNode is just pulling it from sectionText, it's giving an extra
             // whitespace to the start of each line.  We remove it here to avoid a false positive when
             // comparing the wrapped blob to the original.
-            markdownNode.getTextInNode(sectionText).toString()
+            markdownNode.getTextInNode(sectionText)
               .mapLines { it.drop(1).trimEnd() }
           } else {
             // If a CODE_BLOCK is top-level within a section/tag other than the default, that means
@@ -260,7 +260,8 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
 
           // code fences, headers, tables, etc. don't get wrapped
           else -> {
-            markdownNode.getTextInNode(sectionText).toString().trimIndent()
+            markdownNode.getTextInNode(sectionText)
+              .mapLines { it.drop(1).trimEnd() }
           }
         }
       }
