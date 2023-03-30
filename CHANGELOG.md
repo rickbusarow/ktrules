@@ -2,6 +2,10 @@
 
 ## 1.0.2-SNAPSHOT (unreleased)
 
+### Fixed
+
+- Indented code blocks which contain triple backticks inside the code block will no longer be indented by an extra space.
+
 ## [1.0.1] - 2023-03-29
 
 ### Added

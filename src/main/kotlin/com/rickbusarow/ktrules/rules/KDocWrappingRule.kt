@@ -143,13 +143,13 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
 
           val wrappedLines = wrapped.lines()
 
-          var insideCodeBlock = false
+          var insideFencedCodeBlock = false
 
           wrappedLines
             .forEachIndexed { i, line ->
 
-              if (line.trimStart().startsWith("```")) {
-                insideCodeBlock = !insideCodeBlock
+              if (line.startsWith("```")) {
+                insideFencedCodeBlock = !insideFencedCodeBlock
               }
 
               if (i != 0) {
@@ -160,7 +160,7 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
                 // asterisk and the first non-whitespace character.  BUT, if the line has at least
                 // three leading white spaces, leave it alone.  At 3 spaces, IntelliJ and Dokka start
                 // treating it as a code block.
-                if (line.isNotBlank() && (!line.startsWith("   ") || insideCodeBlock)) {
+                if (line.isNotBlank() && (!line.startsWith("   ") || insideFencedCodeBlock)) {
                   tagNode.addChild(PsiWhiteSpaceImpl(" "), anchor)
                 }
               }

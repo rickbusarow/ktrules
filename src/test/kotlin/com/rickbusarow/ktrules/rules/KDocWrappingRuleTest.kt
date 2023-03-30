@@ -672,6 +672,34 @@ class KDocWrappingRuleTest {
     """.trimIndent()
   }
 
+  @Test
+  fun `an indented code block with code fences is left alone`() {
+
+    rules.format(
+      text = """
+        /**
+         * A comment
+         *
+         *     ```
+         *     // some code
+         *     ```
+         */
+        class TestClass
+      """.trimIndent(),
+      wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
+      lineLength = 100
+    ) shouldBe """
+      /**
+       * A comment
+       *
+       *     ```
+       *     // some code
+       *     ```
+       */
+      class TestClass
+    """.trimIndent()
+  }
+
   private fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
