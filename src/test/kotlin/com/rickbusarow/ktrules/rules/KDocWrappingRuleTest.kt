@@ -677,14 +677,86 @@ class KDocWrappingRuleTest {
 
     val results = rules.lint(
       text = """
-          /**
-           * A comment
-           *
-           *     ```
-           *     // some code
-           *     ```
-           */
-          class TestClass
+        /**
+         * A comment
+         *
+         *     ```
+         *     // some code
+         *     ```
+         */
+        class TestClass
+      """.trimIndent(),
+    )
+    results shouldBe listOf()
+  }
+
+  @Test
+  fun `a bulleted list in the default section is not wrapped`() {
+
+    val results = rules.lint(
+      text = """
+      /**
+       * My list:
+       *
+       * - item 1
+       * - item 2
+       */
+      class TestClass
+      """.trimIndent(),
+    )
+    results shouldBe listOf()
+  }
+
+  @Test
+  fun `a bulleted list in a property tag is not wrapped`() {
+
+    val results = rules.lint(
+      text = """
+      /**
+       * @property name My list:
+       *
+       *   - item 1
+       *   - item 2
+       */
+      class TestClass(val name: String)
+      """.trimIndent(),
+    )
+    results shouldBe listOf()
+  }
+
+  @Test
+  fun `a markdown table in the default section is not wrapped`() {
+
+    val results = rules.lint(
+      text = """
+      /**
+       * My table:
+       *
+       * | one | two |
+       * |:---:|:---:|
+       * |  a  |  b  |
+       * |  c  |  d  |
+       */
+      class TestClass(val name: String)
+      """.trimIndent(),
+    )
+    results shouldBe listOf()
+  }
+
+  @Test
+  fun `a markdown table in a property tag is not wrapped`() {
+
+    val results = rules.lint(
+      text = """
+      /**
+       * @property name My table:
+       *
+       *   | one | two |
+       *   |:---:|:---:|
+       *   |  a  |  b  |
+       *   |  c  |  d  |
+       */
+      class TestClass(val name: String)
       """.trimIndent(),
     )
     results shouldBe listOf()

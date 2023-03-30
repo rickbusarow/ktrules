@@ -40,7 +40,7 @@ internal fun String.trimLineEnds(): String = mapLines { it.trimEnd() }
  *
  * @since 1.0.1
  */
-internal fun String.mapLines(
+internal fun CharSequence.mapLines(
   transform: (String) -> CharSequence
 ): String = lineSequence()
   .joinToString("\n", transform = transform)
