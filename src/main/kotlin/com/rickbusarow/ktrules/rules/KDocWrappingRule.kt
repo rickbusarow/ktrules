@@ -267,8 +267,8 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
                 .remove(">")
                 .cleanWhitespaces().splitWords(),
               maxLength = maxLength - continuationIndentLength,
-              leadingIndent = "${leadingIndent}> ",
-              continuationIndent = "${continuationIndent}> "
+              leadingIndent = "$leadingIndent> ",
+              continuationIndent = "$continuationIndent> "
             )
 
           // code fences, headers, tables, etc. don't get wrapped
