@@ -39,6 +39,8 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
  * How's·it·going?
  * """
  * ```
+ *
+ * @since 1.0.1
  */
 class NoTrailingSpacesInRawStringLiteralRule : Rule("no-trailing-space-in-raw-string-literal") {
 

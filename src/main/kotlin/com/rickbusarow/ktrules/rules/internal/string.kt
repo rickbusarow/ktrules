@@ -17,7 +17,11 @@ package com.rickbusarow.ktrules.rules.internal
 
 import java.util.Locale
 
-/** Replaces the deprecated Kotlin version, but hard-codes `Locale.US` */
+/**
+ * Replaces the deprecated Kotlin version, but hard-codes `Locale.US`
+ *
+ * @since 1.0.1
+ */
 internal fun String.capitalize(): String = replaceFirstChar {
   if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString()
 }
@@ -26,10 +30,16 @@ internal fun String.capitalize(): String = replaceFirstChar {
  * Removes trailing whitespaces from all lines in a string.
  *
  * Shorthand for `lines().joinToString("\n") { it.trimEnd() }`
+ *
+ * @since 1.0.1
  */
 internal fun String.trimLineEnds(): String = mapLines { it.trimEnd() }
 
-/** performs [transform] on each line */
+/**
+ * performs [transform] on each line
+ *
+ * @since 1.0.1
+ */
 internal fun String.mapLines(
   transform: (String) -> CharSequence
 ): String = lineSequence()
@@ -38,12 +48,20 @@ internal fun String.mapLines(
 internal fun String.prefixIfNot(prefix: String) =
   if (this.startsWith(prefix)) this else "$prefix$this"
 
-/** shorthand for `replace(___, "")` against multiple tokens */
+/**
+ * shorthand for `replace(___, "")` against multiple tokens
+ *
+ * @since 1.0.1
+ */
 internal fun String.remove(vararg strings: String): String = strings.fold(this) { acc, string ->
   acc.replace(string, "")
 }
 
-/** shorthand for `replace(___, "")` against multiple tokens */
+/**
+ * shorthand for `replace(___, "")` against multiple tokens
+ *
+ * @since 1.0.1
+ */
 internal fun String.remove(vararg regex: Regex): String = regex.fold(this) { acc, reg ->
   acc.replace(reg, "")
 }

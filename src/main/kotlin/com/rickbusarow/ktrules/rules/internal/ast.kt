@@ -65,7 +65,11 @@ internal fun ASTNode?.isFirstAfterKDocStart(): Boolean =
 internal fun ASTNode?.isKDocCodeBlockText(): Boolean =
   this != null && elementType == KDOC_CODE_BLOCK_TEXT
 
-/** The opening backticks with or without a language. */
+/**
+ * The opening backticks with or without a language.
+ *
+ * @since 1.0.1
+ */
 internal fun ASTNode.isKDocCodeBlockStartText(): Boolean {
   if (elementType != KDOC_TEXT) return false
 
@@ -73,7 +77,11 @@ internal fun ASTNode.isKDocCodeBlockStartText(): Boolean {
     .isKDocCodeBlockText()
 }
 
-/** The closing backticks. */
+/**
+ * The closing backticks.
+ *
+ * @since 1.0.1
+ */
 internal fun ASTNode.isKDocCodeBlockEndText(): Boolean {
   if (elementType != KDOC_TEXT) return false
 

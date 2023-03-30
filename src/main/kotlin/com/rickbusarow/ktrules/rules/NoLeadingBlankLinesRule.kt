@@ -20,7 +20,11 @@ import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.children
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
-/** Ensures that there are no blank lines at the *start* of a kotlin file. */
+/**
+ * Ensures that there are no blank lines at the *start* of a kotlin file.
+ *
+ * @since 1.0.1
+ */
 class NoLeadingBlankLinesRule : Rule("no-leading-blank-lines") {
 
   override fun beforeVisitChildNodes(

@@ -28,6 +28,8 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  * header.
  *
  * This can happen somewhat reliably with build.gradle.kts files which have imports.
+ *
+ * @since 1.0.1
  */
 class NoDuplicateCopyrightHeaderRule : Rule("no-duplicate-copyright-header") {
 

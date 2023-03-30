@@ -15,7 +15,11 @@
 
 package com.rickbusarow.ktrules.rules.internal
 
-/** shorthand for `apply { elements.forEach { element -> this.block(element) } }` */
+/**
+ * shorthand for `apply { elements.forEach { element -> this.block(element) } }`
+ *
+ * @since 1.0.1
+ */
 internal inline fun <T : Any, E> T.applyEach(
   elements: Iterable<E>,
   block: T.(E) -> Unit
@@ -23,7 +27,11 @@ internal inline fun <T : Any, E> T.applyEach(
   elements.forEach { element -> this.block(element) }
 }
 
-/** from Kotlin's addToStdlib.kt */
+/**
+ * from Kotlin's addToStdlib.kt
+ *
+ * @since 1.0.1
+ */
 internal inline fun <T> T.letIf(
   predicate: Boolean,
   body: T.() -> T

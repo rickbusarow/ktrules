@@ -38,7 +38,11 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
 import org.jetbrains.kotlin.psi.psiUtil.collectDescendantsOfType
 
-/** Finds Kdoc comments which don't have a `@since <version>` annotation. */
+/**
+ * Finds Kdoc comments which don't have a `@since <version>` annotation.
+ *
+ * @since 1.0.1
+ */
 class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
   UsesEditorConfigProperties {
 

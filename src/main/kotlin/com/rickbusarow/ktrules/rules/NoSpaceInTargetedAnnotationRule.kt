@@ -32,6 +32,8 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  * // good code
  * @file:Suppress("DEPRECATION")
  * ```
+ *
+ * @since 1.0.1
  */
 class NoSpaceInTargetedAnnotationRule : Rule("no-space-in-annotation-with-target") {
 

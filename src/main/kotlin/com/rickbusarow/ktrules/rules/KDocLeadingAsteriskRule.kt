@@ -33,7 +33,11 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 
-/** Ensures that each line of a KDoc comment begins with `* ` (after the indent spaces). */
+/**
+ * Ensures that each line of a KDoc comment begins with `* ` (after the indent spaces).
+ *
+ * @since 1.0.1
+ */
 class KDocLeadingAsteriskRule : Rule("kdoc-leading-asterisk") {
   override fun beforeVisitChildNodes(
     node: ASTNode,

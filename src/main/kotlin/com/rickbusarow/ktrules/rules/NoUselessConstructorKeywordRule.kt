@@ -32,6 +32,8 @@ import org.jetbrains.kotlin.psi.KtPrimaryConstructor
  * // good code
  * class MyClass(val foo: String)
  * ```
+ *
+ * @since 1.0.1
  */
 class NoUselessConstructorKeywordRule : Rule("no-useless-constructor-keyword") {
 
