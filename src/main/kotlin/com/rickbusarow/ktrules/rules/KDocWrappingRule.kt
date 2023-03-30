@@ -37,7 +37,6 @@ import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.mapLines
 import com.rickbusarow.ktrules.rules.internal.remove
 import com.rickbusarow.ktrules.rules.internal.startOffset
-import com.rickbusarow.ktrules.rules.internal.trimLineEnds
 import org.intellij.markdown.MarkdownElementTypes.CODE_BLOCK
 import org.intellij.markdown.MarkdownElementTypes.PARAGRAPH
 import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
@@ -57,6 +56,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  * Fixes wrapping inside KDoc comments.
  *
  * [Markdown link](https://example.com)
+ *
  * @since 1.0.0
  */
 class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties {
@@ -237,12 +237,19 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
             }
 
           CODE_BLOCK -> if (parent.node.elementType == KDOC) {
+            // If a CODE_BLOCK is top-level within the default section, that means it's an indented
+            // block without the code fence (```).  That means we should leave it alone, but there's a
+            // discrepancy in how the whitespace immediately after the leading asterisk is handled by
+            // `sectionText` versus how it's reported by the Markdown library's `getTextInNode`.  Even
+            // though getTextInNode is just pulling it from sectionText, it's giving an extra
+            // whitespace to the start of each line.  We remove it here to avoid a false positive when
+            // comparing the wrapped blob to the original.
             markdownNode.getTextInNode(sectionText).toString()
-              .trimLineEnds()
+              .mapLines { it.drop(1).trimEnd() }
           } else {
-            // If a CODE_BLOCK is top-level within a section/tag, that means it's not wrapped in
-            // three backticks.  Assume this means it's a multi-line description of a tag, and it's
-            // just indented.
+            // If a CODE_BLOCK is top-level within a section/tag other than the default, that means
+            // it's not wrapped in three backticks.  Assume this means it's a multi-line description of
+            // a tag, and it's just indented.
             wrapper.wrap(
               words = markdownNode.getTextInNode(sectionText).cleanWhitespaces().splitWords(),
               maxLength = maxLength - continuationIndentLength,

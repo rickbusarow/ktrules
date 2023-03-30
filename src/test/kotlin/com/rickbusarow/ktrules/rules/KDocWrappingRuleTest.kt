@@ -675,29 +675,19 @@ class KDocWrappingRuleTest {
   @Test
   fun `an indented code block with code fences is left alone`() {
 
-    rules.format(
+    val results = rules.lint(
       text = """
-        /**
-         * A comment
-         *
-         *     ```
-         *     // some code
-         *     ```
-         */
-        class TestClass
+          /**
+           * A comment
+           *
+           *     ```
+           *     // some code
+           *     ```
+           */
+          class TestClass
       """.trimIndent(),
-      wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-      lineLength = 100
-    ) shouldBe """
-      /**
-       * A comment
-       *
-       *     ```
-       *     // some code
-       *     ```
-       */
-      class TestClass
-    """.trimIndent()
+    )
+    results shouldBe listOf()
   }
 
   private fun Set<RuleProvider>.format(

@@ -27,46 +27,52 @@ internal fun interface StringWrapper {
 
     internal fun String.splitWords(): List<String> {
 
+      val wrappedInParenthesis = """\((?:[^()\\]+|\\.|\((?:[^()\\]+|\\.)*\))*\)"""
+      val wrappedInSquareBrackets = """\[(?:[^\]\[]|\[.*?\])*\]"""
+
       val regex = buildString {
-        // match any of the following
+        // non-capturing group which matches any of the following patterns separated by a '|'
+        // The order of these patterns matters, since the matching is done greedily.
         append("(?:")
 
-        // match anything inside complex markdown links like `[Some Text](some link)`
-        append("\\[[^\\]]*]\\([^)]*\\)")
-
+        // match anything inside inline-style Markdown links like `[Some Text](some link)`
+        append("$wrappedInSquareBrackets$wrappedInParenthesis")
         append('|')
-
-        // match anything inside markdown links like `[Some Text]`
-        append("\\[[^\\]]*]")
-
+        // match anything inside shortcut-style Markdown links like `[Some Text][some link]`
+        append("$wrappedInSquareBrackets$wrappedInSquareBrackets")
         append('|')
-
-        // match anything inside backticks
-        append("`[^`]*`")
-
+        // match anything inside simple reference-style Markdown links like [Some Text]
+        append(wrappedInSquareBrackets)
         append('|')
-
-        // match anything inside single underscores or asterisks
-        append("[*_][^*_]*[*_]")
-
+        // match anything inside inline code blocks with three backticks like ```fun foo() = Unit```
+        append("""```[^`]*(?:`[^`]+`[^`]*)*+```""")
         append('|')
-
-        // match anything inside double underscores or asterisks
-        append("[*_]{2}[^*_]*[*_]{2}")
-
+        // match anything inside inline code with a single backtick like `fun foo() = Unit`
+        append("`(?:(?!`).)*`")
         append('|')
-
-        // match anything inside inline code blocks
-        append("`{3}[^`]*`{3}")
-
+        // match anything inside bold text using underscores like __really mean it__
+        append("__(?:(?!__).)*__")
+        append('|')
+        // match anything inside italicized text using underscores like _actually_
+        append("_(?:(?!_).)*_")
+        append('|')
+        // match anything inside bold text using underscores like **really mean it**
+        append("\\*\\*(?:(?!\\*\\*).)*\\*\\*")
+        append('|')
+        // match anything inside italicized text using asterisks like _actually_
+        append("\\*(?:(?!\\*).)*\\*")
         append('|')
 
         // match anything that's not a space or a markdown delimiter
-        append("[^\\s*_`~\\[\\]]+")
+        //language=regexp
+        append("""\S+""")
 
-        // close the group and ensure that anything following is included
-        append(")\\S?")
-      }.toRegex()
+        // close the group
+        append(")")
+
+        // allow for repeats of the above patterns so long as there are no white spaces between them
+        append("+")
+      }.toRegex(RegexOption.DOT_MATCHES_ALL)
 
       return regex.findAll(this).map { it.value }.toList()
     }
