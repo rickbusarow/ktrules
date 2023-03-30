@@ -2,6 +2,11 @@
 
 ## 1.0.3-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kdoc-wrapping` will no longer wrap (break) Markdown tables in kdoc
+- `kdoc-wrapping` will now wrap block quotes in kdoc
+
 ## [1.0.2] - 2023-03-30
 
 ### Fixed

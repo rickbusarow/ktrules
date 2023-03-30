@@ -37,12 +37,13 @@ import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.mapLines
 import com.rickbusarow.ktrules.rules.internal.remove
 import com.rickbusarow.ktrules.rules.internal.startOffset
+import org.intellij.markdown.MarkdownElementTypes.BLOCK_QUOTE
 import org.intellij.markdown.MarkdownElementTypes.CODE_BLOCK
 import org.intellij.markdown.MarkdownElementTypes.PARAGRAPH
 import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
 import org.intellij.markdown.MarkdownTokenTypes.Companion.WHITE_SPACE
 import org.intellij.markdown.ast.getTextInNode
-import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
@@ -65,7 +66,9 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
   private var maxLineLength: Int = maxLineLengthProperty.defaultValue
 
   private val markdownParser by lazy(NONE) {
-    MarkdownParser(CommonMarkFlavourDescriptor())
+    // This has to use the GFMFlavourDescriptor so that it can parse tables.
+    // The CommonMarkFlavourDescriptor does not recognize tables.
+    MarkdownParser(GFMFlavourDescriptor())
   }
 
   override val editorConfigProperties: List<EditorConfigProperty<*>>
@@ -257,6 +260,16 @@ class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties 
               continuationIndent = continuationIndent
             )
           }
+
+          BLOCK_QUOTE ->
+            wrapper.wrap(
+              words = markdownNode.getTextInNode(sectionText).toString()
+                .remove(">")
+                .cleanWhitespaces().splitWords(),
+              maxLength = maxLength - continuationIndentLength,
+              leadingIndent = "${leadingIndent}> ",
+              continuationIndent = "${continuationIndent}> "
+            )
 
           // code fences, headers, tables, etc. don't get wrapped
           else -> {
