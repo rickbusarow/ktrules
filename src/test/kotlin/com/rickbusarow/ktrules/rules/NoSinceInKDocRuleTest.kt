@@ -291,7 +291,7 @@ class NoSinceInKDocRuleTest {
         val name: String
       )
       """.trimIndent(),
-      editorConfigOverride = EditorConfigOverride.from(WRAPPING_STYLE_PROPERTY to "0.0.1-RC")
+      editorConfigOverride = EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to "0.0.1-RC")
     ) shouldBe
       """
       /**
