@@ -762,6 +762,75 @@ class KDocWrappingRuleTest {
     results shouldBe listOf()
   }
 
+  @Test
+  fun `a block quote in the default section is wrapped`() {
+
+    rules.format(
+      text = """
+        /**
+         * My quote:
+         *
+         * > This is a long sentence which should be wrapped when the line length is shorter.
+         */
+        class TestClass(val name: String)
+      """.trimIndent(),
+    ) shouldBe """
+      /**
+       * My quote:
+       *
+       * > This is a long sentence which should be
+       * > wrapped when the line length is shorter.
+       */
+      class TestClass(val name: String)
+    """.trimIndent()
+  }
+
+  @Test
+  fun `a block quote which could be unwrapped is unwrapped`() {
+
+    rules.format(
+      text = """
+        /**
+         * My quote:
+         *
+         * > This
+         * > is a sentence.
+         */
+        class TestClass(val name: String)
+      """.trimIndent(),
+    ) shouldBe """
+      /**
+       * My quote:
+       *
+       * > This is a sentence.
+       */
+      class TestClass(val name: String)
+    """.trimIndent()
+  }
+
+  @Test
+  fun `a block quote in a property tag is wrapped`() {
+
+    rules.format(
+      text = """
+      /**
+       * @property name My quote:
+       *
+       *   > This is a long sentence which should be wrapped when the line length is shorter.
+       */
+      class TestClass(val name: String)
+      """.trimIndent(),
+    ) shouldBe """
+      /**
+       * @property name My quote:
+       *
+       *   > This is a long sentence which should be
+       *   > wrapped when the line length is shorter.
+       */
+      class TestClass(val name: String)
+    """.trimIndent()
+  }
+
   private fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
