@@ -17,8 +17,6 @@ package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.rules.StringWrapper.Companion.splitWords
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.DynamicContainer
-import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
@@ -113,25 +111,19 @@ internal class SplitWordsTest {
     "open_parenthesis" to '(',
     "close_parenthesis" to ')',
   )
-    .map { (characterName, character) ->
+    .container({ it.first }) { (_, character) ->
+      listOf(
+        "start" to "${character}word",
+        "middle" to "wo${character}rd",
+        "end" to "word$character",
+      ).test({ it.first }) { (_, text) ->
 
-      DynamicContainer.dynamicContainer(
-        characterName,
-        listOf(
-          "start" to "${character}word",
-          "middle" to "wo${character}rd",
-          "end" to "word$character",
-        ).map { (name, text) ->
-          DynamicTest.dynamicTest(name) {
-
-            "before $text after".splitWords() shouldBe listOf(
-              "before",
-              text,
-              "after"
-            )
-          }
-        }
-      )
+        "before $text after".splitWords() shouldBe listOf(
+          "before",
+          text,
+          "after"
+        )
+      }
     }
 
   @Test
@@ -143,8 +135,45 @@ internal class SplitWordsTest {
   @Test
   fun `text wrapped in triple backticks is not split`() {
 
-    "before ```dog cat's``` after".splitWords() shouldBe listOf("before", "```dog cat's```", "after")
+    "before ```dog cat's``` after".splitWords() shouldBe listOf(
+      "before",
+      "```dog cat's```",
+      "after"
+    )
   }
+
+  @TestFactory
+  fun `bold or italic delimiters cannot have a whitespace immediately inside`() =
+    listOf(
+      "double asterisks" to "**",
+      "single asterisks" to "*",
+      "double underscores" to "__",
+      "single underscores" to "_",
+    ).container(
+      { it.first }
+    ) { (_, delim) ->
+
+      listOf(
+        test("space after opening delimiter") {
+          "before $delim some words$delim after".splitWords() shouldBe listOf(
+            "before",
+            delim,
+            "some",
+            "words$delim",
+            "after"
+          )
+        },
+        test("space before closing delimiter") {
+          "before ${delim}some words $delim after".splitWords() shouldBe listOf(
+            "before",
+            "${delim}some",
+            "words",
+            delim,
+            "after"
+          )
+        },
+      )
+    }
 
   @Nested
   inner class `link splitting` {
@@ -154,15 +183,12 @@ internal class SplitWordsTest {
       "reference style" to "[markdown link]",
       "shortcut style" to "[markdown link][actual link]",
       "inline style" to "[markdown link](actual link)"
-    ).map { (name, text) ->
-      DynamicTest.dynamicTest(name) {
-
-        "before $text after".splitWords() shouldBe listOf(
-          "before",
-          text,
-          "after"
-        )
-      }
+    ).test({ it.first }) { (_, text) ->
+      "before $text after".splitWords() shouldBe listOf(
+        "before",
+        text,
+        "after"
+      )
     }
 
     @TestFactory
@@ -170,15 +196,13 @@ internal class SplitWordsTest {
       "reference style" to "[markdown link].",
       "shortcut style" to "[markdown link][actual link].",
       "inline style" to "[markdown link](actual link).",
-    ).map { (name, text) ->
-      DynamicTest.dynamicTest(name) {
+    ).test({ it.first }) { (_, text) ->
 
-        "before $text after".splitWords() shouldBe listOf(
-          "before",
-          text,
-          "after"
-        )
-      }
+      "before $text after".splitWords() shouldBe listOf(
+        "before",
+        text,
+        "after"
+      )
     }
 
     @TestFactory
@@ -186,15 +210,13 @@ internal class SplitWordsTest {
       "reference style" to "[markdown link],",
       "shortcut style" to "[markdown link][actual link],",
       "inline style" to "[markdown link](actual link),",
-    ).map { (name, text) ->
-      DynamicTest.dynamicTest(name) {
+    ).test({ it.first }) { (_, text) ->
 
-        "before $text after".splitWords() shouldBe listOf(
-          "before",
-          text,
-          "after"
-        )
-      }
+      "before $text after".splitWords() shouldBe listOf(
+        "before",
+        text,
+        "after"
+      )
     }
 
     @TestFactory
@@ -202,15 +224,13 @@ internal class SplitWordsTest {
       "reference style" to "[markdown link]word",
       "shortcut style" to "[markdown link][actual link]word",
       "inline style" to "[markdown link](actual link)word",
-    ).map { (name, text) ->
-      DynamicTest.dynamicTest(name) {
+    ).test({ it.first }) { (_, text) ->
 
-        "before $text after".splitWords() shouldBe listOf(
-          "before",
-          text,
-          "after"
-        )
-      }
+      "before $text after".splitWords() shouldBe listOf(
+        "before",
+        text,
+        "after"
+      )
     }
   }
 }

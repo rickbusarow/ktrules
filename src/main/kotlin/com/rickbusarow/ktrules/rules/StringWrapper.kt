@@ -51,19 +51,19 @@ internal fun interface StringWrapper {
         append("`(?:(?!`).)*`")
         append('|')
         // match anything inside bold text using underscores like __really mean it__
-        append("__(?:(?!__).)*__")
+        append("""__[^\s](?:(?!__).)*[^\s]__""")
         append('|')
         // match anything inside italicized text using underscores like _actually_
-        append("_(?:(?!_).)*_")
+        append("""_[^\s_](?:(?!_).)*[^\s_]_""")
         append('|')
         // match anything inside bold text using underscores like **really mean it**
-        append("\\*\\*(?:(?!\\*\\*).)*\\*\\*")
+        append("""\*\*[^\s](?:(?!\*\*).)*[^\s]\*\*""")
         append('|')
         // match anything inside italicized text using asterisks like _actually_
-        append("\\*(?:(?!\\*).)*\\*")
-        append('|')
+        append("""\*[^\s\*](?:(?!\*).)*[^\s\*]\*""")
 
-        // match anything that's not a space or a markdown delimiter
+        append('|')
+        // match anything that's not a whitespace
         //language=regexp
         append("""\S+""")
 

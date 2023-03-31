@@ -2,6 +2,12 @@
 
 ## 1.0.4-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kdoc-wrapping` will no longer group words inside bold/italic delimiters if there's a whitespace
+  immediately inside either delimiter, like `__ this __`. Markdown does not render the text style if
+  there's a space. Spaces in between words are still okay.
+
 ## [1.0.3] - 2023-03-30
 
 ### Fixed
@@ -13,7 +19,8 @@
 
 ### Fixed
 
-- Indented code blocks which contain triple backticks inside the code block will no longer be indented by an extra space.
+- Indented code blocks which contain triple backticks inside the code block will no longer be indented
+  by an extra space.
 
 ## [1.0.1] - 2023-03-29
 

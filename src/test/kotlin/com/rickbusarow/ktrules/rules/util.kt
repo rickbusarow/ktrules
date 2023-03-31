@@ -18,6 +18,10 @@ package com.rickbusarow.ktrules.rules
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.api.EditorConfigOverride
 import org.intellij.lang.annotations.Language
+import org.junit.jupiter.api.DynamicContainer
+import org.junit.jupiter.api.DynamicNode
+import org.junit.jupiter.api.DynamicTest
+import java.util.stream.Stream
 import com.pinterest.ktlint.test.format as ktlintTestFormat
 
 fun Set<RuleProvider>.format(
@@ -30,3 +34,19 @@ fun Set<RuleProvider>.format(
   editorConfigOverride = editorConfigOverride,
 )
   .first
+
+inline fun <T> Iterable<T>.container(
+  crossinline name: (T) -> String,
+  crossinline action: (T) -> Iterable<DynamicNode>
+): Stream<DynamicContainer> = map { t ->
+  DynamicContainer.dynamicContainer(name(t), action(t))
+}.stream()
+
+fun test(name: String, action: () -> Unit): DynamicTest = DynamicTest.dynamicTest(name, action)
+
+inline fun <T> Iterable<T>.test(
+  crossinline name: (T) -> String,
+  crossinline action: (T) -> Unit
+): List<DynamicTest> = map { t ->
+  DynamicTest.dynamicTest(name(t)) { action(t) }
+}
