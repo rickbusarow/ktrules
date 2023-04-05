@@ -8,6 +8,12 @@
   immediately inside either delimiter, like `__ this __`. Markdown does not render the text style if
   there's a space. Spaces in between words are still okay.
 
+### Added
+
+- `kdoc-indent-after-leading-asterisk` ensures that every leading asterisk in a KDoc default section is
+  followed by at least one whitespace, and every leading asterisk after a KDoc tag is followed by at
+  least three whitespaces.
+
 ## [1.0.3] - 2023-03-30
 
 ### Fixed

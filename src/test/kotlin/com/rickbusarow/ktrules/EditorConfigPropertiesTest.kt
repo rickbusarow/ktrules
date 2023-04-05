@@ -43,6 +43,7 @@ class EditorConfigPropertiesTest {
       # KtLint specific settings
       # noinspection EditorConfigKeyCorrectness
       [{*.kt,*.kts}]
+      ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-wrapping = enabled
       ktlint_kt-rules_no-duplicate-copyright-header = enabled

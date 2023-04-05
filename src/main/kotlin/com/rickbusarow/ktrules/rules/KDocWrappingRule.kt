@@ -16,6 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.Rule
+import com.pinterest.ktlint.core.Rule.VisitorModifier.RunAfterRule
 import com.pinterest.ktlint.core.api.EditorConfigProperties
 import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
 import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
@@ -56,11 +57,15 @@ import kotlin.LazyThreadSafetyMode.NONE
 /**
  * Fixes wrapping inside KDoc comments.
  *
- * [Markdown link](https://example.com)
- *
  * @since 1.0.0
  */
-class KDocWrappingRule : Rule(id = "kdoc-wrapping"), UsesEditorConfigProperties {
+class KDocWrappingRule : Rule(
+  id = "kdoc-wrapping",
+  visitorModifiers = setOf(
+    RunAfterRule("kdoc-leading-asterisk"),
+    RunAfterRule("kdoc-indent-after-leading-asterisk")
+  )
+), UsesEditorConfigProperties {
 
   private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY
   private var maxLineLength: Int = maxLineLengthProperty.defaultValue

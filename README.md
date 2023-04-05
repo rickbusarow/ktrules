@@ -26,6 +26,7 @@ This is a sentence before a bulleted list. It does not have a space after it.
 # KtLint specific settings
 # noinspection EditorConfigKeyCorrectness
 [{*.kt,*.kts}]
+ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-wrapping = enabled
 ktlint_kt-rules_no-duplicate-copyright-header = enabled
@@ -46,6 +47,7 @@ ktlint_kt-rules_wrapping_style = equal
 
 |                  Rule                  |                                                                Description                                                                 |
 | :------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
+|   KDocIndentAfterLeadingAsteriskRule   |                    ensures that there's a space after every leading asterisk in a KDoc comment, except for blank lines                     |
 |        KDocLeadingAsteriskRule         |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
 |            KDocWrappingRule            |                                    ensures consistent wrapping of KDoc comments to improve readability                                     |
 |     NoDuplicateCopyrightHeaderRule     |                                            ensures that each file has only one copyright header                                            |
@@ -66,7 +68,7 @@ named `ktlint`. In this case, you would add the `ktrules` dependency to your pro
 ```kotlin
 // build.gradle.kts
 dependencies {
-  ktlint("com.rickbusarow.ktrules:ktrules:1.0.2")
+  ktlint("com.rickbusarow.ktrules:ktrules:1.0.3")
 }
 ```
 
