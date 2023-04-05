@@ -20,6 +20,7 @@ package com.rickbusarow.ktrules
 import com.google.auto.service.AutoService
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.RuleSetProviderV2
+import com.rickbusarow.ktrules.rules.KDocIndentAfterLeadingAsteriskRule
 import com.rickbusarow.ktrules.rules.KDocLeadingAsteriskRule
 import com.rickbusarow.ktrules.rules.KDocWrappingRule
 import com.rickbusarow.ktrules.rules.NoDuplicateCopyrightHeaderRule
@@ -43,6 +44,7 @@ class KtRulesRuleSetProvider : RuleSetProviderV2(
 
   override fun getRuleProviders(): Set<RuleProvider> {
     return setOf(
+      RuleProvider { KDocIndentAfterLeadingAsteriskRule() },
       RuleProvider { KDocLeadingAsteriskRule() },
       RuleProvider { KDocWrappingRule() },
       RuleProvider { NoDuplicateCopyrightHeaderRule() },
