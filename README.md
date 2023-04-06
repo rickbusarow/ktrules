@@ -21,6 +21,7 @@ include:
 [{*.kt,*.kts}]
 ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-leading-asterisk = enabled
+ktlint_kt-rules_kdoc-tag-order = enabled
 ktlint_kt-rules_kdoc-wrapping = enabled
 ktlint_kt-rules_no-duplicate-copyright-header = enabled
 ktlint_kt-rules_no-leading-blank-lines = enabled
@@ -42,6 +43,7 @@ ktlint_kt-rules_wrapping_style = equal
 | :------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
 |   KDocIndentAfterLeadingAsteriskRule   |                    ensures that there's a space after every leading asterisk in a KDoc comment, except for blank lines                     |
 |        KDocLeadingAsteriskRule         |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
+|            KDocTagOrderRule            |                                    sorts KDoc tags by their declaration order in the class or function                                     |
 |            KDocWrappingRule            |                                    ensures consistent wrapping of KDoc comments to improve readability                                     |
 |     NoDuplicateCopyrightHeaderRule     |                                            ensures that each file has only one copyright header                                            |
 |        NoLeadingBlankLinesRule         |                                           ensures that there are no leading blank lines in files                                           |

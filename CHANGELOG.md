@@ -13,6 +13,8 @@
 - `kdoc-indent-after-leading-asterisk` ensures that every leading asterisk in a KDoc default section
   is followed by at least one whitespace, and every leading asterisk after a KDoc tag is followed by
   at least three whitespaces.
+- `kdoc-tag-order` ensures that KDoc tags are sorted in the same order as their declarations in the
+  class/function
 
 ## [1.0.3] - 2023-03-30
 

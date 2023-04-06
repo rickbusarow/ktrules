@@ -13,6 +13,11 @@ public final class com/rickbusarow/ktrules/rules/KDocLeadingAsteriskRule : com/p
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
 
+public final class com/rickbusarow/ktrules/rules/KDocTagOrderRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
 public final class com/rickbusarow/ktrules/rules/KDocWrappingRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
 	public fun <init> ()V
 	public fun beforeFirstNode (Ljava/util/Map;)V
@@ -54,5 +59,9 @@ public final class com/rickbusarow/ktrules/rules/NoTrailingSpacesInRawStringLite
 public final class com/rickbusarow/ktrules/rules/NoUselessConstructorKeywordRule : com/pinterest/ktlint/core/Rule {
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/SortKt {
+	public static final fun sortedWith (Ljava/lang/Iterable;[Lkotlin/jvm/functions/Function1;)Ljava/util/List;
 }
 

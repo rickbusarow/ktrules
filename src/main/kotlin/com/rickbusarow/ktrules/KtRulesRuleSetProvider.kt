@@ -22,6 +22,7 @@ import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.RuleSetProviderV2
 import com.rickbusarow.ktrules.rules.KDocIndentAfterLeadingAsteriskRule
 import com.rickbusarow.ktrules.rules.KDocLeadingAsteriskRule
+import com.rickbusarow.ktrules.rules.KDocTagOrderRule
 import com.rickbusarow.ktrules.rules.KDocWrappingRule
 import com.rickbusarow.ktrules.rules.NoDuplicateCopyrightHeaderRule
 import com.rickbusarow.ktrules.rules.NoLeadingBlankLinesRule
@@ -46,6 +47,7 @@ class KtRulesRuleSetProvider : RuleSetProviderV2(
     return setOf(
       RuleProvider { KDocIndentAfterLeadingAsteriskRule() },
       RuleProvider { KDocLeadingAsteriskRule() },
+      RuleProvider { KDocTagOrderRule() },
       RuleProvider { KDocWrappingRule() },
       RuleProvider { NoDuplicateCopyrightHeaderRule() },
       RuleProvider { NoLeadingBlankLinesRule() },
