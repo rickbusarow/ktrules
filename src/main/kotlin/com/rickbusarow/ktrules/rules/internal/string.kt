@@ -133,6 +133,7 @@ internal val String.noDots get() = replace("·", " ")
  * Adds line breaks and indents to the output of data class `toString()`s.
  *
  * @see toStringPretty
+ * @since 1.0.5
  */
 internal fun String.prettyToString(): String {
   return replace(",", ",\n")
@@ -152,13 +153,18 @@ internal fun String.prettyToString(): String {
  * shorthand for `toString().prettyToString()`, which adds line breaks and indents to a string
  *
  * @see prettyToString
+ * @since 1.0.5
  */
 internal fun Any?.toStringPretty(): String = when (this) {
   is Map<*, *> -> toList().joinToString("\n")
   else -> toString().prettyToString()
 }
 
-/** A naive auto-indent which just counts brackets. */
+/**
+ * A naive auto-indent which just counts brackets.
+ *
+ * @since 1.0.5
+ */
 internal fun String.indentByBrackets(tab: String = "  "): String {
 
   var tabCount = 0

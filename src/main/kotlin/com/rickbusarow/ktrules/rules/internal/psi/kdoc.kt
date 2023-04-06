@@ -26,10 +26,10 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.parents
 
-/** */
+/** @since 1.0.5 */
 internal val KDocKnownTag.Companion.AT_PARAM get() = "@param"
 
-/** */
+/** @since 1.0.5 */
 internal val KDocKnownTag.Companion.AT_PROPERTY get() = "@property"
 
 /** @since 1.0.4 */
@@ -53,7 +53,10 @@ internal fun ASTNode?.isKDocSection(): Boolean =
 /** @since 1.0.4 */
 internal fun ASTNode?.isKDocTagOrSection(): Boolean = isKDocSection() || isKDocTag()
 
-/** @return true if this is a KDoc tag "type" name, like `@param`, `@property`, `@throws`, etc. */
+/**
+ * @return true if this is a KDoc tag "type" name, like `@param`, `@property`, `@throws`, etc.
+ * @since 1.0.5
+ */
 internal fun ASTNode?.isKDocTagName(): Boolean {
   return this != null && elementType == ElementType.KDOC_TAG_NAME
 }
@@ -61,6 +64,7 @@ internal fun ASTNode?.isKDocTagName(): Boolean {
 /**
  * @return true if this is a KDoc tag identifier/link, like `myParameter` from
  *   `@param myParameter [...]`
+ * @since 1.0.5
  **/
 internal fun ASTNode?.isKDocTagMarkdownLink(): Boolean {
   return isKDocMarkdownLink() && this?.parent.isKDocTag()
@@ -69,6 +73,7 @@ internal fun ASTNode?.isKDocTagMarkdownLink(): Boolean {
 /**
  * @return true if this is a KDoc tag identifier/link name, like `myParameter` from
  *   `@param myParameter [...]`
+ * @since 1.0.5
  **/
 internal fun ASTNode?.isKDocTagLinkName(): Boolean {
   return this != null && elementType == ElementType.KDOC_NAME && parent.isKDocTagMarkdownLink()
@@ -77,6 +82,7 @@ internal fun ASTNode?.isKDocTagLinkName(): Boolean {
 /**
  * @return true if this is a KDoc tag identifier/link name identifier, like `myParameter` from
  *   `@param myParameter [...]`
+ * @since 1.0.5
  **/
 internal fun ASTNode?.isKDocTagLinkNameIdentifier(): Boolean {
   return this != null && elementType == ElementType.IDENTIFIER && parent.isKDocTagLinkName()

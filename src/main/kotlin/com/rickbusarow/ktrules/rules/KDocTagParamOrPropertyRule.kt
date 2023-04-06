@@ -31,6 +31,8 @@ import kotlin.LazyThreadSafetyMode.NONE
 /**
  * Ensures that KDoc tags use `@property` for vals or vars, and `@param` for non-property
  * parameters.
+ *
+ * @since 1.0.5
  */
 class KDocTagParamOrPropertyRule : Rule(id = "kdoc-tag-param-or-property") {
 
