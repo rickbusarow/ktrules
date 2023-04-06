@@ -2,6 +2,11 @@
 
 ## 1.0.5-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kdoc-tag-order` will now properly sort `@param` and `@property` tags when the
+  function/constructor has 10 or more parameters
+
 ## [1.0.4] - 2023-04-05
 
 ### Fixed
