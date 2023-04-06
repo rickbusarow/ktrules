@@ -18,7 +18,7 @@
 import com.diffplug.gradle.spotless.GroovyGradleExtension
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessTask
-import com.rickbusarow.docusync.gradle.DocusyncTask
+import com.rickbusarow.doks.DoksTask
 import com.vanniktech.maven.publish.JavadocJar.Dokka
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
@@ -69,7 +69,7 @@ buildscript {
 plugins {
   alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.detekt)
-  alias(libs.plugins.docusync)
+  alias(libs.plugins.doks)
   alias(libs.plugins.dokka)
   alias(libs.plugins.github.release)
   alias(libs.plugins.google.ksp)
@@ -120,8 +120,8 @@ val VERSION_RELEASED = libs.versions.ktrules.released.get()
 val GROUP = "com.rickbusarow.ktrules"
 val website = "https://www.github.com/rbusarow/ktrules/"
 
-docusync {
-  docSet {
+doks {
+  dokSet {
     docs("README.md", "CHANGELOG.md")
 
     sampleCodeSource.from(fileTree(projectDir.resolve("src/test/kotlin")) {
@@ -143,7 +143,7 @@ docusync {
   }
 }
 
-tasks.withType<DocusyncTask> {
+tasks.withType<DoksTask> {
   mustRunAfter(tasks.withType<KotlinCompile>())
   mustRunAfter("apiDump")
 }
@@ -364,7 +364,7 @@ val fix by tasks.registering {
   description = "Runs all auto-fix linting tasks"
 
   dependsOn("apiDump")
-  dependsOn("docusync")
+  dependsOn("doks")
   dependsOn("formatKotlin")
   dependsOn("spotlessApply")
   dependsOn(deleteEmptyDirs)

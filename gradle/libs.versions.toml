@@ -30,7 +30,7 @@ kotlinx-knit = "0.4.0"
 ktlint-plugin = "11.3.1"
 prettier-lib = "2.8.4"
 prettier-plugin-sh = "0.12.8"
-rickBusarow-docusync = "0.1.1"
+rickBusarow-doks = "0.1.2"
 rickBusarow-moduleCheck = "0.12.5"
 slf4j = "2.0.7"
 vanniktech-publish = "0.25.1"
@@ -40,7 +40,7 @@ vanniktech-publish = "0.25.1"
 benManes = { id = "com.github.ben-manes.versions", version.ref = "benManes-versions" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-docusync = { id = "com.rickbusarow.docusync", version.ref = "rickBusarow-docusync" }
+doks = { id = "com.rickbusarow.doks", version.ref = "rickBusarow-doks" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 dropbox-dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dropbox-dependencyGuard" }
 github-release = { id = "com.github.breadmoirai.github-release", version.ref = "github-release" }

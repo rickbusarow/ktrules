@@ -13,7 +13,7 @@ include:
 
 ## Rules
 
-<!--docusync editorconfig-sample-->
+<!--doks editorconfig-sample-->
 
 ```editorconfig
 # KtLint specific settings
@@ -38,10 +38,10 @@ ktlint_kt-rules_wrapping_style = equal
 # actual kotlin settings go here
 ```
 
-<!--/docusync-->
+<!--/doks-->
 
 |                  Rule                  |                                                                Description                                                                 |
-| :------------------------------------: |:------------------------------------------------------------------------------------------------------------------------------------------:|
+| :------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
 |   KDocIndentAfterLeadingAsteriskRule   |                    ensures that there's a space after every leading asterisk in a KDoc comment, except for blank lines                     |
 |        KDocLeadingAsteriskRule         |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
 |       KDocTagParamOrPropertyRule       |                     ensures that KDoc tags use `@property` for vals or vars, and `@param` for non-property parameters.                     |
@@ -61,7 +61,7 @@ using third-party extensions. Typically, your plugin or custom tasks will have a
 configuration named `ktlint`. In this case, you would add the `ktrules` dependency to your project's
 build file like:
 
-<!--docusync maven-artifact:1-->
+<!--doks maven-artifact:1-->
 
 ```kotlin
 // build.gradle.kts
@@ -70,7 +70,7 @@ dependencies {
 }
 ```
 
-<!--/docusync-->
+<!--/doks-->
 
 ## `@since` tags
 
