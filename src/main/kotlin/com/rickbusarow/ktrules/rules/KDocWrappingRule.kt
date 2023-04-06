@@ -103,7 +103,7 @@ class KDocWrappingRule : Rule(
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    if (!skipAll && node.elementType == ElementType.KDOC_START) {
+    if (!skipAll && node.elementType == ElementType.KDOC) {
       visitKDoc(node, autoCorrect = autoCorrect, emit = emit)
     }
   }
@@ -114,7 +114,7 @@ class KDocWrappingRule : Rule(
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    val kdoc = kdocNode.psi.parent as KDoc
+    val kdoc = kdocNode.psi as KDoc
 
     val starIndent = kdoc.findIndent()
 
@@ -150,7 +150,7 @@ class KDocWrappingRule : Rule(
       wrappedLines = wrappedLines,
       inKDocDefaultSection = inKDocDefaultSection,
       starIndent = starIndent,
-      tags = tags
+      isLastTag = tags.lastOrNull() == this@fix
     )
 
     val tagIndex = tags.indexOf(this)
@@ -204,7 +204,7 @@ class KDocWrappingRule : Rule(
     wrappedLines: List<String>,
     inKDocDefaultSection: Boolean,
     starIndent: String,
-    tags: List<KDocTag>
+    isLastTag: Boolean,
   ) = if (singleLineKDoc) {
     "/**${wrapped.prefixIfNot(" ")} */"
   } else {
@@ -221,7 +221,7 @@ class KDocWrappingRule : Rule(
         }
       }
 
-      if (inKDocDefaultSection && tags.size > 1) {
+      if (inKDocDefaultSection && !isLastTag) {
         appendLine("$starIndent*")
       }
 

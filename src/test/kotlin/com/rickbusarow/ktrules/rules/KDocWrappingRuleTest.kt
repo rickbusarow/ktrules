@@ -1056,6 +1056,97 @@ class KDocWrappingRuleTest : Tests {
     ) shouldBe emptyList()
   }
 
+  @Test
+  fun `wrapping the first tag with only unknown tags`() {
+
+    rules.format(
+      """
+      /**
+       * @return it returns something with a very long description because I need to wrap
+       * @since 0.0.1
+       * @throws IllegalArgumentException because I
+       *   need a comment which is long enough to wrap
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * @return it returns something with a very
+       *   long description because I need to wrap
+       * @since 0.0.1
+       * @throws IllegalArgumentException because I
+       *   need a comment which is long enough to wrap
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `wrapping a middle tag with only unknown tags`() {
+
+    rules.format(
+      """
+      /**
+       * @return it returns something
+       * @since A very very very very very very very very very very very very very long time ago
+       * @throws IllegalArgumentException because I
+       *   need a comment which is long enough to wrap
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * @return it returns something
+       * @since A very very very very very very very
+       *   very very very very very very long time ago
+       * @throws IllegalArgumentException because I
+       *   need a comment which is long enough to wrap
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `wrapping the last tag with only unknown tags`() {
+
+    rules.format(
+      """
+      /**
+       * @return it returns something
+       * @since 0.1.1
+       * @throws IllegalArgumentException because I need a comment which is long enough to wrap
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * @return it returns something
+       * @since 0.1.1
+       * @throws IllegalArgumentException because I
+       *   need a comment which is long enough to wrap
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
   private fun Set<RuleProvider>.format(
     text: String,
     wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,

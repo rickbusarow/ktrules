@@ -2,6 +2,10 @@
 
 ## 1.0.6-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kdoc-wrapping` will no longer add a new line at the end of a KDoc when wrapping the last tag.
+
 ## [1.0.5] - 2023-04-06
 
 ### Fixed
