@@ -20,6 +20,8 @@ import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter
 /**
  * prints a tree starting at any markdown tree element, showing all its children types and their
  * text
+ *
+ * @since 1.0.4
  */
 internal class MarkdownTreePrinter(
   whitespaceChar: Char = ' '
@@ -37,7 +39,7 @@ internal class MarkdownTreePrinter(
 
   companion object {
 
-    /** */
+    /** @since 1.0.4 */
     internal fun MarkdownNode.printEverything(
       whitespaceChar: Char = ' '
     ) = apply {

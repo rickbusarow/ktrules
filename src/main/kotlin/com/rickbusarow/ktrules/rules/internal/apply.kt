@@ -43,6 +43,7 @@ internal inline fun <T> T.letIf(
  * shorthand for `requireNotNull(this, lazyMessage)`
  *
  * @throws IllegalArgumentException if receiver is null
+ * @since 1.0.4
  */
 internal inline fun <T : Any> T?.requireNotNull(lazyMessage: () -> Any): T {
   contract {
@@ -55,6 +56,7 @@ internal inline fun <T : Any> T?.requireNotNull(lazyMessage: () -> Any): T {
  * shorthand for `checkNotNull(this, lazyMessage)`
  *
  * @throws IllegalStateException if receiver is null
+ * @since 1.0.4
  */
 internal inline fun <T : Any> T?.checkNotNull(lazyMessage: () -> Any): T {
   contract {
@@ -67,6 +69,7 @@ internal inline fun <T : Any> T?.checkNotNull(lazyMessage: () -> Any): T {
  * shorthand for `check({...}, lazyMessage)`
  *
  * @throws IllegalStateException if receiver is null
+ * @since 1.0.4
  */
 internal inline fun <T : Any?> T.check(
   condition: (T) -> Boolean,

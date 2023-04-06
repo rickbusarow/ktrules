@@ -21,6 +21,8 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 /**
  * prints a tree starting at any arbitrary psi element, showing all its children types and their
  * text
+ *
+ * @since 1.0.4
  */
 internal class ASTTreePrinter(
   whitespaceChar: Char = ' '

@@ -20,6 +20,8 @@ package com.rickbusarow.ktrules.rules.internal
  *
  * The sort is _stable_. It means that equal elements preserve their order relative to each other
  * after sorting.
+ *
+ * @since 1.0.4
  */
 fun <T> Iterable<T>.sortedWith(vararg selectors: (T) -> Comparable<*>): List<T> {
   if (this is Collection) {

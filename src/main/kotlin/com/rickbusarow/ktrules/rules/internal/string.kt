@@ -51,6 +51,8 @@ internal fun CharSequence.mapLines(
  * performs [transform] on each line
  *
  * Doesn't preserve the original line endings.
+ *
+ * @since 1.0.4
  */
 internal fun CharSequence.mapLinesIndexed(
   transform: (Int, String) -> CharSequence
@@ -66,6 +68,8 @@ internal fun CharSequence.mapLinesIndexed(
  * Prepends [continuationIndent] to every line of the original string.
  *
  * Doesn't preserve the original line endings.
+ *
+ * @since 1.0.4
  */
 internal fun CharSequence.prependContinuationIndent(
   continuationIndent: String
@@ -77,7 +81,11 @@ internal fun CharSequence.prependContinuationIndent(
   }
 }
 
-/** `"$prefix$this$suffix"` */
+/**
+ * `"$prefix$this$suffix"`
+ *
+ * @since 1.0.4
+ */
 internal fun CharSequence.wrapIn(
   prefix: String,
   suffix: String = prefix
@@ -107,8 +115,16 @@ internal fun String.remove(vararg regex: Regex): String = regex.fold(this) { acc
   acc.replace(reg, "")
 }
 
-/** replace ` ` with `·` */
+/**
+ * replace ` ` with `·`
+ *
+ * @since 1.0.4
+ */
 internal val String.dots get() = replace(" ", "·")
 
-/** replace `·` with ` ` */
+/**
+ * replace `·` with ` `
+ *
+ * @since 1.0.4
+ */
 internal val String.noDots get() = replace("·", " ")

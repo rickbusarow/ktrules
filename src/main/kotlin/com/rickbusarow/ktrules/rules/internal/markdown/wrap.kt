@@ -23,7 +23,7 @@ import com.rickbusarow.ktrules.rules.wrapping.StringWrapper.Companion.splitWords
 import org.intellij.markdown.MarkdownElementTypes
 import kotlin.LazyThreadSafetyMode.NONE
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.wrap(
   wrapper: StringWrapper,
   maxLength: Int,
@@ -51,7 +51,7 @@ internal fun MarkdownNode.wrap(
     }
 }
 
-/** */
+/** @since 1.0.4 */
 private fun MarkdownNode.getChildText(
   paragraphCount: Int,
   wrapper: StringWrapper,
@@ -135,7 +135,7 @@ private fun MarkdownNode.getChildText(
   }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.indent(
   addKDocLeadingSpace: Boolean,
   beforeAnyTags: Boolean
@@ -183,7 +183,7 @@ internal fun MarkdownNode.indent(
   }
 }
 
-/** */
+/** @since 1.0.4 */
 private fun MarkdownNode.continuationIndent(
   beforeAnyTags: Boolean,
   addKDocLeadingSpace: Boolean

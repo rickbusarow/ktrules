@@ -39,69 +39,69 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.parents
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isBlank(): Boolean = this != null && text.isBlank()
 
-/** */
+/** @since 1.0.4 */
 private val copyRightCommentStart = Regex(
   """(?:\/\*{1,2}\s+(?:\*\s)?|\/\/ *)Copyright [\s\S]*"""
 )
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.isCopyrightHeader(): Boolean {
   if (elementType != ElementType.BLOCK_COMMENT) return false
 
   return text.matches(copyRightCommentStart)
 }
 
-/** */
+/** @since 1.0.4 */
 internal val ASTNode.parent: ASTNode? get() = treeParent
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.isFirstChild(): Boolean = prevSibling() == null
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.prevSibling(): ASTNode? = prevSibling { true }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocText(): Boolean = this != null && elementType == KDOC_TEXT
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocTag(): Boolean = this != null && elementType == KDOC_TAG
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocSectionWithTagChildren(): Boolean =
   this != null && elementType == KDOC_SECTION && children().any { it.isKDocTag() }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocTagWithTagChildren(): Boolean =
   this != null && elementType == KDOC_TAG && children().any { it.isKDocTag() }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocSection(): Boolean = this != null && elementType == KDOC_SECTION
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocTagOrSection(): Boolean = isKDocSection() || isKDocTag()
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocTagName(): Boolean = this != null && elementType == KDOC_TAG_NAME
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocTagLink(): Boolean {
   return this != null && elementType == IDENTIFIER && parent?.elementType == KDOC_NAME
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocMarkdownLink(): Boolean =
   this != null && elementType == KDOC_MARKDOWN_LINK
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocDefaultSection(): Boolean = this?.psi?.isKDocDefaultSection() == true
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocFirstSectionAfterDefault(): Boolean {
   return when {
     this == null -> false
@@ -111,7 +111,7 @@ internal fun ASTNode?.isKDocFirstSectionAfterDefault(): Boolean {
   }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocLastSection(): Boolean {
 
   return when {
@@ -122,17 +122,17 @@ internal fun ASTNode?.isKDocLastSection(): Boolean {
   }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.getKDocSection(): ASTNode? {
   return this?.parents()?.firstOrNull { it.isKDocSection() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isInKDocTag(): Boolean {
   return this != null && parents().any { it.isKDocTag() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isInKDocDefaultSection(): Boolean {
   if (this == null) return false
 
@@ -143,29 +143,29 @@ internal fun ASTNode?.isInKDocDefaultSection(): Boolean {
   return this == defaultSection || parents().any { it == defaultSection }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocWhitespaceAfterLeadingAsterisk(): Boolean =
   this != null && (isWhiteSpace() || isBlank()) && prevSibling().isKDocLeadingAsterisk()
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocWhitespaceBeforeLeadingAsterisk(): Boolean =
   this != null && elementType == WHITE_SPACE && nextSibling().isKDocLeadingAsterisk()
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocLeadingAsterisk(): Boolean =
   this != null && elementType == KDOC_LEADING_ASTERISK
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocEnd(): Boolean = this != null && elementType == KDOC_END
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocStart(): Boolean = this != null && elementType == KDOC_START
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isFirstAfterKDocStart(): Boolean =
   this != null && prevSibling()?.isKDocStart() == true
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode?.isKDocCodeBlockText(): Boolean =
   this != null && elementType == KDOC_CODE_BLOCK_TEXT
 
@@ -193,12 +193,12 @@ internal fun ASTNode.isKDocCodeBlockEndText(): Boolean {
     .isKDocCodeBlockText()
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.childrenDepthFirst(): Sequence<ASTNode> {
   return depthFirstTraversal { children().toList() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.childrenDepthFirst(
   predicate: (ASTNode) -> Boolean
 ): Sequence<ASTNode> = depthFirstTraversal {
@@ -207,12 +207,12 @@ internal fun ASTNode.childrenDepthFirst(
     .toList()
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.childrenBreadthFirst(): Sequence<ASTNode> {
   return breadthFirstTraversal { children().toList() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun ASTNode.childrenBreadthFirst(
   predicate: (ASTNode) -> Boolean
 ): Sequence<ASTNode> = breadthFirstTraversal {

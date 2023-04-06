@@ -30,7 +30,7 @@ import org.jetbrains.kotlin.com.intellij.openapi.util.Key
 import org.jetbrains.kotlin.com.intellij.openapi.util.UserDataHolder
 import kotlin.LazyThreadSafetyMode.NONE
 
-/** */
+/** @since 1.0.4 */
 internal data class MarkdownNode(
   val node: ASTNode,
   private val fullText: String,
@@ -115,10 +115,10 @@ internal data class MarkdownNode(
   }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isEOL(): Boolean = this != null && elementType == MarkdownTokenTypes.EOL
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.previousSibling(): MarkdownNode? {
   val currentParent = this.parent ?: return null
   val siblings = currentParent.children
@@ -127,24 +127,24 @@ internal fun MarkdownNode.previousSibling(): MarkdownNode? {
   return if (index > 0) siblings[index - 1] else null
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.previousSiblings(): Sequence<MarkdownNode> {
   return generateSequence(previousSibling()) { it.previousSibling() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.previousLeaf(): MarkdownNode? {
   return generateSequence(previousSibling()) { it.children.lastOrNull() }
     .firstOrNull { it.isLeaf }
     ?: parent?.previousLeaf()
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.previousLeaves(): Sequence<MarkdownNode> {
   return previousSiblings().filter { it.isLeaf }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.nextSibling(): MarkdownNode? {
 
   val currentParent = this.parent ?: return null
@@ -154,97 +154,97 @@ internal fun MarkdownNode.nextSibling(): MarkdownNode? {
   return if (index < siblings.size - 1) siblings[index + 1] else null
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.nextSiblings(): Sequence<MarkdownNode> {
   return generateSequence(nextSibling()) { it.nextSibling() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.nextLeaf(): MarkdownNode? {
   return generateSequence(nextSibling()) { it.children.firstOrNull() }
     .firstOrNull { it.isLeaf }
     ?: parent?.nextLeaf()
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.nextLeaves(): Sequence<MarkdownNode> {
   return nextSiblings().filter { it.isLeaf }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.parents(): Sequence<MarkdownNode> = generateSequence(parent) { it.parent }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.parentsWithSelf(): Sequence<MarkdownNode> =
   generateSequence(this) { it.parent }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.parentListItems() = parents()
   .filter { it.elementType == MarkdownElementTypes.LIST_ITEM }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.parentListItemsWithSelf() = parentsWithSelf()
   .filter { it.elementType == MarkdownElementTypes.LIST_ITEM }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.countParentLists() = parentListItems().count()
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.countParentListsWithSelf() = parentListItemsWithSelf().count()
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isUnorderedList(): Boolean {
   return this != null && elementType == MarkdownElementTypes.UNORDERED_LIST
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isOrderedList(): Boolean {
   return this != null && elementType == MarkdownElementTypes.ORDERED_LIST
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isList(): Boolean {
   return isUnorderedList() || isOrderedList()
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isListItem(): Boolean {
   return this != null && elementType == MarkdownElementTypes.LIST_ITEM
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.isParagraphInBlockQuote(): Boolean {
   return isParagraph && parent.isBlockQuoteElement()
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.isFirstParagraphInParent(): Boolean {
   return isParagraph && previousSiblings().none { it.isParagraph }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.isListItemDelimiter(): Boolean {
   return elementType == MarkdownTokenTypes.LIST_BULLET || elementType == MarkdownTokenTypes.LIST_NUMBER
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.countParentBlockQuotes(): Int {
   return parents().count { it.isBlockQuoteElement() }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isBlockQuoteElement(): Boolean {
   if (this == null) return false
   return elementType == MarkdownElementTypes.BLOCK_QUOTE
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isBlockQuoteToken(): Boolean {
   if (this == null) return false
   return elementType == MarkdownTokenTypes.BLOCK_QUOTE
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isBlockQuoteTokenOrBlockQuoteTokenInWhiteSpace(): Boolean {
   return isBlockQuoteToken() || isBlockQuoteTokenInWhiteSpace()
 }
@@ -252,6 +252,8 @@ internal fun MarkdownNode?.isBlockQuoteTokenOrBlockQuoteTokenInWhiteSpace(): Boo
 /**
  * When a block quote is nested, any angle brackets other than the last one are incorrectly parsed
  * as WHITE_SPACE, and added as the last node of the parent block quote.
+ *
+ * @since 1.0.4
  */
 internal fun MarkdownNode?.isBlockQuoteTokenInWhiteSpace(): Boolean {
   return this != null &&
@@ -259,17 +261,17 @@ internal fun MarkdownNode?.isBlockQuoteTokenInWhiteSpace(): Boolean {
     text.matches("^>\\s&&[^\\n]+\$".toRegex())
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.isWhiteSpace(): Boolean {
   return elementType == MarkdownTokenTypes.WHITE_SPACE
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.isWhiteSpaceAfterNewLine(): Boolean {
   return isWhiteSpace() && previousSibling()?.elementType == MarkdownTokenTypes.EOL
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode?.isEolFollowedByParagraph(): Boolean {
   return when {
     this == null -> false
@@ -278,24 +280,24 @@ internal fun MarkdownNode?.isEolFollowedByParagraph(): Boolean {
   }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.firstChildOfTypeOrNull(vararg types: IElementType): MarkdownNode? {
   return childrenDepthFirst()
     .firstOrNull { it.elementType in types }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.firstChildOfType(vararg types: IElementType): MarkdownNode {
   return childrenDepthFirst()
     .first { it.elementType in types }
 }
 
-/** */
+/** @since 1.0.4 */
 internal fun MarkdownNode.childrenDepthFirst(): Sequence<MarkdownNode> {
   return depthFirstTraversal(MarkdownNode::children)
 }
 
-/** */
+/** @since 1.0.4 */
 internal inline fun MarkdownNode.childrenDepthFirst(
   crossinline predicate: (MarkdownNode) -> Boolean
 ): Sequence<MarkdownNode> = depthFirstTraversal { children.filter(predicate) }

@@ -27,7 +27,11 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
 import org.jetbrains.kotlin.psi.psiUtil.getValueParameters
 
-/** Sorts KDoc tags by their declaration order in the class or function. */
+/**
+ * Sorts KDoc tags by their declaration order in the class or function.
+ *
+ * @since 1.0.4
+ */
 class KDocTagOrderRule : Rule(id = "kdoc-tag-order") {
 
   override fun beforeVisitChildNodes(

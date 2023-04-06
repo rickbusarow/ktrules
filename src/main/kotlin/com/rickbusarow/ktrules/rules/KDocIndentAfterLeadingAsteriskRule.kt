@@ -29,6 +29,8 @@ import org.jetbrains.kotlin.psi.psiUtil.parents
 /**
  * Ensures that there's a space after every leading asterisk in a KDoc comment, except for blank
  * lines.
+ *
+ * @since 1.0.4
  */
 class KDocIndentAfterLeadingAsteriskRule : Rule(
   id = "kdoc-indent-after-leading-asterisk",
