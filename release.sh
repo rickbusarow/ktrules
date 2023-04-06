@@ -88,7 +88,7 @@ function parseVersionAndSyncDocs() {
 
   # update the version references in docs before versioning them
   progress "Update docs versions"
-  ./gradlew docusync
+  ./gradlew doks
   maybeCommit "update version references in docs to $VERSION_DEV"
 }
 
