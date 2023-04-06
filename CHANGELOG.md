@@ -1,6 +1,8 @@
 # Changelog
 
-## 1.0.4-SNAPSHOT (unreleased)
+## 1.0.5-SNAPSHOT (unreleased)
+
+## [1.0.4] - 2023-04-05
 
 ### Fixed
 
@@ -77,3 +79,4 @@ Hello World
 [1.0.1]: https://github.com/rbusarow/ktrules/releases/tag/1.0.1
 [1.0.2]: https://github.com/rbusarow/ktrules/releases/tag/1.0.2
 [1.0.3]: https://github.com/rbusarow/ktrules/releases/tag/1.0.3
+[1.0.4]: https://github.com/rbusarow/ktrules/releases/tag/1.0.4
