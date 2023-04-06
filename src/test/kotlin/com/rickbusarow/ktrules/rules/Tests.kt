@@ -15,6 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
+import com.pinterest.ktlint.core.LintError
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.api.EditorConfigOverride
 import com.rickbusarow.ktrules.rules.internal.dots
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
 import java.util.stream.Stream
 import com.pinterest.ktlint.test.format as ktlintTestFormat
+import com.pinterest.ktlint.test.lint as ktlintTestLint
 import io.kotest.matchers.shouldBe as kotestShouldBe
 
 interface Tests {
@@ -36,13 +38,21 @@ interface Tests {
   fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
-    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.EMPTY_EDITOR_CONFIG_OVERRIDE
+    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.emptyEditorConfigOverride
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    lintedFilePath = null,
     editorConfigOverride = editorConfigOverride,
   )
-    .first
+
+  fun Set<RuleProvider>.lint(
+    @Language("kotlin")
+    text: String,
+    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.emptyEditorConfigOverride
+  ): List<LintError> = ktlintTestLint(
+    text = text,
+    editorConfigOverride = editorConfigOverride
+  )
 
   fun <T> Iterable<T>.container(
     name: (T) -> String,

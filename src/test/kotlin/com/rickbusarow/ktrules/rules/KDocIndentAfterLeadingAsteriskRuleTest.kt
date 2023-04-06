@@ -179,18 +179,17 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
   private fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
-    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.EMPTY_EDITOR_CONFIG_OVERRIDE
+    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.emptyEditorConfigOverride
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    lintedFilePath = null,
     editorConfigOverride = editorConfigOverride,
   )
-    .first
 
   private fun Set<RuleProvider>.lint(
     @Language("kotlin")
     text: String,
-    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.EMPTY_EDITOR_CONFIG_OVERRIDE
+    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.emptyEditorConfigOverride
   ): List<LintError> = ktlintTestLint(
     text = text,
     editorConfigOverride = editorConfigOverride

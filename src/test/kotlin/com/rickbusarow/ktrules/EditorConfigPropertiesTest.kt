@@ -34,7 +34,7 @@ class EditorConfigPropertiesTest : Tests {
 
     val ids by lazy {
       ruleProviders.map { it.createNewRuleInstance().id }
-        .plus(ALL_PROPERTIES.map { it.name.removePrefix("${RULES_PREFIX}_") })
+        .plus(ALL_PROPERTIES.map { it.type.name.removePrefix("${RULES_PREFIX}_") })
     }
 
     @Suppress("EditorConfigEmptySection")

@@ -28,8 +28,9 @@ public final class com/rickbusarow/ktrules/rules/KDocWrappingRule : com/pinteres
 	public fun beforeFirstNode (Ljava/util/Map;)V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 	public fun getEditorConfigProperties ()Ljava/util/List;
-	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;)Ljava/lang/Object;
-	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;Lcom/pinterest/ktlint/core/api/editorconfig/CodeStyleValue;)Ljava/lang/String;
+	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;)Ljava/lang/Object;
+	public fun getEditorConfigValue (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;)Ljava/lang/Object;
+	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;Lcom/pinterest/ktlint/core/api/DefaultEditorConfigProperties$CodeStyleValue;)Ljava/lang/String;
 }
 
 public final class com/rickbusarow/ktrules/rules/NoDuplicateCopyrightHeaderRule : com/pinterest/ktlint/core/Rule {
@@ -47,8 +48,9 @@ public final class com/rickbusarow/ktrules/rules/NoSinceInKDocRule : com/pintere
 	public fun beforeFirstNode (Ljava/util/Map;)V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 	public fun getEditorConfigProperties ()Ljava/util/List;
-	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;)Ljava/lang/Object;
-	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/editorconfig/EditorConfigProperty;Lcom/pinterest/ktlint/core/api/editorconfig/CodeStyleValue;)Ljava/lang/String;
+	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;)Ljava/lang/Object;
+	public fun getEditorConfigValue (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;)Ljava/lang/Object;
+	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;Lcom/pinterest/ktlint/core/api/DefaultEditorConfigProperties$CodeStyleValue;)Ljava/lang/String;
 }
 
 public final class com/rickbusarow/ktrules/rules/NoSpaceInTargetedAnnotationRule : com/pinterest/ktlint/core/Rule {

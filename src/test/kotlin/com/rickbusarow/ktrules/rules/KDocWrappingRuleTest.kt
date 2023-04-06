@@ -17,8 +17,8 @@ package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.LintError
 import com.pinterest.ktlint.core.RuleProvider
+import com.pinterest.ktlint.core.api.DefaultEditorConfigProperties.maxLineLengthProperty
 import com.pinterest.ktlint.core.api.EditorConfigOverride
-import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
@@ -1062,32 +1062,30 @@ class KDocWrappingRuleTest : Tests {
     lineLength: Int = 50,
     editorConfigOverride: EditorConfigOverride =
       EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
+        maxLineLengthProperty to lineLength,
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
       )
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    lintedFilePath = null,
     editorConfigOverride = editorConfigOverride,
   )
-    .first
 
   override fun Set<RuleProvider>.format(
     text: String,
     editorConfigOverride: EditorConfigOverride
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    lintedFilePath = null,
     editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
       EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to 50,
+        maxLineLengthProperty to 50,
         WRAPPING_STYLE_PROPERTY to WrappingStyle.MINIMUM_RAGGED.displayValue
       )
     } else {
       editorConfigOverride
     },
   )
-    .first
 
   private fun Set<RuleProvider>.lint(
     text: String,
@@ -1095,11 +1093,27 @@ class KDocWrappingRuleTest : Tests {
     lineLength: Int = 50,
     editorConfigOverride: EditorConfigOverride =
       EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
+        maxLineLengthProperty to lineLength,
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
       )
   ): List<LintError> = ktlintTestLint(
     text = text,
     editorConfigOverride = editorConfigOverride
+  )
+
+  override fun Set<RuleProvider>.lint(
+    text: String,
+    editorConfigOverride: EditorConfigOverride
+  ): List<LintError> = ktlintTestLint(
+    text = text,
+    lintedFilePath = null,
+    editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
+      EditorConfigOverride.from(
+        maxLineLengthProperty to 50,
+        WRAPPING_STYLE_PROPERTY to WrappingStyle.MINIMUM_RAGGED.displayValue
+      )
+    } else {
+      editorConfigOverride
+    },
   )
 }

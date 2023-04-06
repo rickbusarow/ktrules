@@ -24,6 +24,7 @@ import com.pinterest.ktlint.core.ast.nextLeaf
 import com.pinterest.ktlint.core.ast.upsertWhitespaceBeforeMe
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafElement
 import org.jetbrains.kotlin.psi.psiUtil.parents
 
 /**
@@ -63,7 +64,7 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
 
         val fix = leading.drop(existingSpaces)
 
-        nextLeaf.upsertWhitespaceBeforeMe(fix)
+        (nextLeaf as LeafElement).upsertWhitespaceBeforeMe(fix)
       }
     }
   }

@@ -17,10 +17,10 @@ package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.Rule
 import com.pinterest.ktlint.core.Rule.VisitorModifier.RunAfterRule
+import com.pinterest.ktlint.core.api.DefaultEditorConfigProperties
 import com.pinterest.ktlint.core.api.EditorConfigProperties
 import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
-import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
-import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.pinterest.ktlint.core.api.UsesEditorConfigProperties.EditorConfigProperty
 import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.children
 import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
@@ -67,7 +67,8 @@ class KDocWrappingRule : Rule(
   )
 ), UsesEditorConfigProperties {
 
-  private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY
+  private val maxLineLengthProperty =
+    DefaultEditorConfigProperties.maxLineLengthProperty.copy(defaultValue = 103)
   private var maxLineLength: Int = maxLineLengthProperty.defaultValue
 
   private val markdownParser by lazy(NONE) {

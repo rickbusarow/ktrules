@@ -18,7 +18,7 @@ package com.rickbusarow.ktrules.rules
 import com.pinterest.ktlint.core.Rule
 import com.pinterest.ktlint.core.api.EditorConfigProperties
 import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
-import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
+import com.pinterest.ktlint.core.api.UsesEditorConfigProperties.EditorConfigProperty
 import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.ElementType.KDOC_TAG
 import com.pinterest.ktlint.core.ast.ElementType.KDOC_TAG_NAME
