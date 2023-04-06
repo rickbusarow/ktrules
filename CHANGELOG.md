@@ -7,6 +7,11 @@
 - `kdoc-tag-order` will now properly sort `@param` and `@property` tags when the
   function/constructor has 10 or more parameters
 
+### Added
+
+- `kdoc-tag-param-or-property` ensures that KDoc comments use `@property` tags for properties (`val`
+  or `var`) and `@param` tags for type parameters (like `T`) or non-property value parameters.
+
 ## [1.0.4] - 2023-04-05
 
 ### Fixed

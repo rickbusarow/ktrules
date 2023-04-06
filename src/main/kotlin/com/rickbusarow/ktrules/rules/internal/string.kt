@@ -128,3 +128,61 @@ internal val String.dots get() = replace(" ", "·")
  * @since 1.0.4
  */
 internal val String.noDots get() = replace("·", " ")
+
+/**
+ * Adds line breaks and indents to the output of data class `toString()`s.
+ *
+ * @see toStringPretty
+ */
+internal fun String.prettyToString(): String {
+  return replace(",", ",\n")
+    .replace("(", "(\n")
+    .replace(")", "\n)")
+    .replace("[", "[\n")
+    .replace("]", "\n]")
+    .replace("{", "{\n")
+    .replace("}", "\n}")
+    .replace("\\(\\s*\\)".toRegex(), "()")
+    .replace("\\[\\s*]".toRegex(), "[]")
+    .indentByBrackets()
+    .replace("""\n *\n""".toRegex(), "\n")
+}
+
+/**
+ * shorthand for `toString().prettyToString()`, which adds line breaks and indents to a string
+ *
+ * @see prettyToString
+ */
+internal fun Any?.toStringPretty(): String = when (this) {
+  is Map<*, *> -> toList().joinToString("\n")
+  else -> toString().prettyToString()
+}
+
+/** A naive auto-indent which just counts brackets. */
+internal fun String.indentByBrackets(tab: String = "  "): String {
+
+  var tabCount = 0
+
+  val open = setOf('{', '(', '[', '<')
+  val close = setOf('}', ')', ']', '>')
+
+  return lines()
+    .map { it.trim() }
+    .joinToString("\n") { line ->
+
+      if (line.firstOrNull() in close) {
+        tabCount--
+      }
+
+      "${tab.repeat(tabCount)}$line"
+        .also {
+
+          // Arrows aren't brackets
+          val noSpecials = line.remove("<=", "->")
+
+          tabCount += noSpecials.count { char -> char in open }
+          // Skip the first char because if it's a closing bracket, it was already counted above.
+          tabCount -= noSpecials.drop(1).count { char -> char in close }
+        }
+    }
+}

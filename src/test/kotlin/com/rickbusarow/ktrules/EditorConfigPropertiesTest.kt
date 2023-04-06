@@ -47,6 +47,7 @@ class EditorConfigPropertiesTest : Tests {
       ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-tag-order = enabled
+      ktlint_kt-rules_kdoc-tag-param-or-property = enabled
       ktlint_kt-rules_kdoc-wrapping = enabled
       ktlint_kt-rules_no-duplicate-copyright-header = enabled
       ktlint_kt-rules_no-leading-blank-lines = enabled

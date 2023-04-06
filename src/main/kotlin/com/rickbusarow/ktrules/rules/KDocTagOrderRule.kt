@@ -60,7 +60,9 @@ class KDocTagOrderRule : Rule(id = "kdoc-tag-order") {
 
           when (val tagName = tag.findChildByType(KDOC_TAG_NAME)?.text.orEmpty()) {
             "@param", "@property" -> {
-              val paramName = tag.text.substringAfter(tagName).trim().substringBefore(" ")
+
+              val paramName = tag.findChildByType(ElementType.KDOC_MARKDOWN_LINK)?.text
+                ?: tag.text.substringAfter(tagName).trim().substringBefore(" ")
               // Treat parameter indices as numbers since they'll be sorted ahead of strings,
               // but pad them with zeros ('01', '02', etc.) so that '10' isn't sorted ahead of '2'.
               @Suppress("MagicNumber")

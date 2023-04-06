@@ -104,6 +104,7 @@ dependencies {
   testImplementation(libs.kotest.assertions.core.jvm)
   testImplementation(libs.kotest.assertions.shared)
   testImplementation(libs.kotest.common)
+  testImplementation(libs.kotest.runner.junit5.jvm)
   testImplementation(libs.kotest.extensions)
   testImplementation(libs.kotest.property.jvm)
   testImplementation(libs.kotlin.compiler)
@@ -326,6 +327,8 @@ tasks.withType<Detekt> {
 
   // https://github.com/detekt/detekt/issues/4127
   exclude { "/build/generated/" in it.file.absolutePath }
+
+  mustRunAfter("ktlintFormat")
 }
 
 fun otherDetektTasks(
