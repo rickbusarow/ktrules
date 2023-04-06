@@ -16,10 +16,9 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
-import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class NoTrailingSpacesInRawStringLiteralRuleTest {
+class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
 
   val rules = setOf(
     RuleProvider { NoTrailingSpacesInRawStringLiteralRule() }
@@ -36,23 +35,23 @@ class NoTrailingSpacesInRawStringLiteralRuleTest {
 
     rules.format(
       """
-      |const·val·name:·String·=·$TRIPLE
-      |······
-      |··fun·foo()·=·Unit··
-      |··
+      |const val name: String = $TRIPLE
+      |
+      |  fun foo() = Unit
+      |
       |$TRIPLE.trimIndent()
-      |··
+      |
       """.trimMargin()
-        .replace("·", " ")
+        .replace(" ", " ")
     ) shouldBe
       """
-      |const·val·name:·String·=·$TRIPLE
+      |const val name: String = $TRIPLE
       |
-      |  fun·foo()·=·Unit
+      |  fun foo() = Unit
       |
       |$TRIPLE.trimIndent()
-      |··
+      |
       """.trimMargin()
-        .replace("·", " ")
+        .replace(" ", " ")
   }
 }

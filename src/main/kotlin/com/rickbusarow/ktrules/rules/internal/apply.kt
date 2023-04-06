@@ -15,6 +15,8 @@
 
 package com.rickbusarow.ktrules.rules.internal
 
+import kotlin.contracts.contract
+
 /**
  * shorthand for `apply { elements.forEach { element -> this.block(element) } }`
  *
@@ -36,3 +38,37 @@ internal inline fun <T> T.letIf(
   predicate: Boolean,
   body: T.() -> T
 ): T = if (predicate) body() else this
+
+/**
+ * shorthand for `requireNotNull(this, lazyMessage)`
+ *
+ * @throws IllegalArgumentException if receiver is null
+ */
+internal inline fun <T : Any> T?.requireNotNull(lazyMessage: () -> Any): T {
+  contract {
+    returns() implies (this@requireNotNull != null)
+  }
+  return requireNotNull(this, lazyMessage)
+}
+
+/**
+ * shorthand for `checkNotNull(this, lazyMessage)`
+ *
+ * @throws IllegalStateException if receiver is null
+ */
+internal inline fun <T : Any> T?.checkNotNull(lazyMessage: () -> Any): T {
+  contract {
+    returns() implies (this@checkNotNull != null)
+  }
+  return checkNotNull(this, lazyMessage)
+}
+
+/**
+ * shorthand for `check({...}, lazyMessage)`
+ *
+ * @throws IllegalStateException if receiver is null
+ */
+internal inline fun <T : Any?> T.check(
+  condition: (T) -> Boolean,
+  lazyMessage: (T) -> Any
+) = apply { check(condition(this)) { lazyMessage(this) } }

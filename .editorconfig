@@ -22,7 +22,7 @@ end_of_line = lf
 indent_size = 2
 indent_style = space
 insert_final_newline = true
-max_line_length = 103
+max_line_length = 100
 tab_width = 2
 trim_trailing_whitespace = true
 ij_continuation_indent_size = 4
@@ -54,6 +54,7 @@ ktlint_ignore_back_ticked_identifier = true
 # ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = 3
 ktlint_experimental = enabled
 ktlint_kt-rules_project_version = 1.0.4-SNAPSHOT
+ktlint_kt-rules_wrapping_style = greedy
 
 ktlint_experimental_class-naming = disabled
 ktlint_experimental_function-naming = disabled
@@ -154,9 +155,9 @@ ij_yaml_spaces_within_braces = true
 ij_yaml_spaces_within_brackets = true
 
 [{*.markdown,*.md,*.mdx}]
-indent_size = 2
-tab_width = 2
-ij_continuation_indent_size = 4
+indent_size = 3
+tab_width = 3
+ij_continuation_indent_size = 3
 ij_markdown_force_one_space_after_blockquote_symbol = true
 ij_markdown_force_one_space_after_header_symbol = true
 ij_markdown_force_one_space_after_list_bullet = true

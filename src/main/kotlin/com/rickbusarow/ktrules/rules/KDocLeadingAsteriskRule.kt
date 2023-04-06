@@ -21,13 +21,13 @@ import com.pinterest.ktlint.core.ast.ElementType.KDOC_END
 import com.pinterest.ktlint.core.ast.isWhiteSpace
 import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
 import com.pinterest.ktlint.core.ast.nextLeaf
-import com.rickbusarow.ktrules.rules.internal.depthFirst
-import com.rickbusarow.ktrules.rules.internal.findIndent
-import com.rickbusarow.ktrules.rules.internal.isKDocEnd
-import com.rickbusarow.ktrules.rules.internal.isKDocLeadingAsterisk
-import com.rickbusarow.ktrules.rules.internal.isWhitespaceBeforeKDocLeadingAsterisk
-import com.rickbusarow.ktrules.rules.internal.nextSibling
-import com.rickbusarow.ktrules.rules.internal.parent
+import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
+import com.rickbusarow.ktrules.rules.internal.psi.findIndent
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocEnd
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceBeforeLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
+import com.rickbusarow.ktrules.rules.internal.psi.parent
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
@@ -61,11 +61,11 @@ class KDocLeadingAsteriskRule : Rule("kdoc-leading-asterisk") {
     val indent = kdoc.findIndent()
     val newlineIndent = "\n$indent"
 
-    kdoc.node.depthFirst()
+    kdoc.node.childrenDepthFirst()
       .distinct()
       .filter { it.elementType == ElementType.WHITE_SPACE }
       .filter { it.text.lines().size > 1 }
-      .filter { !it.isWhitespaceBeforeKDocLeadingAsterisk() }
+      .filter { !it.isKDocWhitespaceBeforeLeadingAsterisk() }
       .filter { node ->
         val next = node.nextLeaf()
 

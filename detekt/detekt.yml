@@ -164,7 +164,7 @@ complexity:
       - "with"
   LabeledExpression:
     active: false
-    ignoredLabels: []
+    ignoredLabels: [ ]
   LargeClass:
     active: true
     threshold: 600
@@ -185,7 +185,7 @@ complexity:
     constructorThreshold: 7
     ignoreDefaultParameters: false
     ignoreDataClasses: true
-    ignoreAnnotatedParameter: []
+    ignoreAnnotatedParameter: [ ]
   MethodOverloading:
     active: false
     threshold: 6
@@ -414,7 +414,7 @@ naming:
     enumEntryPattern: "[A-Z][_a-zA-Z0-9]*"
   ForbiddenClassName:
     active: false
-    forbiddenName: []
+    forbiddenName: [ ]
   FunctionMaxLength:
     active: false
     maximumFunctionNameLength: 30
@@ -569,7 +569,7 @@ potential-bugs:
       - "kotlin.sequences.Sequence"
       - "kotlinx.coroutines.flow.*Flow"
       - "java.util.stream.*Stream"
-    ignoreFunctionCall: []
+    ignoreFunctionCall: [ ]
   ImplicitDefaultLocale:
     active: true
   ImplicitUnitReturnType:
@@ -596,7 +596,7 @@ potential-bugs:
     active: true
   MissingPackageDeclaration:
     active: false
-    excludes: ["**/*.kts"]
+    excludes: [ "**/*.kts" ]
   NullCheckOnMutableProperty:
     active: false
   NullableToStringCall:
@@ -676,10 +676,11 @@ style:
   ForbiddenImport:
     active: true
     imports:
+      - 'org.jetbrains.kotlin.psi.psiUtil.children'
       - 'org.jetbrains.kotlin.psi.psiUtil.endOffset'
       - 'org.jetbrains.kotlin.psi.psiUtil.startOffset'
     forbiddenPatterns: ""
-    excludes: ["**/build-logic/**"]
+    excludes: [ "**/build-logic/**" ]
   ForbiddenMethodCall:
     active: false
     methods:
@@ -689,7 +690,7 @@ style:
         value: "kotlin.io.println"
   ForbiddenSuppress:
     active: false
-    rules: []
+    rules: [ ]
   ForbiddenVoid:
     active: true
     ignoreOverridden: false
@@ -698,7 +699,7 @@ style:
     active: true
     ignoreOverridableFunction: true
     ignoreActualFunction: true
-    excludedFunctions: []
+    excludedFunctions: [ ]
   LoopWithTooManyJumpStatements:
     active: true
     maxJumpCount: 1

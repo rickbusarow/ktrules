@@ -11,13 +11,6 @@ The rules in ktrules cover a wide range of coding styles and best practices, fro
 indentation to naming conventions and documentation. Some of the specific areas covered by the rules
 include:
 
-This is a sentence before a bulleted list. It does not have a space after it.
-
-- Main point
-- another main point
-  - a sub point
-  - another one
-
 ## Rules
 
 <!--docusync editorconfig-sample-->
@@ -59,9 +52,10 @@ ktlint_kt-rules_wrapping_style = equal
 
 ## Gradle Usage
 
-To use ktrules in your project, follow the documentation for your existing integration solution using
-third-party extensions. Typically, your plugin or custom tasks will have a Gradle configuration
-named `ktlint`. In this case, you would add the `ktrules` dependency to your project's build file like:
+To use ktrules in your project, follow the documentation for your existing integration solution
+using third-party extensions. Typically, your plugin or custom tasks will have a Gradle
+configuration named `ktlint`. In this case, you would add the `ktrules` dependency to your project's
+build file like:
 
 <!--docusync maven-artifact:1-->
 
@@ -76,8 +70,8 @@ dependencies {
 
 ## `@since` tags
 
-The `NoSinceInKDocRule` must know your project's current version in order to automatically add tags. It
-can read that version from an editorconfig property named `project_version` or a System property
+The `NoSinceInKDocRule` must know your project's current version in order to automatically add tags.
+It can read that version from an editorconfig property named `project_version` or a System property
 named `ktrules.project_version`.
 
 This can be set inside your KtLint task's configuration. For example, if the version is defined
@@ -99,8 +93,8 @@ fun java.util.Properties.setIfAbsent(name: String, value: () -> String) {
 
 ## Contributing
 
-If you'd like to contribute to ktrules, please submit a pull request with your changes. Bug reports or
-new rule requests are also welcome in the issue tracker.
+If you'd like to contribute to ktrules, please submit a pull request with your changes. Bug reports
+or new rule requests are also welcome in the issue tracker.
 
 ### License
 

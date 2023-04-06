@@ -16,10 +16,9 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
-import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class NoUselessConstructorKeywordRuleTest {
+class NoUselessConstructorKeywordRuleTest : Tests {
 
   val rules = setOf(
     RuleProvider { NoUselessConstructorKeywordRule() }

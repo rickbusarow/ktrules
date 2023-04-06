@@ -19,15 +19,15 @@ import com.pinterest.ktlint.core.LintError
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.api.EditorConfigOverride
 import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import com.pinterest.ktlint.test.format as ktlintTestFormat
 import com.pinterest.ktlint.test.lint as ktlintTestLint
 
 @Suppress("SpellCheckingInspection")
-class KDocWrappingRuleTest {
+class KDocWrappingRuleTest : Tests {
 
   val rules = setOf(
     RuleProvider { KDocWrappingRule() }
@@ -62,30 +62,44 @@ class KDocWrappingRuleTest {
   }
 
   @Test
-  fun `@see tags have their extra white spaces removed but are not wrapped together`() {
+  fun `greedy threshold wrapping`() {
 
     rules.format(
       """
       /**
-       * First line
-       *   second line
+       * comment
        *
-       * @see SomeClass someClass     description
-       * @see Object object     description
-       * @since 0.10.0
+       * ohrpl tieiecec as,tPaclfa]swa' aoAaAfeht so sccySai Seae pAeRr
+       * en sGieotfe wri lfw[espvtgcA
+       * g caa teths t tpnthhiyhlxsat.ee si
+       *
+       * 1. aapwAPatSnhtar cfecat lcipge creaAe
+       *    t esif
+       *    swisAycoGvaf] eeoleods
+       *    sie ei,o [rRShcp'lAtwae ssfe
+       *    g caa teths
+       *    t tpnthhiyhlxsat.ee si
+       *
+       * @since 0.12.0
        */
       data class Subject(
         val name: String,
         val age: Int
       )
-      """.trimIndent()
+      """.trimIndent(),
+      lineLength = 100,
+      wrappingStyle = GREEDY
     ) shouldBe """
       /**
-       * First line second line
+       * comment
        *
-       * @see SomeClass someClass description
-       * @see Object object description
-       * @since 0.10.0
+       * ohrpl tieiecec as,tPaclfa]swa' aoAaAfeht so sccySai Seae pAeRr en sGieotfe wri lfw[espvtgcA g caa
+       * teths t tpnthhiyhlxsat.ee si
+       *
+       * 1. aapwAPatSnhtar cfecat lcipge creaAe t esif swisAycoGvaf] eeoleods sie ei,o [rRShcp'lAtwae ssfe
+       *    g caa teths t tpnthhiyhlxsat.ee si
+       *
+       * @since 0.12.0
        */
       data class Subject(
         val name: String,
@@ -306,8 +320,8 @@ class KDocWrappingRuleTest {
        *
        * @property name some name property
        *
-       *                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-       *                incididunt.
+       *   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+       *   incididunt.
        * @property age some age property
        */
       data class Subject(
@@ -364,10 +378,9 @@ class KDocWrappingRuleTest {
        *
        * @property name some name property
        *
-       *   Lorem ipsum dolor sit amet,
-       *   consectetur adipiscing elit, sed
-       *   do eiusmod tempor incididunt ut
-       *   labore et dolore magna aliqua.
+       *   Lorem ipsum dolor sit amet, consectetur
+       *   adipiscing elit, sed do eiusmod tempor
+       *   incididunt ut labore et dolore magna aliqua.
        * @property age some age property
        */
       data class Subject(
@@ -461,13 +474,10 @@ class KDocWrappingRuleTest {
        * ```java
        * val seq = TODO()
        * ```
-       *
        * followed by:
-       *
        * ```
        * fun foo() = Unit
        * ```
-       *
        * do some things
        */
       data class Subject(
@@ -596,7 +606,7 @@ class KDocWrappingRuleTest {
         class TestClass
       """.trimIndent(),
       wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-      lineLength = 27
+      lineLength = 28
     ) shouldBe """
       /**
        * This is a test with some
@@ -623,7 +633,7 @@ class KDocWrappingRuleTest {
         class TestClass
       """.trimIndent(),
       wrappingStyle = WrappingStyle.GREEDY,
-      lineLength = 7
+      lineLength = 8
     ) shouldBe """
       /**
        * This
@@ -654,7 +664,7 @@ class KDocWrappingRuleTest {
         class TestClass
       """.trimIndent(),
       wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-      lineLength = 7
+      lineLength = 8
     ) shouldBe """
       /**
        * This
@@ -786,6 +796,46 @@ class KDocWrappingRuleTest {
   }
 
   @Test
+  fun `a default comment with tag which is already correct does not throw`() {
+
+    rules.lint(
+      text = """
+        /**
+         * The location in the local file system to which the root of the repository was mapped at the
+         * time of the analysis.
+         *
+         * @since 0.12.0
+         */
+        class TestClass(val name: String)
+      """.trimIndent(),
+      lineLength = 95,
+      wrappingStyle = GREEDY
+    ) shouldBe emptyList()
+  }
+
+  @Test
+  fun `a single-line default section kdoc is left alone`() {
+
+    rules.lint(
+      text = """
+        /** Comment */
+        class TestClass(val name: String)
+      """.trimIndent(),
+    ) shouldBe emptyList()
+  }
+
+  @Test
+  fun `a single-line tag kdoc is left alone`() {
+
+    rules.lint(
+      text = """
+        /** @since 0.0.1 */
+        class TestClass(val name: String)
+      """.trimIndent(),
+    ) shouldBe emptyList()
+  }
+
+  @Test
   fun `a block quote which could be unwrapped is unwrapped`() {
 
     rules.format(
@@ -831,8 +881,182 @@ class KDocWrappingRuleTest {
     """.trimIndent()
   }
 
+  @Test
+  fun `canary thing`() {
+
+    rules.format(
+      text = """
+      /**
+       * Default section
+       *
+       * @property name This is a long sentence which should be wrapped when the line length is shorter.
+       */
+      """.trimIndent(),
+    ) shouldBe """
+      /**
+       * Default section
+       *
+       * @property name This is a long
+       *   sentence which should be wrapped
+       *   when the line length is shorter.
+       */
+    """.trimIndent()
+  }
+
+  @Test
+  fun `canary thing 2`() {
+
+    rules.lint(
+      text = """
+      /**
+       * Default section
+       *
+       * @property name This is a long
+       *   sentence which should be wrapped
+       *   when the line length is shorter.
+       */
+      """.trimIndent(),
+    ) shouldBe emptyList()
+  }
+
+  @Test
+  fun `a bulleted list at the start of the default section is wrapped`() {
+
+    rules.format(
+      text = """
+      /**
+       * - bulleted list in default section line one
+       * - bulleted list in default
+       *
+       *   section line two
+       * - bulleted list in default section line three
+       */
+      class TestClass(val name: String)
+      """.trimIndent(),
+      lineLength = 30
+    ) shouldBe """
+      /**
+       * - bulleted list in default
+       *   section line one
+       * - bulleted list in default
+       *
+       *   section line two
+       * - bulleted list in default
+       *   section line three
+       */
+      class TestClass(val name: String)
+    """.trimIndent()
+  }
+
+  @Test
+  fun `property tags after a paragraph and a newline stay where they are`() {
+
+    rules.format(
+      text = """
+      /**
+       * A paragraph
+       * to unwrap
+       *
+       * @property name  name_property
+       */
+      class TestClass(val name: String)
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * A paragraph to unwrap
+       *
+       * @property name name_property
+       */
+      class TestClass(val name: String)
+    """.trimIndent()
+  }
+
+  @Test
+  fun `@see tags have their extra white spaces removed but are not wrapped together`() {
+
+    rules.format(
+      """
+      /**
+       * First line
+       *   second line
+       *
+       * @see SomeClass someClass     description
+       * @see Object object     description
+       * @since 0.10.0
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * First line second line
+       *
+       * @see SomeClass someClass description
+       * @see Object object description
+       * @since 0.10.0
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `a list inside a property tag is indented`() {
+
+    rules.format(
+      """
+      /**
+       * @property name name_description
+       *
+       * - item 1
+       * - item 2
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * @property name name_description
+       *
+       *   - item 1
+       *   - item 2
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `a single-line kdoc does not have an asterisk added`() {
+
+    rules.lint(
+      """
+      /** comment */
+      class Subject
+      """.trimIndent()
+    ) shouldBe emptyList()
+  }
+
+  @Test
+  fun `a single-line tagged kdoc does not have an asterisk added`() {
+
+    rules.lint(
+      """
+      /** @orange tangerine */
+      class Subject
+      """.trimIndent()
+    ) shouldBe emptyList()
+  }
+
   private fun Set<RuleProvider>.format(
-    @Language("kotlin")
     text: String,
     wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,
     lineLength: Int = 50,
@@ -848,8 +1072,24 @@ class KDocWrappingRuleTest {
   )
     .first
 
+  override fun Set<RuleProvider>.format(
+    text: String,
+    editorConfigOverride: EditorConfigOverride
+  ): String = ktlintTestFormat(
+    text = text,
+    filePath = null,
+    editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
+      EditorConfigOverride.from(
+        MAX_LINE_LENGTH_PROPERTY to 50,
+        WRAPPING_STYLE_PROPERTY to WrappingStyle.MINIMUM_RAGGED.displayValue
+      )
+    } else {
+      editorConfigOverride
+    },
+  )
+    .first
+
   private fun Set<RuleProvider>.lint(
-    @Language("kotlin")
     text: String,
     wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,
     lineLength: Int = 50,

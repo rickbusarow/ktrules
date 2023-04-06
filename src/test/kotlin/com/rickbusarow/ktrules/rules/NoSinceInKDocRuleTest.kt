@@ -17,12 +17,10 @@ package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.api.EditorConfigOverride
-import io.kotest.matchers.shouldBe
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import com.pinterest.ktlint.test.format as ktlintTestFormat
 
-class NoSinceInKDocRuleTest {
+class NoSinceInKDocRuleTest : Tests {
 
   private val currentVersion = "0.2.3"
 
@@ -334,15 +332,17 @@ class NoSinceInKDocRuleTest {
       """.trimIndent()
   }
 
-  private fun Set<RuleProvider>.format(
-    @Language("kotlin")
+  override fun Set<RuleProvider>.format(
     text: String,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to currentVersion)
+    editorConfigOverride: EditorConfigOverride
   ): String = ktlintTestFormat(
     text = text,
     filePath = null,
-    editorConfigOverride = editorConfigOverride,
+    editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
+      EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to currentVersion)
+    } else {
+      editorConfigOverride
+    },
   )
     .first
 }

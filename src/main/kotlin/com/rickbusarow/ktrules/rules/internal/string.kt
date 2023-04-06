@@ -38,6 +38,8 @@ internal fun String.trimLineEnds(): String = mapLines { it.trimEnd() }
 /**
  * performs [transform] on each line
  *
+ * Doesn't preserve the original line endings.
+ *
  * @since 1.0.1
  */
 internal fun CharSequence.mapLines(
@@ -45,8 +47,47 @@ internal fun CharSequence.mapLines(
 ): String = lineSequence()
   .joinToString("\n", transform = transform)
 
-internal fun String.prefixIfNot(prefix: String) =
-  if (this.startsWith(prefix)) this else "$prefix$this"
+/**
+ * performs [transform] on each line
+ *
+ * Doesn't preserve the original line endings.
+ */
+internal fun CharSequence.mapLinesIndexed(
+  transform: (Int, String) -> CharSequence
+): String = buildString {
+  this@mapLinesIndexed
+    .lineSequence()
+    .forEachIndexed { i, line ->
+      appendLine(transform(i, line))
+    }
+}
+
+/**
+ * Prepends [continuationIndent] to every line of the original string.
+ *
+ * Doesn't preserve the original line endings.
+ */
+internal fun CharSequence.prependContinuationIndent(
+  continuationIndent: String
+): String = mapLinesIndexed { i, line ->
+  when {
+    i == 0 -> line
+    line.isBlank() -> line
+    else -> "$continuationIndent$line"
+  }
+}
+
+/** `"$prefix$this$suffix"` */
+internal fun CharSequence.wrapIn(
+  prefix: String,
+  suffix: String = prefix
+): String = "$prefix$this$suffix"
+
+internal fun CharSequence.prefix(prefix: String): String = "$prefix$this"
+
+internal fun String.prefixIfNot(prefix: String): String {
+  return if (this.startsWith(prefix)) this else "$prefix$this"
+}
 
 /**
  * shorthand for `replace(___, "")` against multiple tokens
@@ -65,3 +106,9 @@ internal fun String.remove(vararg strings: String): String = strings.fold(this) 
 internal fun String.remove(vararg regex: Regex): String = regex.fold(this) { acc, reg ->
   acc.replace(reg, "")
 }
+
+/** replace ` ` with `·` */
+internal val String.dots get() = replace(" ", "·")
+
+/** replace `·` with ` ` */
+internal val String.noDots get() = replace("·", " ")

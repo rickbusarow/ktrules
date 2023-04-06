@@ -251,6 +251,10 @@ kotlin {
       apiVersion = kotlinMajor
 
       jvmTarget = libs.versions.jvmTarget.get()
+
+      freeCompilerArgs += listOf(
+        "-opt-in=kotlin.contracts.ExperimentalContracts"
+      )
     }
   }
 }

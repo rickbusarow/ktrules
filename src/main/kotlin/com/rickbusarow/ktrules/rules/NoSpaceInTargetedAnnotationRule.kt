@@ -45,10 +45,10 @@ class NoSpaceInTargetedAnnotationRule : Rule("no-space-in-annotation-with-target
 
     if (node.elementType == ElementType.ANNOTATION_ENTRY) {
 
-      val whiteSpace = node.children().firstOrNull { it.isWhiteSpace() } ?: return
+      val whitespace = node.children().firstOrNull { it.isWhiteSpace() } ?: return
 
       emit(node.startOffset, "no space after annotation target", true)
-      node.removeChild(whiteSpace)
+      node.removeChild(whitespace)
     }
   }
 }

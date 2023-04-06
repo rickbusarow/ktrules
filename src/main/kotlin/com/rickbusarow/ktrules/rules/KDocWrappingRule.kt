@@ -22,33 +22,33 @@ import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
 import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
 import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
 import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.ElementType.KDOC
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_LEADING_ASTERISK
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_TEXT
 import com.pinterest.ktlint.core.ast.children
-import com.rickbusarow.ktrules.rules.StringWrapper.Companion.splitWords
+import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
+import com.pinterest.ktlint.core.ast.lastChildLeafOrSelf
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
-import com.rickbusarow.ktrules.rules.internal.findIndent
-import com.rickbusarow.ktrules.rules.internal.getAllTags
-import com.rickbusarow.ktrules.rules.internal.isKDocLeadingAsterisk
-import com.rickbusarow.ktrules.rules.internal.isKDocTag
-import com.rickbusarow.ktrules.rules.internal.isKDocText
 import com.rickbusarow.ktrules.rules.internal.letIf
-import com.rickbusarow.ktrules.rules.internal.mapLines
-import com.rickbusarow.ktrules.rules.internal.remove
-import com.rickbusarow.ktrules.rules.internal.startOffset
-import org.intellij.markdown.MarkdownElementTypes.BLOCK_QUOTE
-import org.intellij.markdown.MarkdownElementTypes.CODE_BLOCK
-import org.intellij.markdown.MarkdownElementTypes.PARAGRAPH
-import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
-import org.intellij.markdown.MarkdownTokenTypes.Companion.WHITE_SPACE
-import org.intellij.markdown.ast.getTextInNode
+import com.rickbusarow.ktrules.rules.internal.markdown.MarkdownNode
+import com.rickbusarow.ktrules.rules.internal.markdown.wrap
+import com.rickbusarow.ktrules.rules.internal.prefixIfNot
+import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
+import com.rickbusarow.ktrules.rules.internal.psi.createFileFromText
+import com.rickbusarow.ktrules.rules.internal.psi.findIndent
+import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
+import com.rickbusarow.ktrules.rules.internal.psi.getKDocSection
+import com.rickbusarow.ktrules.rules.internal.psi.isInKDocDefaultSection
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagOrSection
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceAfterLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.parent
+import com.rickbusarow.ktrules.rules.internal.psi.sectionTextWithoutLeadingAsterisks
+import com.rickbusarow.ktrules.rules.internal.psi.startOffset
+import com.rickbusarow.ktrules.rules.wrapping.GreedyWrapper
+import com.rickbusarow.ktrules.rules.wrapping.MinimumRaggednessWrapper
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
-import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
-import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
@@ -118,175 +118,180 @@ class KDocWrappingRule : Rule(
 
     val starIndent = kdoc.findIndent()
 
-    // KDocSection is a subtype of KDocTag.  The default section is a tag.
     val tags = kdoc.getAllTags()
 
-    tags.forEachIndexed { tagIndex, tag ->
+    val notWrapped = tags.getFixedTagPairs(starIndent)
 
-      val lastTag = tagIndex == tags.lastIndex
+    notWrapped.forEach { (tag, wrapped) ->
 
-      val textNodesEtc = tag.node.children()
-        .dropWhile { !it.isKDocText() }
-        .takeWhile { !it.isKDocTag() }
-        .toList()
+      emit(tag.startOffset, "kdoc line wrapping", true)
 
-      val sectionText = textNodesEtc
-        .joinToString("") { it.text }
-        .mapLines { it.remove("""^ *\*? ?""".toRegex()) }
-        .trimEnd()
-
-      val wrapped = tag.sectionContent(starIndent.length + 2)
-
-      if (sectionText != wrapped) {
-
-        emit(tag.startOffset, "kdoc line wrapping", true)
-
-        if (autoCorrect) {
-
-          val tagNode = tag.node as CompositeElement
-
-          val anchor = textNodesEtc.firstOrNull()
-
-          val newlineIndent = "\n$starIndent"
-
-          val wrappedLines = wrapped.lines()
-
-          var insideFencedCodeBlock = false
-
-          wrappedLines
-            .forEachIndexed { i, line ->
-
-              if (line.startsWith("```")) {
-                insideFencedCodeBlock = !insideFencedCodeBlock
-              }
-
-              if (i != 0) {
-                tagNode.addChild(PsiWhiteSpaceImpl(newlineIndent), anchor)
-                tagNode.addChild(LeafPsiElement(KDOC_LEADING_ASTERISK, "*"), anchor)
-
-                // Make sure that every non-blank line has at least one white space between the leading
-                // asterisk and the first non-whitespace character.  BUT, if the line has at least
-                // three leading white spaces, leave it alone.  At 3 spaces, IntelliJ and Dokka start
-                // treating it as a code block.
-                if (line.isNotBlank() && (!line.startsWith("   ") || insideFencedCodeBlock)) {
-                  tagNode.addChild(PsiWhiteSpaceImpl(" "), anchor)
-                }
-              }
-
-              if (i == 0 && tag.parent == kdoc) {
-
-                tagNode.addChild(LeafPsiElement(KDOC_TEXT, " $line"), anchor)
-              } else {
-                tagNode.addChild(LeafPsiElement(KDOC_TEXT, line), anchor)
-              }
-            }
-
-          if (!lastTag) {
-            if (tag.parent == kdoc) {
-              tagNode.addChild(PsiWhiteSpaceImpl(newlineIndent), anchor)
-              tagNode.addChild(LeafPsiElement(KDOC_LEADING_ASTERISK, "*"), anchor)
-              tagNode.addChild(PsiWhiteSpaceImpl(newlineIndent), anchor)
-              tagNode.addChild(LeafPsiElement(KDOC_LEADING_ASTERISK, "*"), anchor)
-              tagNode.addChild(PsiWhiteSpaceImpl(" "), anchor)
-            }
-          }
-
-          textNodesEtc.toList().forEach { tagNode.removeChild(it) }
-        }
+      if (autoCorrect) {
+        tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent, tags = tags)
       }
     }
   }
 
-  private fun KDocTag.sectionContent(indentLength: Int): String {
+  private fun KDocTag.fix(
+    wrapped: String,
+    kdoc: KDoc,
+    starIndent: String,
+    tags: List<KDocTag>
+  ) {
 
-    val sectionText = node.children()
-      // strip away the LEADING asterisk (from the first line), as well as any `@___` tags and any
-      // links like `myParameter` or `IllegalStateException`
-      .dropWhile { !it.isKDocText() }
+    val inKDocDefaultSection = node.isInKDocDefaultSection()
+    val wrappedLines = wrapped.lines()
+
+    val singleLineKDoc = wrappedLines.size == 1 && kdoc.text.lines().size == 1
+
+    val wrappedAsKDoc = getWrappedAsKDoc(
+      singleLineKDoc = singleLineKDoc,
+      wrapped = wrapped,
+      wrappedLines = wrappedLines,
+      inKDocDefaultSection = inKDocDefaultSection,
+      starIndent = starIndent,
+      tags = tags
+    )
+
+    val tagIndex = tags.indexOf(this)
+
+    val nextTagOrNull = tags.getOrNull(tagIndex + 1)
+    val nextTagIsInSameSection = nextTagOrNull?.getKDocSection() == getKDocSection()
+
+    val wrappedSection = getWrappedSectionPsi(
+      wrappedAsKdoc = wrappedAsKDoc,
+      nextTagIsInSameSection = nextTagIsInSameSection,
+      tagIndex = tagIndex,
+      nextTagOrNull = nextTagOrNull
+    )
+
+    val toDelete = node.children()
       .takeWhile { !it.isKDocTag() }
-      .joinToString("") { it.text }
-      .mapLines { it.remove("""^ *\*?""".toRegex()) }
+      .toList()
+      .letIf(nextTagOrNull != null) {
 
-    val skip = setOf(WHITE_SPACE, EOL)
+        var count = 0
 
-    val maxLength = maxLineLength - indentLength
+        @Suppress("MagicNumber")
+        val keep = if (nextTagIsInSameSection) 2 else 4
 
-    return markdownParser.buildMarkdownTreeFromString(sectionText)
-      .children
-      .asSequence()
-      .filterNot { it.type in skip }
-      .mapIndexed { paragraphNumber: Int, markdownNode ->
+        dropLastWhile { node ->
 
-        val leadingIndent = if (parent.node.elementType != KDOC) {
-          if (paragraphNumber == 0) {
-            node.children()
-              .dropWhile { it.isKDocLeadingAsterisk() }
-              .takeWhile { !it.isKDocText() }
-              .joinToString("") { " ".repeat(it.text.length) }
-          } else {
-            "  "
-          }
-        } else {
-          ""
-        }
+          if (++count < keep) return@dropLastWhile false
 
-        val continuationIndentLength = if (parent.node.elementType == KDOC) 0 else 2
-        val continuationIndent = " ".repeat(continuationIndentLength)
-
-        when (markdownNode.type) {
-          PARAGRAPH -> wrapper.wrap(
-            words = markdownNode.getTextInNode(sectionText).cleanWhitespaces().splitWords(),
-            maxLength = maxLength - continuationIndentLength,
-            leadingIndent = leadingIndent,
-            continuationIndent = continuationIndent
-          )
-            .letIf(paragraphNumber == 0 || parent.node.elementType == KDOC) {
-              trimStart()
-            }
-
-          CODE_BLOCK -> if (parent.node.elementType == KDOC) {
-            // If a CODE_BLOCK is top-level within the default section, that means it's an indented
-            // block without the code fence (```).  That means we should leave it alone, but there's a
-            // discrepancy in how the whitespace immediately after the leading asterisk is handled by
-            // `sectionText` versus how it's reported by the Markdown library's `getTextInNode`.  Even
-            // though getTextInNode is just pulling it from sectionText, it's giving an extra
-            // whitespace to the start of each line.  We remove it here to avoid a false positive when
-            // comparing the wrapped blob to the original.
-            markdownNode.getTextInNode(sectionText)
-              .mapLines { it.drop(1).trimEnd() }
-          } else {
-            // If a CODE_BLOCK is top-level within a section/tag other than the default, that means
-            // it's not wrapped in three backticks.  Assume this means it's a multi-line description of
-            // a tag, and it's just indented.
-            wrapper.wrap(
-              words = markdownNode.getTextInNode(sectionText).cleanWhitespaces().splitWords(),
-              maxLength = maxLength - continuationIndentLength,
-              leadingIndent = leadingIndent,
-              continuationIndent = continuationIndent
-            )
-          }
-
-          BLOCK_QUOTE ->
-            wrapper.wrap(
-              words = markdownNode.getTextInNode(sectionText).toString()
-                .remove(">")
-                .cleanWhitespaces().splitWords(),
-              maxLength = maxLength - continuationIndentLength,
-              leadingIndent = "$leadingIndent> ",
-              continuationIndent = "$continuationIndent> "
-            )
-
-          // code fences, headers, tables, etc. don't get wrapped
-          else -> {
-            markdownNode.getTextInNode(sectionText)
-              .mapLines { it.drop(1).trimEnd() }
-          }
+          node.isKDocWhitespaceAfterLeadingAsterisk() || node.isKDocLeadingAsterisk()
         }
       }
-      .joinToString("\n\n")
+
+    if (toDelete.isEmpty()) {
+      node.parent!!.replaceChild(node, wrappedSection.node)
+    } else {
+      val anchor = toDelete.first()
+
+      wrappedSection.node.children()
+        .toList()
+        .forEach { new ->
+          node.addChild(new, anchor)
+        }
+
+      toDelete.forEach { node.removeChild(it) }
+    }
   }
 
-  private fun CharSequence.cleanWhitespaces(): String {
-    return replace("(\\S)\\s+".toRegex(), "$1 ").trim()
+  private fun getWrappedAsKDoc(
+    singleLineKDoc: Boolean,
+    wrapped: String,
+    wrappedLines: List<String>,
+    inKDocDefaultSection: Boolean,
+    starIndent: String,
+    tags: List<KDocTag>
+  ) = if (singleLineKDoc) {
+    "/**${wrapped.prefixIfNot(" ")} */"
+  } else {
+    buildString {
+      appendLine("/**")
+
+      wrappedLines.forEachIndexed { i, line ->
+
+        when {
+          i == 0 && inKDocDefaultSection -> appendLine("$starIndent*$line")
+          line.isBlank() -> appendLine("$starIndent*")
+          !line.startsWith(" ") -> appendLine("$starIndent* $line")
+          else -> appendLine("$starIndent*$line")
+        }
+      }
+
+      if (inKDocDefaultSection && tags.size > 1) {
+        appendLine("$starIndent*")
+      }
+
+      appendLine("$starIndent*/")
+    }
+  }
+
+  private fun KDocTag.getWrappedSectionPsi(
+    wrappedAsKdoc: String,
+    nextTagIsInSameSection: Boolean,
+    tagIndex: Int,
+    nextTagOrNull: KDocTag?
+  ): KDocTag = createFileFromText(wrappedAsKdoc)
+    .childrenBreadthFirst()
+    .last { psi ->
+      psi.node.isKDocTagOrSection() && psi.children
+        .none { child -> child.node.isKDocTag() }
+    }
+    .let { it as KDocTag }
+    .also { newTag ->
+
+      val newTagNode = newTag.node
+
+      if (nextTagIsInSameSection) {
+
+        repeat(2) {
+          val toDelete = newTagNode.children()
+            .lastOrNull()
+            .takeIf { newNode ->
+              newNode.isKDocWhitespaceAfterLeadingAsterisk() ||
+                newNode.isKDocLeadingAsterisk() ||
+                newNode.isWhiteSpaceWithNewline()
+            }
+            ?: return@repeat
+
+          newTagNode.removeChild(toDelete)
+        }
+
+        if (tagIndex == 0) {
+          newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
+        }
+      } else if (nextTagOrNull != null && newTagNode.lastChildLeafOrSelf()
+          .isKDocLeadingAsterisk()
+      ) {
+
+        newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
+      }
+    }
+
+  private fun List<KDocTag>.getFixedTagPairs(starIndent: String): List<Pair<KDocTag, String>> {
+    return mapIndexedNotNull { tagIndex, tag ->
+
+      val beforeAnyTags = tag.node.isInKDocDefaultSection() && tagIndex == 0
+
+      val sectionText = tag.sectionTextWithoutLeadingAsterisks()
+
+      val maxLength = maxLineLength - (starIndent.length + 1)
+
+      val wrapped = MarkdownNode.from(
+        markdown = sectionText,
+        markdownParser = markdownParser
+      )
+        .wrap(
+          wrapper = wrapper,
+          maxLength = maxLength,
+          beforeAnyTags = beforeAnyTags,
+          addKDocLeadingSpace = true
+        )
+
+      (tag to wrapped).takeIf { it.second != sectionText }
+    }
   }
 }

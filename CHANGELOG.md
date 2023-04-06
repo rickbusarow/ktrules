@@ -10,9 +10,9 @@
 
 ### Added
 
-- `kdoc-indent-after-leading-asterisk` ensures that every leading asterisk in a KDoc default section is
-  followed by at least one whitespace, and every leading asterisk after a KDoc tag is followed by at
-  least three whitespaces.
+- `kdoc-indent-after-leading-asterisk` ensures that every leading asterisk in a KDoc default section
+  is followed by at least one whitespace, and every leading asterisk after a KDoc tag is followed by
+  at least three whitespaces.
 
 ## [1.0.3] - 2023-03-30
 
@@ -25,8 +25,8 @@
 
 ### Fixed
 
-- Indented code blocks which contain triple backticks inside the code block will no longer be indented
-  by an extra space.
+- Indented code blocks which contain triple backticks inside the code block will no longer be
+  indented by an extra space.
 
 ## [1.0.1] - 2023-03-29
 
@@ -35,16 +35,16 @@
 - New editorconfig property `ktlint_kt-rules_wrapping_style` introduced to configure the KDoc text
   wrapping algorithm used by the `KDocWrappingRule`. The available options are `equal` (default) for
   the minimum raggedness algorithm and `greedy` for the greedy wrapping algorithm.
-  - The greedy algorithm wraps the text by simply adding as many words as possible to a line without
-    exceeding the maximum line length.
+  - The greedy algorithm wraps the text by simply adding as many words as possible to a line
+    without exceeding the maximum line length.
     - Example output (max line length: 30):
       ```
       This is a sample sentence that is
       wrapped using the greedy
       algorithm.
       ```
-  - The minimum raggedness algorithm balances the line lengths more evenly, reducing the "raggedness"
-    of the wrapped text.
+  - The minimum raggedness algorithm balances the line lengths more evenly, reducing the "
+    raggedness" of the wrapped text.
     - Example output (max line length: 30):
       ```
       This is a sample sentence that
@@ -55,8 +55,8 @@
 ### Changed
 
 - updated behavior of `KDocWrappingRule`:
-  - The rule will now be disabled if the `max_line_length` editorconfig property is not set. This was
-    done to be more consistent with the behavior of first-party KtLint rules.
+  - The rule will now be disabled if the `max_line_length` editorconfig property is not set. This
+    was done to be more consistent with the behavior of first-party KtLint rules.
   - The rule now supports both minimum raggedness and greedy wrapping algorithms. The default
     algorithm has been changed from the greedy algorithm to the minimum raggedness algorithm for
     better line length balance in wrapped KDoc text. This option is set via

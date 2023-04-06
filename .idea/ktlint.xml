@@ -4,10 +4,10 @@
     <useExperimental>true</useExperimental>
     <treatAsErrors>false</treatAsErrors>
     <formatOnSave>true</formatOnSave>
-    <externalJarPaths>
+    <disabledRules>
       <list>
-        <option value="$PROJECT_DIR$/build/libs/ktrules.jar" />
+        <option value="no-trailing-spaces" />
       </list>
-    </externalJarPaths>
+    </disabledRules>
   </component>
 </project>

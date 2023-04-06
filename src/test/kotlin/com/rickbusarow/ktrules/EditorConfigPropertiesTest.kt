@@ -17,10 +17,11 @@ package com.rickbusarow.ktrules
 
 import com.rickbusarow.ktrules.rules.ALL_PROPERTIES
 import com.rickbusarow.ktrules.rules.RULES_PREFIX
+import com.rickbusarow.ktrules.rules.Tests
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class EditorConfigPropertiesTest {
+class EditorConfigPropertiesTest : Tests {
 
   class Environment {
 

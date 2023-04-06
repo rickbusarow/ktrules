@@ -13,24 +13,25 @@
  * limitations under the License.
  */
 
-package com.rickbusarow.ktrules.rules
+package com.rickbusarow.ktrules.rules.wrapping
 
-import com.rickbusarow.ktrules.rules.StringWrapper.Companion.splitWords
+import com.rickbusarow.ktrules.rules.Tests
+import com.rickbusarow.ktrules.rules.wrapping.StringWrapper.Companion.splitWords
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class MinimumRaggednessWrapperTest {
+class MinimumRaggednessWrapperTest : Tests {
 
   @Test
   fun `should wrap text with single space`() {
-    val input = "This·is·a·test."
+    val input = "This is a test."
     val maxLength = 10
-    val leadingIndent = "··"
-    val continuationIndent = "····"
+    val leadingIndent = "  "
+    val continuationIndent = "    "
     val expectedOutput = """
-      |··This
-      |····is·a
-      |····test.
+      |  This
+      |    is a
+      |    test.
     """.trimMargin()
     wrap(
       input = input,
@@ -42,14 +43,14 @@ class MinimumRaggednessWrapperTest {
 
   @Test
   fun `should wrap text with multiple spaces`() {
-    val input = "This··is···a····test."
+    val input = "This  is   a    test."
     val maxLength = 10
-    val leadingIndent = "··"
-    val continuationIndent = "····"
+    val leadingIndent = "  "
+    val continuationIndent = "    "
     val expectedOutput = """
-      |··This
-      |····is·a
-      |····test.
+      |  This
+      |    is a
+      |    test.
     """.trimMargin()
     wrap(
       input = input,
@@ -61,14 +62,14 @@ class MinimumRaggednessWrapperTest {
 
   @Test
   fun `should handle text with backticks`() {
-    val input = "This·is·`a·test·with`·backticks."
+    val input = "This is `a test with` backticks."
     val maxLength = 10
-    val leadingIndent = "··"
-    val continuationIndent = "····"
+    val leadingIndent = "  "
+    val continuationIndent = "    "
     val expectedOutput = """
-      |··This·is
-      |····`a·test·with`
-      |····backticks.
+      |  This is
+      |    `a test with`
+      |    backticks.
     """.trimMargin()
     wrap(
       input = input,
@@ -80,14 +81,14 @@ class MinimumRaggednessWrapperTest {
 
   @Test
   fun `should handle single word exceeding maxLength`() {
-    val input = "This·is·a·veryverylongwordthatexceedsthemaxlength."
+    val input = "This is a veryverylongwordthatexceedsthemaxlength."
     val maxLength = 10
-    val leadingIndent = "··"
-    val continuationIndent = "····"
+    val leadingIndent = "  "
+    val continuationIndent = "    "
     val expectedOutput = """
-      |··This
-      |····is·a
-      |····veryverylongwordthatexceedsthemaxlength.
+      |  This
+      |    is a
+      |    veryverylongwordthatexceedsthemaxlength.
     """.trimMargin()
     wrap(
       input = input,
@@ -101,8 +102,8 @@ class MinimumRaggednessWrapperTest {
   fun `should handle empty input`() {
     val input = ""
     val maxLength = 10
-    val leadingIndent = "··"
-    val continuationIndent = "····"
+    val leadingIndent = "  "
+    val continuationIndent = "    "
     val expectedOutput = ""
     wrap(
       input = input,
@@ -114,11 +115,11 @@ class MinimumRaggednessWrapperTest {
 
   @Test
   fun `should handle input shorter than maxLength`() {
-    val input = "This·is·a·short·test."
+    val input = "This is a short test."
     val maxLength = 25
-    val leadingIndent = "··"
-    val continuationIndent = "····"
-    val expectedOutput = "··This·is·a·short·test."
+    val leadingIndent = "  "
+    val continuationIndent = "    "
+    val expectedOutput = "  This is a short test."
     wrap(
       input = input,
       maxLength = maxLength,
@@ -167,10 +168,10 @@ class MinimumRaggednessWrapperTest {
     continuationIndent: String
   ) = MinimumRaggednessWrapper()
     .wrap(
-      words = input.replace('·', ' ').splitWords(),
+      words = input.replace(' ', ' ').splitWords(),
       maxLength = maxLength,
       leadingIndent = leadingIndent,
       continuationIndent = continuationIndent
     )
-    .replace(' ', '·')
+    .replace(' ', ' ')
 }

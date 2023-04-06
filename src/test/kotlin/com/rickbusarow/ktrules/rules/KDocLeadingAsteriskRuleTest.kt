@@ -20,7 +20,7 @@ import com.pinterest.ktlint.test.lint
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class KDocLeadingAsteriskRuleTest {
+class KDocLeadingAsteriskRuleTest : Tests {
 
   val rules = setOf(
     RuleProvider { KDocLeadingAsteriskRule() }
@@ -118,6 +118,28 @@ class KDocLeadingAsteriskRuleTest {
         val age: Int
       )
     """.trimIndent()
+  }
+
+  @Test
+  fun `a single-line kdoc does not have an asterisk added`() {
+
+    rules.lint(
+      """
+      /** comment */
+      class Subject
+      """.trimIndent()
+    ) shouldBe emptyList()
+  }
+
+  @Test
+  fun `a single-line tagged kdoc does not have an asterisk added`() {
+
+    rules.lint(
+      """
+      /** @orange tangerine */
+      class Subject
+      """.trimIndent()
+    ) shouldBe emptyList()
   }
 
   @Test

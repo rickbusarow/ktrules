@@ -13,15 +13,16 @@
  * limitations under the License.
  */
 
-package com.rickbusarow.ktrules.rules
+package com.rickbusarow.ktrules.rules.wrapping
 
-import com.rickbusarow.ktrules.rules.StringWrapper.Companion.splitWords
+import com.rickbusarow.ktrules.rules.Tests
+import com.rickbusarow.ktrules.rules.wrapping.StringWrapper.Companion.splitWords
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 
-internal class SplitWordsTest {
+internal class SplitWordsTest : Tests {
 
   @Test
   fun `punctuation characters are included with their preceding words`() {
@@ -142,13 +143,27 @@ internal class SplitWordsTest {
     )
   }
 
+  @Test
+  fun `a word with delimiters in the middle is not split`() {
+
+    "before my__word__ after".splitWords() shouldBe listOf(
+      "before",
+      "my__word__",
+      "after"
+    )
+  }
+
   @TestFactory
-  fun `bold or italic delimiters cannot have a whitespace immediately inside`() =
+  fun `bold, italic, or strikethrough delimiters cannot have a whitespace immediately inside`() =
     listOf(
+      "triple asterisks" to "***",
       "double asterisks" to "**",
       "single asterisks" to "*",
+      "triple underscores" to "___",
       "double underscores" to "__",
       "single underscores" to "_",
+      "double tildes" to "~~",
+      "single tildes" to "~",
     ).container(
       { it.first }
     ) { (_, delim) ->
