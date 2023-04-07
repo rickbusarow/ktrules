@@ -52,16 +52,6 @@ import kotlin.text.RegexOption.MULTILINE
 buildscript {
   dependencies {
     classpath(libs.rickBusarow.ktrules)
-    if (libs.versions.ktrules.released.get() > "1.0.0") {
-      // All this text will be automagically removed as soon as the next version is released.
-      val old = buildFile.readText()
-      val new = old.replace(
-        """\s+if \(libs\.versions\.ktrules[\s\S]+?}classpath\(libs\.jetbrains\.markdown\)""".toRegex(),
-        ""
-      )
-      buildFile.writeText(new)
-    }
-    classpath(libs.jetbrains.markdown)
   }
 }
 
