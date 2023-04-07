@@ -334,10 +334,11 @@ class NoSinceInKDocRuleTest : Tests {
 
   override fun Set<RuleProvider>.format(
     text: String,
+    filePath: String?,
     editorConfigOverride: EditorConfigOverride
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    filePath = filePath,
     editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
       EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to currentVersion)
     } else {

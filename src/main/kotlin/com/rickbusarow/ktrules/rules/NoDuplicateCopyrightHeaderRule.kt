@@ -17,9 +17,13 @@ package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.Rule
 import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.children
 import com.pinterest.ktlint.core.ast.nextLeaf
+import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.isCopyrightHeader
+import com.rickbusarow.ktrules.rules.internal.psi.isFile
+import com.rickbusarow.ktrules.rules.internal.psi.isScript
+import com.rickbusarow.ktrules.rules.internal.psi.isTopLevel
+import com.rickbusarow.ktrules.rules.internal.psi.parentsWithSelf
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /**
@@ -41,8 +45,19 @@ class NoDuplicateCopyrightHeaderRule : Rule("no-duplicate-copyright-header") {
 
     if (node.elementType == ElementType.FILE) {
 
-      node.children()
+      node.childrenBreadthFirst { child ->
+
+        // In a script file, the second copyright block will be attached to whatever comes after it.
+        // So the comment's parent will be a block, property, etc.,
+        // and that element's parent will be a SCRIPT.  The script's parent is the file.
+        @Suppress("MagicNumber")
+        child.isFile() || child.isTopLevel() || child.parentsWithSelf()
+          .take(3)
+          .any { it.isScript() }
+      }
         .filter { it.isCopyrightHeader() }
+        // Sort by their position so that the actual first one is kept.
+        .sortedBy { it.startOffset }
         .drop(1)
         .forEach { commentNode ->
 

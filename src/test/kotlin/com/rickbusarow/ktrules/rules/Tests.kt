@@ -36,10 +36,11 @@ interface Tests {
   fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
+    filePath: String? = null,
     editorConfigOverride: EditorConfigOverride = EditorConfigOverride.EMPTY_EDITOR_CONFIG_OVERRIDE
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    filePath = filePath,
     editorConfigOverride = editorConfigOverride,
   )
     .first

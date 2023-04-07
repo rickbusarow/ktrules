@@ -5,6 +5,8 @@
 ### Fixed
 
 - `kdoc-wrapping` will no longer add a new line at the end of a KDoc when wrapping the last tag.
+- `no-duplicate-copyright-header` will now properly remove duplicate copyright headers from
+  script (`.kts`) files
 
 ## [1.0.5] - 2023-04-06
 
