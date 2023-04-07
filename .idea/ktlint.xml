@@ -5,6 +5,9 @@
     <treatAsErrors>false</treatAsErrors>
     <formatOnSave>true</formatOnSave>
     <disabledRules>
+      <list>
+        <option value="no-trailing-spaces" />
+      </list>
     </disabledRules>
   </component>
 </project>

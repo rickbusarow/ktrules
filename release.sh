@@ -78,6 +78,8 @@ function parseVersionAndSyncDocs() {
 
   # Add `@since ____` tags to any new KDoc
   progress "Add \`@since ____\` tags to any new KDoc"
+  ./gradlew updateEditorConfigVersion
+  killAll -9 java
   ./gradlew ktlintFormat
   maybeCommit "add @since tags to new KDoc for $VERSION_DEV"
 
