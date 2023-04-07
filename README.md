@@ -38,7 +38,7 @@ ktlint_kt-rules_wrapping_style = equal
 # actual kotlin settings go here
 ```
 
-<!--/doks-->
+<!--doks END-->
 
 |                  Rule                  |                                                                Description                                                                 |
 | :------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
@@ -70,7 +70,7 @@ dependencies {
 }
 ```
 
-<!--/doks-->
+<!--doks END-->
 
 ## `@since` tags
 

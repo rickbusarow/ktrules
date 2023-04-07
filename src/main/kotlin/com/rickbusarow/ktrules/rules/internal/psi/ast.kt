@@ -38,6 +38,15 @@ internal fun ASTNode.isCopyrightHeader(): Boolean {
   return text.matches(copyRightCommentStart)
 }
 
+/** */
+internal fun ASTNode?.isFile(): Boolean = this?.elementType == ElementType.FILE
+
+/** */
+internal fun ASTNode?.isTopLevel(): Boolean = this?.parent.isFile()
+
+/** */
+internal fun ASTNode?.isScript(): Boolean = this?.parent?.elementType == ElementType.SCRIPT
+
 /** @since 1.0.4 */
 internal val ASTNode.parent: ASTNode? get() = treeParent
 
@@ -53,6 +62,11 @@ internal fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
 /** @since 1.0.4 */
 internal fun ASTNode.childrenDepthFirst(): Sequence<ASTNode> {
   return depthFirstTraversal { children().toList() }
+}
+
+/** */
+internal fun ASTNode.parentsWithSelf(): Sequence<ASTNode> {
+  return generateSequence(this) { it.parent }
 }
 
 /** @since 1.0.4 */

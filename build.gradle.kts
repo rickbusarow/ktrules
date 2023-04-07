@@ -502,64 +502,6 @@ tasks.withType(AbstractDokkaLeafTask::class.java) {
     }
   }
 }
-//
-// configurations.named("compileOnly") { extendsFrom(project.configurations.getByName("shadow")) }
-//
-// val shadowJar = tasks.named("shadowJar", ShadowJar::class.java) {
-//
-//   configurations = listOf(project.configurations.shadow.get())
-//
-//   listOf(
-//     "org.intellij.markdown",
-//     "org.ec4j.core",
-//   ).forEach { relocate(it, "$GROUP.$it") }
-//
-//   // relocate("com.pinterest.ktlint", "$GROUP.com.pinterest.ktlint") {
-//   //   exclude("com.pinterest.ktlint.core.RuleSetProviderV2")
-//   // }
-//
-//   archiveClassifier.convention("")
-//   archiveClassifier.set("")
-//
-//   transformers.add(
-//     ServiceFileTransformer()
-//     // .exclude("com.pinterest.ktlint.core.RuleSetProviderV2")
-//   )
-//
-//   exclude("**/*.kotlin_metadata")
-//   exclude("**/*.kotlin_module")
-//   exclude("META-INF/maven/**")
-// }
-//
-// val foo by tasks.registering {
-//
-//   dependsOn(tasks.shadowJar)
-//
-//   doLast {
-//
-//     val providers = mutableSetOf<String>()
-//
-//     val servicePath = "META-INF/services/com.pinterest.ktlint.core.RuleSetProviderV2"
-//
-//     zipTree(tasks.shadowJar.flatMap { it.archiveFile }).visit {
-//
-//       if (relativePath.pathString == servicePath) {
-//         providers.addAll(file.readLines().filter { it.isNotBlank() })
-//       }
-//     }
-//
-//     require(providers == setOf("com.rickbusarow.ktrules.KtRulesRuleSetProvider")) {
-//       "The shadow jar does not contain the required service file of: $servicePath"
-//     }
-//   }
-// }
-//
-// // By adding the task's output to archives, it's automatically picked up by Gradle's maven-publish
-// // plugin and added as an artifact to the publication.
-// artifacts {
-//   add("runtimeOnly", shadowJar)
-//   add("archives", shadowJar)
-// }
 
 tasks.withType<SpotlessTask> {
   mustRunAfter("apiDump")

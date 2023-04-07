@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 
 class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
@@ -24,8 +24,11 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
     RuleProvider { NoDuplicateCopyrightHeaderRule() }
   )
 
-  @Test
-  fun `duplicate file license header`() {
+  @TestFactory
+  fun `consecutive duplicate file license header is removed`() = listOf(
+    "script" to "foo.kts",
+    "normal" to "foo.kt"
+  ).test({ it.first }) { (_, filePath) ->
 
     rules.format(
       """
@@ -41,7 +44,8 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |
       |class MyClass
       |
-      """.trimMargin()
+      """.trimMargin(),
+      filePath = filePath
     ) shouldBe
       """
       |/*
@@ -49,6 +53,111 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       | */
       |
       |package com.test
+      |
+      |class MyClass
+      |
+      """.trimMargin()
+  }
+
+  @TestFactory
+  fun `duplicate file license header after package declaration is removed`() = listOf(
+    "script" to "foo.kts",
+    "normal" to "foo.kt"
+  ).test({ it.first }) { (_, filePath) ->
+
+    rules.format(
+      """
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |package com.test
+      |
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |class MyClass
+      |
+      """.trimMargin(),
+      filePath = filePath
+    ) shouldBe
+      """
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |package com.test
+      |
+      |class MyClass
+      |
+      """.trimMargin()
+  }
+
+  @TestFactory
+  fun `duplicate file license header after import is removed`() = listOf(
+    "script" to "foo.kts",
+    "normal" to "foo.kt"
+  ).test({ it.first }) { (_, filePath) ->
+
+    rules.format(
+      """
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |import java.io.Serializable
+      |
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |class MyClass : Serializable
+      |
+      """.trimMargin(),
+      filePath = filePath
+    ) shouldBe
+      """
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |import java.io.Serializable
+      |
+      |class MyClass : Serializable
+      |
+      """.trimMargin()
+  }
+
+  @TestFactory
+  fun `duplicate file license header after file annotation is removed`() = listOf(
+    "script" to "foo.kts",
+    "normal" to "foo.kt"
+  ).test({ it.first }) { (_, filePath) ->
+
+    rules.format(
+      """
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |@file:Suppress("MAGIC_NUMBER")
+      |
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |class MyClass
+      |
+      """.trimMargin(),
+      filePath = filePath
+    ) shouldBe
+      """
+      |/*
+      | * Copyright (C) 1985 Sylvester Stallone
+      | */
+      |
+      |@file:Suppress("MAGIC_NUMBER")
       |
       |class MyClass
       |

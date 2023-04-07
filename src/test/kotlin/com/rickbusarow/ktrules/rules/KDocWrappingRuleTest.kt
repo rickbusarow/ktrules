@@ -1165,10 +1165,11 @@ class KDocWrappingRuleTest : Tests {
 
   override fun Set<RuleProvider>.format(
     text: String,
+    filePath: String?,
     editorConfigOverride: EditorConfigOverride
   ): String = ktlintTestFormat(
     text = text,
-    filePath = null,
+    filePath = filePath,
     editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
       EditorConfigOverride.from(
         MAX_LINE_LENGTH_PROPERTY to 50,
