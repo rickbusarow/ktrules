@@ -19,11 +19,11 @@ include:
 # KtLint specific settings
 # noinspection EditorConfigKeyCorrectness
 [{*.kt,*.kts}]
+ktlint_kt-rules_kdoc-content-wrapping = enabled
 ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-tag-order = enabled
 ktlint_kt-rules_kdoc-tag-param-or-property = enabled
-ktlint_kt-rules_kdoc-wrapping = enabled
 ktlint_kt-rules_no-duplicate-copyright-header = enabled
 ktlint_kt-rules_no-leading-blank-lines = enabled
 ktlint_kt-rules_no-since-in-kdoc = enabled
@@ -40,19 +40,19 @@ ktlint_kt-rules_wrapping_style = equal
 
 <!--doks END-->
 
-|                  Rule                  |                                                                Description                                                                 |
-| :------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
-|   KDocIndentAfterLeadingAsteriskRule   |                    ensures that there's a space after every leading asterisk in a KDoc comment, except for blank lines                     |
-|        KDocLeadingAsteriskRule         |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
-|       KDocTagParamOrPropertyRule       |                     ensures that KDoc tags use `@property` for vals or vars, and `@param` for non-property parameters.                     |
-|            KDocTagOrderRule            |                                    sorts KDoc tags by their declaration order in the class or function                                     |
-|            KDocWrappingRule            |                                    ensures consistent wrapping of KDoc comments to improve readability                                     |
-|     NoDuplicateCopyrightHeaderRule     |                                            ensures that each file has only one copyright header                                            |
-|        NoLeadingBlankLinesRule         |                                           ensures that there are no leading blank lines in files                                           |
-|           NoSinceInKDocRule            |                                            ensures that there is no @since tag in KDoc comments                                            |
-|    NoSpaceInTargetedAnnotationRule     | ensures that targeted annotations (annotations with a target specifier such as @get:, @set:, etc.) have no space before or after the colon |
-| NoTrailingSpacesInRawStringLiteralRule |                                      ensures that there are no trailing spaces in raw string literals                                      |
-|    NoUselessConstructorKeywordRule     |                                    removes the unnecessary constructor keyword from class constructors                                     |
+|                   Rule                    |                                                                Description                                                                 |
+| :---------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
+|          `kdoc-content-wrapping`          |                                    ensures consistent wrapping of KDoc comments to improve readability                                     |
+|   `kdoc-indent-after-leading-asterisk`    |                    ensures that there's a space after every leading asterisk in a KDoc comment, except for blank lines                     |
+|          `kdoc-leading-asterisk`          |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
+|             `kdoc-tag-order`              |                                    sorts KDoc tags by their declaration order in the class or function                                     |
+|       `kdoc-tag-param-or-property`        |                     ensures that KDoc tags use `@property` for vals or vars, and `@param` for non-property parameters.                     |
+|      `no-duplicate-copyright-header`      |                                            ensures that each file has only one copyright header                                            |
+|         `no-leading-blank-lines`          |                                           ensures that there are no leading blank lines in files                                           |
+|            `no-since-in-kdoc`             |                                            ensures that there is no @since tag in KDoc comments                                            |
+|   `no-space-in-annotation-with-target`    | ensures that targeted annotations (annotations with a target specifier such as @get:, @set:, etc.) have no space before or after the colon |
+| `no-trailing-space-in-raw-string-literal` |                                      ensures that there are no trailing spaces in raw string literals                                      |
+|     `no-useless-constructor-keyword`      |                                    removes the unnecessary constructor keyword from class constructors                                     |
 
 ## Gradle Usage
 

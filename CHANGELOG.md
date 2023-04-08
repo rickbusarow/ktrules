@@ -2,6 +2,13 @@
 
 ## 1.0.7-SNAPSHOT (unreleased)
 
+### Changed
+
+- The rule `KDocWrappingRule` (`kdoc-wrapping`) has been renamed
+  to `KDocContentWrappingRule`/`kdoc-content-wrapping` in order to avoid a conflict with
+  the [new experimental rule](https://pinterest.github.io/ktlint/rules/experimental/#kdoc-wrapping)
+  in the KtLint library.
+
 ## [1.0.6] - 2023-04-07
 
 ### Fixed
