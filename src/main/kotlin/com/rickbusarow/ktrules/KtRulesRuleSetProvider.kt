@@ -20,11 +20,11 @@ package com.rickbusarow.ktrules
 import com.google.auto.service.AutoService
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.RuleSetProviderV2
+import com.rickbusarow.ktrules.rules.KDocContentWrappingRule
 import com.rickbusarow.ktrules.rules.KDocIndentAfterLeadingAsteriskRule
 import com.rickbusarow.ktrules.rules.KDocLeadingAsteriskRule
 import com.rickbusarow.ktrules.rules.KDocTagOrderRule
 import com.rickbusarow.ktrules.rules.KDocTagParamOrPropertyRule
-import com.rickbusarow.ktrules.rules.KDocWrappingRule
 import com.rickbusarow.ktrules.rules.NoDuplicateCopyrightHeaderRule
 import com.rickbusarow.ktrules.rules.NoLeadingBlankLinesRule
 import com.rickbusarow.ktrules.rules.NoSinceInKDocRule
@@ -46,11 +46,11 @@ class KtRulesRuleSetProvider : RuleSetProviderV2(
 
   override fun getRuleProviders(): Set<RuleProvider> {
     return setOf(
+      RuleProvider { KDocContentWrappingRule() },
       RuleProvider { KDocIndentAfterLeadingAsteriskRule() },
       RuleProvider { KDocLeadingAsteriskRule() },
       RuleProvider { KDocTagOrderRule() },
       RuleProvider { KDocTagParamOrPropertyRule() },
-      RuleProvider { KDocWrappingRule() },
       RuleProvider { NoDuplicateCopyrightHeaderRule() },
       RuleProvider { NoLeadingBlankLinesRule() },
       RuleProvider { NoSinceInKDocRule() },

@@ -59,8 +59,8 @@ import kotlin.LazyThreadSafetyMode.NONE
  *
  * @since 1.0.0
  */
-class KDocWrappingRule : Rule(
-  id = "kdoc-wrapping",
+class KDocContentWrappingRule : Rule(
+  id = "kdoc-content-wrapping",
   visitorModifiers = setOf(
     RunAfterRule("kdoc-leading-asterisk"),
     RunAfterRule("kdoc-indent-after-leading-asterisk")

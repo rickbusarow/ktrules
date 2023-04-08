@@ -34,6 +34,7 @@ class EditorConfigPropertiesTest : Tests {
 
     val ids by lazy {
       ruleProviders.map { it.createNewRuleInstance().id }
+        .sorted()
         .plus(ALL_PROPERTIES.map { it.name.removePrefix("${RULES_PREFIX}_") })
     }
 
@@ -44,11 +45,11 @@ class EditorConfigPropertiesTest : Tests {
       # KtLint specific settings
       # noinspection EditorConfigKeyCorrectness
       [{*.kt,*.kts}]
+      ktlint_kt-rules_kdoc-content-wrapping = enabled
       ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-tag-order = enabled
       ktlint_kt-rules_kdoc-tag-param-or-property = enabled
-      ktlint_kt-rules_kdoc-wrapping = enabled
       ktlint_kt-rules_no-duplicate-copyright-header = enabled
       ktlint_kt-rules_no-leading-blank-lines = enabled
       ktlint_kt-rules_no-since-in-kdoc = enabled

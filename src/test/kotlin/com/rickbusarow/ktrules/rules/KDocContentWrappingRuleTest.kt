@@ -27,10 +27,10 @@ import com.pinterest.ktlint.test.format as ktlintTestFormat
 import com.pinterest.ktlint.test.lint as ktlintTestLint
 
 @Suppress("SpellCheckingInspection")
-class KDocWrappingRuleTest : Tests {
+class KDocContentWrappingRuleTest : Tests {
 
   val rules = setOf(
-    RuleProvider { KDocWrappingRule() }
+    RuleProvider { KDocContentWrappingRule() }
   )
 
   @Test
