@@ -2,6 +2,11 @@
 
 ## 1.0.7-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kdoc-content-wrapping` will now add newlines around a wrapped kdoc if the original is a collapsed
+  single-line comment
+
 ### Changed
 
 - The rule `KDocWrappingRule` (`kdoc-wrapping`) has been renamed

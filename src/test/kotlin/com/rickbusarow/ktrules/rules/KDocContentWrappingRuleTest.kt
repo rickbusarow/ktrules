@@ -62,6 +62,52 @@ class KDocContentWrappingRuleTest : Tests {
   }
 
   @Test
+  fun `a default section collapsed comment which is too long is wrapped`() {
+
+    rules.format(
+      """
+      /** extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex eacupidatat */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * extercitatrekvsuion nostrud exerc mco
+       * laboris nisteghi ut aliquip ex eacupidatat
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
+  fun `a collapsed tag which is too long is wrapped`() {
+
+    rules.format(
+      """
+      /** @property extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex eacupidatat */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) shouldBe """
+      /**
+       * @property extercitatrekvsuion nostrud exerc mco
+       *   laboris nisteghi ut aliquip ex eacupidatat
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+    """.trimIndent()
+  }
+
+  @Test
   fun `greedy threshold wrapping`() {
 
     rules.format(

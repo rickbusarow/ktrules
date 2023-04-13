@@ -25,6 +25,8 @@ import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.children
 import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
 import com.pinterest.ktlint.core.ast.lastChildLeafOrSelf
+import com.pinterest.ktlint.core.ast.nextLeaf
+import com.pinterest.ktlint.core.ast.upsertWhitespaceAfterMe
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
 import com.rickbusarow.ktrules.rules.internal.letIf
@@ -41,6 +43,7 @@ import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagOrSection
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceAfterLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
 import com.rickbusarow.ktrules.rules.internal.psi.parent
 import com.rickbusarow.ktrules.rules.internal.psi.sectionTextWithoutLeadingAsterisks
 import com.rickbusarow.ktrules.rules.internal.psi.startOffset
@@ -49,6 +52,7 @@ import com.rickbusarow.ktrules.rules.wrapping.MinimumRaggednessWrapper
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
@@ -124,7 +128,7 @@ class KDocContentWrappingRule : Rule(
 
     notWrapped.forEach { (tag, wrapped) ->
 
-      emit(tag.startOffset, "kdoc line wrapping", true)
+      emit(tag.startOffset, "kdoc content wrapping", true)
 
       if (autoCorrect) {
         tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent, tags = tags)
@@ -188,11 +192,28 @@ class KDocContentWrappingRule : Rule(
     } else {
       val anchor = toDelete.first()
 
+      val makingMultiLine = wrappedLines.size > 1 && kdoc.text.lines().size == 1
+
+      if (makingMultiLine) {
+
+        val open = kdoc.node.firstChildNode
+        val afterOpen = open.nextSibling()
+        kdoc.node.addChild(PsiWhiteSpaceImpl("\n$starIndent"), afterOpen)
+
+        if (!wrappedSection.node.nextLeaf().isKDocLeadingAsterisk()) {
+          kdoc.node.addChild(LeafPsiElement(ElementType.KDOC_LEADING_ASTERISK, "*"), afterOpen)
+        }
+      }
+
       wrappedSection.node.children()
         .toList()
         .forEach { new ->
           node.addChild(new, anchor)
         }
+
+      if (makingMultiLine) {
+        node.upsertWhitespaceAfterMe("\n$starIndent")
+      }
 
       toDelete.forEach { node.removeChild(it) }
     }
