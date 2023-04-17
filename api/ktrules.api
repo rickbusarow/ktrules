@@ -3,6 +3,11 @@ public final class com/rickbusarow/ktrules/KtRulesRuleSetProvider : com/pinteres
 	public fun getRuleProviders ()Ljava/util/Set;
 }
 
+public final class com/rickbusarow/ktrules/rules/KDocBlankLinesRule : com/pinterest/ktlint/core/Rule {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
 public final class com/rickbusarow/ktrules/rules/KDocContentWrappingRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
 	public fun <init> ()V
 	public fun beforeFirstNode (Ljava/util/Map;)V
