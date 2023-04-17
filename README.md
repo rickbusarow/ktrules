@@ -19,6 +19,7 @@ include:
 # KtLint specific settings
 # noinspection EditorConfigKeyCorrectness
 [{*.kt,*.kts}]
+ktlint_kt-rules_kdoc-blank-lines = enabled
 ktlint_kt-rules_kdoc-content-wrapping = enabled
 ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-leading-asterisk = enabled
@@ -42,6 +43,7 @@ ktlint_kt-rules_wrapping_style = equal
 
 |                   Rule                    |                                                                Description                                                                 |
 | :---------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
+|            `kdoc-blank-lines`             |                      ensures that there are no consecutive or extraneous blank lines within a KDoc comment's content                       |
 |          `kdoc-content-wrapping`          |                                    ensures consistent wrapping of KDoc comments to improve readability                                     |
 |   `kdoc-indent-after-leading-asterisk`    |                    ensures that there's a space after every leading asterisk in a KDoc comment, except for blank lines                     |
 |          `kdoc-leading-asterisk`          |                                 ensures that the leading asterisk in a KDoc comment is followed by a space                                 |
