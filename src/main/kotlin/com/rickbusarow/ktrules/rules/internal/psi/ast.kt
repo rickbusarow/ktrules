@@ -17,11 +17,15 @@ package com.rickbusarow.ktrules.rules.internal.psi
 
 import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.children
+import com.pinterest.ktlint.core.ast.isWhiteSpace
+import com.pinterest.ktlint.core.ast.nextLeaf
 import com.pinterest.ktlint.core.ast.nextSibling
+import com.pinterest.ktlint.core.ast.prevLeaf
 import com.pinterest.ktlint.core.ast.prevSibling
 import com.rickbusarow.ktrules.rules.internal.trees.breadthFirstTraversal
 import com.rickbusarow.ktrules.rules.internal.trees.depthFirstTraversal
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
+import kotlin.contracts.contract
 
 /** @since 1.0.4 */
 internal fun ASTNode?.isBlank(): Boolean = this != null && text.isBlank()
@@ -44,6 +48,17 @@ internal fun ASTNode?.isFile(): Boolean = this?.elementType == ElementType.FILE
 /** @since 1.0.6 */
 internal fun ASTNode?.isTopLevel(): Boolean = this?.parent.isFile()
 
+/**  */
+internal fun ASTNode?.isWhiteSpaceOrBlank(): Boolean {
+
+  contract {
+    returns(true) implies (this@isWhiteSpaceOrBlank != null)
+  }
+
+  if (this == null) return false
+  return isWhiteSpace() || isBlank()
+}
+
 /** @since 1.0.6 */
 internal fun ASTNode?.isScript(): Boolean = this?.parent?.elementType == ElementType.SCRIPT
 
@@ -56,8 +71,24 @@ internal fun ASTNode.isFirstChild(): Boolean = prevSibling() == null
 /** @since 1.0.4 */
 internal fun ASTNode.prevSibling(): ASTNode? = prevSibling { true }
 
+/** */
+internal fun ASTNode.prevSiblings(): Sequence<ASTNode> =
+  generateSequence(prevSibling()) { it.prevSibling() }
+
+/** */
+internal fun ASTNode.prevLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
+  generateSequence(prevLeaf(includeEmpty = includeEmpty)) { it.prevLeaf(includeEmpty = includeEmpty) }
+
 /** @since 1.0.4 */
 internal fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
+
+/** */
+internal fun ASTNode.nextSiblings(): Sequence<ASTNode> =
+  generateSequence(nextSibling()) { it.nextSibling() }
+
+/** */
+internal fun ASTNode.nextLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
+  generateSequence(nextLeaf(includeEmpty = includeEmpty)) { it.nextLeaf(includeEmpty = includeEmpty) }
 
 /** @since 1.0.4 */
 internal fun ASTNode.childrenDepthFirst(): Sequence<ASTNode> {

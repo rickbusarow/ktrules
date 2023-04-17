@@ -19,6 +19,7 @@ import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.children
 import com.pinterest.ktlint.core.ast.isWhiteSpace
 import com.pinterest.ktlint.core.ast.nextSibling
+import com.pinterest.ktlint.core.ast.prevLeaf
 import com.pinterest.ktlint.core.ast.prevSibling
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag
@@ -137,9 +138,19 @@ internal fun ASTNode?.isInKDocDefaultSection(): Boolean {
   return this == defaultSection || parents().any { it == defaultSection }
 }
 
+/** */
+internal fun ASTNode?.isKDocWhitespaceAfterKDocStart(): Boolean {
+
+  if (!isWhiteSpaceOrBlank()) return false
+  return prevLeaf(true).isKDocStart()
+}
+
 /** @since 1.0.4 */
-internal fun ASTNode?.isKDocWhitespaceAfterLeadingAsterisk(): Boolean =
-  this != null && (isWhiteSpace() || isBlank()) && prevSibling().isKDocLeadingAsterisk()
+internal fun ASTNode?.isKDocWhitespaceAfterLeadingAsterisk(): Boolean {
+
+  if (!isWhiteSpaceOrBlank()) return false
+  return prevLeaf(true).isKDocLeadingAsterisk()
+}
 
 /** @since 1.0.4 */
 internal fun ASTNode?.isKDocWhitespaceBeforeLeadingAsterisk(): Boolean =
@@ -154,6 +165,9 @@ internal fun ASTNode?.isKDocEnd(): Boolean = this != null && elementType == Elem
 
 /** @since 1.0.4 */
 internal fun ASTNode?.isKDocStart(): Boolean = this != null && elementType == ElementType.KDOC_START
+
+/** */
+internal fun ASTNode?.isKDoc(): Boolean = this != null && elementType == ElementType.KDOC
 
 /** @since 1.0.4 */
 internal fun ASTNode?.isFirstAfterKDocStart(): Boolean =
