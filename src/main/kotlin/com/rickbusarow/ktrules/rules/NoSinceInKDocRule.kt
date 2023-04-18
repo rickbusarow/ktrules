@@ -27,7 +27,7 @@ import com.pinterest.ktlint.core.ast.ElementType.WHITE_SPACE
 import com.pinterest.ktlint.core.ast.children
 import com.pinterest.ktlint.core.ast.nextSibling
 import com.pinterest.ktlint.core.ast.prevLeaf
-import com.rickbusarow.ktrules.rules.internal.psi.findIndent
+import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafElement
@@ -137,7 +137,7 @@ class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
 
     val kdoc = psi.parent as KDoc
 
-    val indent = kdoc.findIndent()
+    val indent = kdoc.fileIndent(additionalOffset = 1)
     val newlineIndent = "\n$indent"
 
     val isSingleLine = kdoc.text.lines().size == 1

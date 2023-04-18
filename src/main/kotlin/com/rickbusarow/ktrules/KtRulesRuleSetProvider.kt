@@ -21,6 +21,7 @@ import com.google.auto.service.AutoService
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.RuleSetProviderV2
 import com.rickbusarow.ktrules.rules.KDocBlankLinesRule
+import com.rickbusarow.ktrules.rules.KDocCollapseRule
 import com.rickbusarow.ktrules.rules.KDocContentWrappingRule
 import com.rickbusarow.ktrules.rules.KDocIndentAfterLeadingAsteriskRule
 import com.rickbusarow.ktrules.rules.KDocLeadingAsteriskRule
@@ -48,6 +49,7 @@ class KtRulesRuleSetProvider : RuleSetProviderV2(
   override fun getRuleProviders(): Set<RuleProvider> {
     return setOf(
       RuleProvider { KDocBlankLinesRule() },
+      RuleProvider { KDocCollapseRule() },
       RuleProvider { KDocContentWrappingRule() },
       RuleProvider { KDocIndentAfterLeadingAsteriskRule() },
       RuleProvider { KDocLeadingAsteriskRule() },

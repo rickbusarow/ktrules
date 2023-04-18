@@ -46,6 +46,7 @@ class EditorConfigPropertiesTest : Tests {
       # noinspection EditorConfigKeyCorrectness
       [{*.kt,*.kts}]
       ktlint_kt-rules_kdoc-blank-lines = enabled
+      ktlint_kt-rules_kdoc-collapse = enabled
       ktlint_kt-rules_kdoc-content-wrapping = enabled
       ktlint_kt-rules_kdoc-indent-after-leading-asterisk = enabled
       ktlint_kt-rules_kdoc-leading-asterisk = enabled

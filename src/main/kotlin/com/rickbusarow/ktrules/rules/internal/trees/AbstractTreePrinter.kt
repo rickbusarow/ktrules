@@ -21,7 +21,8 @@ internal abstract class AbstractTreePrinter<T : Any>(
   private val levels = mutableMapOf<T, Int>()
   private val dashes = "------------------------------------------------------------"
 
-  private val parentNameMap = mutableMapOf<T, String>()
+  private val elementSimpleNameMap = mutableMapOf<T, String>()
+  private val elementTypeNameMap = mutableMapOf<T, String>()
 
   abstract fun T.simpleClassName(): String
   abstract fun T.parent(): T?
@@ -35,8 +36,8 @@ internal abstract class AbstractTreePrinter<T : Any>(
     depthFirstChildren(rootNode)
       .forEach { node ->
 
-        val thisName = node.simpleClassName()
-        val parentName = (node.parentName() ?: "----")
+        val thisName = node.uniqueSimpleName()
+        val parentName = (node.parent()?.uniqueTypeName() ?: "----")
 
         val parentLevel = node.parent()?.let { parent -> levels[parent] } ?: 0
         levels[node] = parentLevel + 1
@@ -79,27 +80,44 @@ internal abstract class AbstractTreePrinter<T : Any>(
       }
         .lines()
         .let {
-          it.dropLast(1) + it.last().replaceFirst("  ", "└─")
+          it.dropLast(1) + it.last().replaceFirst(" ", "└─")
         }
         .joinToString("\n")
         .prependIndent("│   ".repeat(level))
     )
   }
 
-  private fun T.parentName() = parent()?.let { parent ->
+  private fun T.uniqueTypeName(): String = uniqueName(NameType.TYPE)
 
-    parentNameMap.getOrPut(parent) {
-      val typeCount = parentNameMap.keys.count { it.typeName() == parent.typeName() }
+  private fun T.uniqueSimpleName(): String = uniqueName(NameType.SIMPLE)
 
-      val simpleName = parent.typeName()
+  private fun T.uniqueName(nameType: NameType): String {
+    val map = when (nameType) {
+      NameType.SIMPLE -> elementSimpleNameMap
+      NameType.TYPE -> elementTypeNameMap
+    }
 
-      val start = if (typeCount == 0) {
-        simpleName
-      } else {
-        "$simpleName (${typeCount + 1})"
+    return map.getOrPut(this@uniqueName) {
+      val count = map.keys.count {
+        if (nameType == NameType.SIMPLE) {
+          it.simpleClassName() == simpleClassName()
+        } else {
+          it.typeName() == typeName()
+        }
       }
 
-      start
+      val name = if (nameType == NameType.SIMPLE) simpleClassName() else typeName()
+
+      if (count == 0) {
+        name
+      } else {
+        "$name (${count + 1})"
+      }
     }
+  }
+
+  private enum class NameType {
+    SIMPLE,
+    TYPE
   }
 }

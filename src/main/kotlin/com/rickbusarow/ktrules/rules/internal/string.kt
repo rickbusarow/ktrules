@@ -15,6 +15,7 @@
 
 package com.rickbusarow.ktrules.rules.internal
 
+import org.intellij.lang.annotations.Language
 import java.util.Locale
 
 /**
@@ -113,6 +114,18 @@ internal fun String.remove(vararg strings: String): String = strings.fold(this) 
  */
 internal fun String.remove(vararg regex: Regex): String = regex.fold(this) { acc, reg ->
   acc.replace(reg, "")
+}
+
+/**
+ * shorthand for `replace(___, "")` against multiple tokens. The input strings are converted to
+ * Regex before replacement.
+ *
+ * @since 1.0.7
+ */
+internal fun String.removeRegex(
+  @Language("regexp") vararg regex: String
+): String = regex.fold(this) { acc, reg ->
+  acc.replace(reg.toRegex(), "")
 }
 
 /**
