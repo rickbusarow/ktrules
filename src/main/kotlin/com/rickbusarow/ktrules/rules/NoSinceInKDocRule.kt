@@ -43,7 +43,7 @@ import org.jetbrains.kotlin.psi.psiUtil.collectDescendantsOfType
  *
  * @since 1.0.1
  */
-class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
+class NoSinceInKDocRule : Rule(id = ID),
   UsesEditorConfigProperties {
 
   private var currentVersion: String? = null
@@ -238,5 +238,10 @@ class NoSinceInKDocRule : Rule(id = "no-since-in-kdoc"),
     val old = tag.text
 
     tag.rawReplaceWithText("$old $version")
+  }
+
+  internal companion object {
+
+    const val ID = "no-since-in-kdoc"
   }
 }

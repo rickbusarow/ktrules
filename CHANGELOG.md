@@ -2,6 +2,10 @@
 
 ## 1.0.8-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kdoc-collapse` will no longer emit an error if a KDoc is already properly collapsed.
+
 ## [1.0.7] - 2023-04-18
 
 ### Fixed

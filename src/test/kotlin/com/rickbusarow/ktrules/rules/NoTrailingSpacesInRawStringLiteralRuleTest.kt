@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 
 class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { NoTrailingSpacesInRawStringLiteralRule() }
   )
 
@@ -50,7 +50,6 @@ class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
       |  fun foo() = Unit
       |
       |$TRIPLE.trimIndent()
-      |
       """.trimMargin()
         .replace(" ", " ")
   }

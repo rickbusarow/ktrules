@@ -26,7 +26,7 @@ val rules = setOf(
 
 class KDocTagParamOrPropertyRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { KDocTagParamOrPropertyRule() }
   )
 

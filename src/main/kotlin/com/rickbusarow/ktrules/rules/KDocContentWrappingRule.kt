@@ -64,7 +64,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  * @since 1.0.0
  */
 class KDocContentWrappingRule : Rule(
-  id = "kdoc-content-wrapping",
+  id = ID,
   visitorModifiers = setOf(
     RunAfterRule("kdoc-leading-asterisk"),
     RunAfterRule("kdoc-indent-after-leading-asterisk")
@@ -128,7 +128,7 @@ class KDocContentWrappingRule : Rule(
 
     notWrapped.forEach { (tag, wrapped) ->
 
-      emit(tag.startOffset, "kdoc content wrapping", true)
+      emit(tag.startOffset, ERROR_MESSAGE, true)
 
       if (autoCorrect) {
         tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent, tags = tags)
@@ -314,5 +314,11 @@ class KDocContentWrappingRule : Rule(
 
       (tag to wrapped).takeIf { it.second != sectionText }
     }
+  }
+
+  internal companion object {
+
+    const val ID = "kdoc-content-wrapping"
+    const val ERROR_MESSAGE = "kdoc content wrapping"
   }
 }

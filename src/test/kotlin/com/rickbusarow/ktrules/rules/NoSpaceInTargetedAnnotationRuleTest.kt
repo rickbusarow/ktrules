@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 
 class NoSpaceInTargetedAnnotationRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { NoSpaceInTargetedAnnotationRule() }
   )
 
@@ -43,7 +43,6 @@ class NoSpaceInTargetedAnnotationRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -66,7 +65,6 @@ class NoSpaceInTargetedAnnotationRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -93,7 +91,6 @@ class NoSpaceInTargetedAnnotationRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 }

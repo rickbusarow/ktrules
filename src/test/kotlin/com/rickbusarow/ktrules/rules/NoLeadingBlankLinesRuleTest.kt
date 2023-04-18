@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 
 class NoLeadingBlankLinesRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { NoLeadingBlankLinesRule() }
   )
 
@@ -42,7 +42,6 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -68,7 +67,6 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -90,7 +88,6 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |import java.io.Serializable
       |
       |class MyClass : Serializable
-      |
       """.trimMargin()
   }
 
@@ -108,7 +105,6 @@ class NoLeadingBlankLinesRuleTest : Tests {
     ) shouldBe
       """
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -138,7 +134,6 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 }
