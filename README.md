@@ -70,7 +70,7 @@ build file like:
 ```kotlin
 // build.gradle.kts
 dependencies {
-  ktlint("com.rickbusarow.ktrules:ktrules:1.0.6")
+  ktlint("com.rickbusarow.ktrules:ktrules:1.0.7")
 }
 ```
 
