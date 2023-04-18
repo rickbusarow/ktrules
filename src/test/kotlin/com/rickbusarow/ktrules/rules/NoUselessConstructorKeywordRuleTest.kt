@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 
 class NoUselessConstructorKeywordRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { NoUselessConstructorKeywordRule() }
   )
 
@@ -39,7 +39,6 @@ class NoUselessConstructorKeywordRuleTest : Tests {
       |class MyClass @Inject constructor(
       |  val name: String
       |)
-      |
       """.trimMargin()
   }
 
@@ -58,7 +57,6 @@ class NoUselessConstructorKeywordRuleTest : Tests {
       |class MyClass private constructor(
       |  val name: String
       |)
-      |
       """.trimMargin()
   }
 
@@ -77,7 +75,6 @@ class NoUselessConstructorKeywordRuleTest : Tests {
       |class MyClass(
       |  val name: String
       |)
-      |
       """.trimMargin()
   }
 }

@@ -15,28 +15,24 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.LintError
 import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.core.api.EditorConfigOverride
-import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import com.pinterest.ktlint.test.format as ktlintTestFormat
-import com.pinterest.ktlint.test.lint as ktlintTestLint
 
 @Suppress("SpellCheckingInspection")
 class KDocContentWrappingRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { KDocContentWrappingRule() }
   )
 
   @Test
   fun `threshold wrapping`() {
 
-    rules.format(
+    format(
       """
       /**
        * @property extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex ea
@@ -47,7 +43,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 4)
+
+      output shouldBe """
       /**
        * @property extercitatrekvsuion nostrud
        *   exerc mco laboris nisteghi ut aliquip
@@ -58,13 +57,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a default section collapsed comment which is too long is wrapped`() {
 
-    rules.format(
+    format(
       """
       /** extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex eacupidatat */
       data class Subject(
@@ -72,7 +72,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(1, 4)
+
+      output shouldBe """
       /**
        * extercitatrekvsuion nostrud exerc mco
        * laboris nisteghi ut aliquip ex eacupidatat
@@ -81,13 +84,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a collapsed tag which is too long is wrapped`() {
 
-    rules.format(
+    format(
       """
       /** @property extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex eacupidatat */
       data class Subject(
@@ -95,22 +99,26 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
-      /**
-       * @property extercitatrekvsuion nostrud exerc mco
-       *   laboris nisteghi ut aliquip ex eacupidatat
-       */
-      data class Subject(
-        val name: String,
-        val age: Int
-      )
-    """.trimIndent()
+    ) {
+      expectError(1, 5)
+
+      output shouldBe """
+        /**
+         * @property extercitatrekvsuion nostrud exerc mco
+         *   laboris nisteghi ut aliquip ex eacupidatat
+         */
+        data class Subject(
+          val name: String,
+          val age: Int
+        )
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `greedy threshold wrapping`() {
 
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -135,7 +143,10 @@ class KDocContentWrappingRuleTest : Tests {
       """.trimIndent(),
       lineLength = 100,
       wrappingStyle = GREEDY
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * comment
        *
@@ -151,13 +162,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `text with a link and no extra spaces is left alone`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * comment with [Subject]
@@ -173,7 +185,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `an code fenced block with language in the default section is treated as a code block`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -191,7 +203,9 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -207,13 +221,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `an code fenced block without language in the default section is treated as a code block`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -231,7 +246,9 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -247,13 +264,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `an indented paragraph in the default section is treated as a code block`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -269,7 +287,9 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -283,13 +303,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single line indented code block is treated as a code block`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -303,7 +324,9 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -315,13 +338,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `an indented code block with a blank line in the middle does not have trailing spaces`() {
 
-    rules.format(
+    format(
       """
       /**
        * Some normal line.
@@ -337,7 +361,9 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * Some normal line.
        *
@@ -351,13 +377,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `an indented tag comment is moved left`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -375,7 +402,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(6, 4)
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -392,13 +422,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a paragraph after a tag comment is indented by two spaces`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -416,7 +447,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(6, 4)
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -433,13 +467,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a long single-line tag description is wrapped and indented`() {
 
-    rules.format(
+    format(
       """
       /**
        * a comment
@@ -452,7 +487,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(4, 4)
+
+      output shouldBe """
       /**
        * a comment
        *
@@ -465,13 +503,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a correctly formatted kdoc does not emit`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * a comment
@@ -493,7 +532,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `code blocks are not wrapped`() {
 
-    rules.format(
+    format(
       """
       /**
        * Given this
@@ -513,7 +552,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * Given this code:
        *
@@ -530,13 +572,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a code block which is exactly 4 spaces from the asterisk is not collapsed`() {
 
-    rules.format(
+    format(
       """
       /**
        * This is a comment.
@@ -553,7 +596,9 @@ class KDocContentWrappingRuleTest : Tests {
       )
       """.trimIndent(),
       lineLength = 100
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * This is a comment.
        *
@@ -567,13 +612,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a code block which is exactly 5 spaces from the asterisk is not collapsed`() {
 
-    rules.format(
+    format(
       """
       /**
        * This is a comment.
@@ -590,7 +636,9 @@ class KDocContentWrappingRuleTest : Tests {
       )
       """.trimIndent(),
       lineLength = 100
-    ) shouldBe """
+    ) {
+
+      output shouldBe """
       /**
        * This is a comment.
        *
@@ -604,13 +652,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a fenced code block with 4+ indented spaces does not have its indentation changed`() {
 
-    rules.format(
+    format(
       """
       /**
        * One two three four five six
@@ -624,7 +673,10 @@ class KDocContentWrappingRuleTest : Tests {
       class Subject
       """.trimIndent(),
       lineLength = 25
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * One two three
        * four five six
@@ -636,13 +688,14 @@ class KDocContentWrappingRuleTest : Tests {
        * ```
        */
       class Subject
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `minimum raggedness wrapping with maximum line length`() {
 
-    rules.format(
+    format(
       text = """
         /**
          * This is a test with some verylongwordsthatexceedthelinelimit and `text wrapped in backticks`.
@@ -653,7 +706,10 @@ class KDocContentWrappingRuleTest : Tests {
       """.trimIndent(),
       wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
       lineLength = 28
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * This is a test with some
        * verylongwordsthatexceedthelinelimit
@@ -663,13 +719,14 @@ class KDocContentWrappingRuleTest : Tests {
        * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
        */
       class TestClass
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `greedy wrapping with short line length`() {
 
-    rules.format(
+    format(
       text = """
         /**
          * This is a test with some verylongwordsthatexceedthelinelimit and `text wrapped in backticks`.
@@ -680,7 +737,10 @@ class KDocContentWrappingRuleTest : Tests {
       """.trimIndent(),
       wrappingStyle = WrappingStyle.GREEDY,
       lineLength = 8
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * This
        * is a
@@ -694,13 +754,14 @@ class KDocContentWrappingRuleTest : Tests {
        * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
        */
       class TestClass
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `minimum raggedness wrapping with short line length`() {
 
-    rules.format(
+    format(
       text = """
         /**
          * This is a test with some verylongwordsthatexceedthelinelimit and `text wrapped in backticks`.
@@ -711,7 +772,10 @@ class KDocContentWrappingRuleTest : Tests {
       """.trimIndent(),
       wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
       lineLength = 8
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * This
        * is a
@@ -725,13 +789,14 @@ class KDocContentWrappingRuleTest : Tests {
        * [This is a very long Markdown link that should not be wrapped](https://www.example.com/some/very/long/url)
        */
       class TestClass
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `an indented code block with code fences is left alone`() {
 
-    val results = rules.lint(
+    val results = lint(
       text = """
         /**
          * A comment
@@ -749,7 +814,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a bulleted list in the default section is not wrapped`() {
 
-    val results = rules.lint(
+    val results = lint(
       text = """
       /**
        * My list:
@@ -766,7 +831,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a bulleted list in a property tag is not wrapped`() {
 
-    val results = rules.lint(
+    val results = lint(
       text = """
       /**
        * @property name My list:
@@ -783,7 +848,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a markdown table in the default section is not wrapped`() {
 
-    val results = rules.lint(
+    val results = lint(
       text = """
       /**
        * My table:
@@ -802,7 +867,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a markdown table in a property tag is not wrapped`() {
 
-    val results = rules.lint(
+    val results = lint(
       text = """
       /**
        * @property name My table:
@@ -821,7 +886,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a block quote in the default section is wrapped`() {
 
-    rules.format(
+    format(
       text = """
         /**
          * My quote:
@@ -830,7 +895,11 @@ class KDocContentWrappingRuleTest : Tests {
          */
         class TestClass(val name: String)
       """.trimIndent(),
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * My quote:
        *
@@ -838,13 +907,14 @@ class KDocContentWrappingRuleTest : Tests {
        * > wrapped when the line length is shorter.
        */
       class TestClass(val name: String)
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a default comment with tag which is already correct does not throw`() {
 
-    rules.lint(
+    lint(
       text = """
         /**
          * The location in the local file system to which the root of the repository was mapped at the
@@ -862,7 +932,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a single-line default section kdoc is left alone`() {
 
-    rules.lint(
+    lint(
       text = """
         /** Comment */
         class TestClass(val name: String)
@@ -873,7 +943,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a single-line tag kdoc is left alone`() {
 
-    rules.lint(
+    lint(
       text = """
         /** @since 0.0.1 */
         class TestClass(val name: String)
@@ -884,7 +954,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a block quote which could be unwrapped is unwrapped`() {
 
-    rules.format(
+    format(
       text = """
         /**
          * My quote:
@@ -894,20 +964,25 @@ class KDocContentWrappingRuleTest : Tests {
          */
         class TestClass(val name: String)
       """.trimIndent(),
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * My quote:
        *
        * > This is a sentence.
        */
       class TestClass(val name: String)
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a block quote in a property tag is wrapped`() {
 
-    rules.format(
+    format(
       text = """
       /**
        * @property name My quote:
@@ -916,7 +991,10 @@ class KDocContentWrappingRuleTest : Tests {
        */
       class TestClass(val name: String)
       """.trimIndent(),
-    ) shouldBe """
+    ) {
+      expectError(2, 4)
+
+      output shouldBe """
       /**
        * @property name My quote:
        *
@@ -924,51 +1002,14 @@ class KDocContentWrappingRuleTest : Tests {
        *   > wrapped when the line length is shorter.
        */
       class TestClass(val name: String)
-    """.trimIndent()
-  }
-
-  @Test
-  fun `canary thing`() {
-
-    rules.format(
-      text = """
-      /**
-       * Default section
-       *
-       * @property name This is a long sentence which should be wrapped when the line length is shorter.
-       */
-      """.trimIndent(),
-    ) shouldBe """
-      /**
-       * Default section
-       *
-       * @property name This is a long
-       *   sentence which should be wrapped
-       *   when the line length is shorter.
-       */
-    """.trimIndent()
-  }
-
-  @Test
-  fun `canary thing 2`() {
-
-    rules.lint(
-      text = """
-      /**
-       * Default section
-       *
-       * @property name This is a long
-       *   sentence which should be wrapped
-       *   when the line length is shorter.
-       */
-      """.trimIndent(),
-    ) shouldBe emptyList()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a bulleted list at the start of the default section is wrapped`() {
 
-    rules.format(
+    format(
       text = """
       /**
        * - bulleted list in default section line one
@@ -980,7 +1021,10 @@ class KDocContentWrappingRuleTest : Tests {
       class TestClass(val name: String)
       """.trimIndent(),
       lineLength = 30
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * - bulleted list in default
        *   section line one
@@ -991,13 +1035,14 @@ class KDocContentWrappingRuleTest : Tests {
        *   section line three
        */
       class TestClass(val name: String)
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `property tags after a paragraph and a newline stay where they are`() {
 
-    rules.format(
+    format(
       text = """
       /**
        * A paragraph
@@ -1007,20 +1052,25 @@ class KDocContentWrappingRuleTest : Tests {
        */
       class TestClass(val name: String)
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+      expectError(5, 1)
+
+      output shouldBe """
       /**
        * A paragraph to unwrap
        *
        * @property name name_property
        */
       class TestClass(val name: String)
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `@see tags have their extra white spaces removed but are not wrapped together`() {
 
-    rules.format(
+    format(
       """
       /**
        * First line
@@ -1035,7 +1085,12 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+      expectError(4, 2)
+      expectError(5, 39)
+
+      output shouldBe """
       /**
        * First line second line
        *
@@ -1047,13 +1102,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a list inside a property tag is indented`() {
 
-    rules.format(
+    format(
       """
       /**
        * @property name name_description
@@ -1066,7 +1122,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 4)
+
+      output shouldBe """
       /**
        * @property name name_description
        *
@@ -1077,13 +1136,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single-line kdoc does not have an asterisk added`() {
 
-    rules.lint(
+    lint(
       """
       /** comment */
       class Subject
@@ -1094,7 +1154,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `a single-line tagged kdoc does not have an asterisk added`() {
 
-    rules.lint(
+    lint(
       """
       /** @orange tangerine */
       class Subject
@@ -1105,7 +1165,7 @@ class KDocContentWrappingRuleTest : Tests {
   @Test
   fun `wrapping the first tag with only unknown tags`() {
 
-    rules.format(
+    format(
       """
       /**
        * @return it returns something with a very long description because I need to wrap
@@ -1118,7 +1178,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 4)
+
+      output shouldBe """
       /**
        * @return it returns something with a very
        *   long description because I need to wrap
@@ -1130,13 +1193,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `wrapping a middle tag with only unknown tags`() {
 
-    rules.format(
+    format(
       """
       /**
        * @return it returns something
@@ -1149,7 +1213,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(3, 4)
+
+      output shouldBe """
       /**
        * @return it returns something
        * @since A very very very very very very very
@@ -1161,13 +1228,14 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `wrapping the last tag with only unknown tags`() {
 
-    rules.format(
+    format(
       """
       /**
        * @return it returns something
@@ -1179,7 +1247,10 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(4, 4)
+
+      output shouldBe """
       /**
        * @return it returns something
        * @since 0.1.1
@@ -1190,54 +1261,19 @@ class KDocContentWrappingRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
-  private fun Set<RuleProvider>.format(
-    text: String,
-    wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-    lineLength: Int = 50,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
-      )
-  ): String = ktlintTestFormat(
-    text = text,
-    filePath = null,
-    editorConfigOverride = editorConfigOverride,
-  )
-    .first
-
-  override fun Set<RuleProvider>.format(
-    text: String,
-    filePath: String?,
-    editorConfigOverride: EditorConfigOverride
-  ): String = ktlintTestFormat(
-    text = text,
-    filePath = filePath,
-    editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to 50,
-        WRAPPING_STYLE_PROPERTY to WrappingStyle.MINIMUM_RAGGED.displayValue
-      )
-    } else {
-      editorConfigOverride
-    },
-  )
-    .first
-
-  private fun Set<RuleProvider>.lint(
-    text: String,
-    wrappingStyle: WrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-    lineLength: Int = 50,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
-      )
-  ): List<LintError> = ktlintTestLint(
-    text = text,
-    editorConfigOverride = editorConfigOverride
-  )
+  private fun KtLintResults.expectError(
+    line: Int,
+    col: Int,
+  ) {
+    expectError(
+      line = line,
+      col = col,
+      ruleId = KDocContentWrappingRule.ID,
+      detail = KDocContentWrappingRule.ERROR_MESSAGE
+    )
+  }
 }

@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 
 class KDocTagOrderRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { KDocTagOrderRule() }
   )
 

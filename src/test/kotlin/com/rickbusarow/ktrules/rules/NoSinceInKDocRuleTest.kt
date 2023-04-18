@@ -16,26 +16,21 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.core.api.EditorConfigOverride
+import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import org.junit.jupiter.api.Test
-import com.pinterest.ktlint.test.format as ktlintTestFormat
 
 class NoSinceInKDocRuleTest : Tests {
 
-  private val currentVersion = "0.2.3"
+  override val currentVersionDefault = "0.2.3"
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { NoSinceInKDocRule() }
   )
 
   @Test
-  fun `a missing since is not an issue if the version is a -SNAPSHOT`() {
+  fun `a missing since does not emit if the version is a -SNAPSHOT`() {
 
-    val rules = setOf(
-      RuleProvider { NoSinceInKDocRule() }
-    )
-
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -46,9 +41,11 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent(),
-      editorConfigOverride = EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to "0.0.1-SNAPSHOT")
-    ) shouldBe
-      """
+      currentVersion = "0.0.1-SNAPSHOT"
+    ) {
+
+      output shouldBe
+        """
       /**
        * comment
        *
@@ -57,13 +54,14 @@ class NoSinceInKDocRuleTest : Tests {
       data class Subject(
         val name: String
       )
-      """.trimIndent()
+        """.trimIndent()
+    }
   }
 
   @Test
   fun `missing since in comment is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -74,62 +72,74 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(line = 5, col = 2)
+
+      output shouldBe """
       /**
        * comment
        *
        * @property name a name
-       * @since $currentVersion
+       * @since $currentVersionDefault
        */
       data class Subject(
         val name: String
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `missing since in empty comment is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /** */
       data class Subject(
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
-    /** @since $currentVersion */
+    ) {
+      expectError(line = 1, col = 5)
+
+      output shouldBe """
+    /** @since $currentVersionDefault */
     data class Subject(
       val name: String
     )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `missing since in suppressed comment is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /** @suppress */
       data class Subject(
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(line = 1, col = 15)
+
+      output shouldBe """
     /**
      * @suppress
-     * @since $currentVersion
+     * @since $currentVersionDefault
      */
     data class Subject(
       val name: String
     )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `missing since in nested comment is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       class Outer {
         /**
@@ -142,68 +152,80 @@ class NoSinceInKDocRuleTest : Tests {
         )
       }
       """.trimIndent()
-    ) shouldBe """
-    class Outer {
-      /**
-       * comment
-       *
-       * @property name a name
-       * @since $currentVersion
-       */
-      data class Subject(
-        val name: String
-      )
+    ) {
+      expectError(line = 6, col = 4)
+
+      output shouldBe """
+      class Outer {
+        /**
+         * comment
+         *
+         * @property name a name
+         * @since $currentVersionDefault
+         */
+        data class Subject(
+          val name: String
+        )
+      }
+      """.trimIndent()
     }
-    """.trimIndent()
   }
 
   @Test
   fun `single-line kdoc is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /** comment */
       data class Subject(
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
-    /**
-     * comment
-     *
-     * @since $currentVersion
-     */
-    data class Subject(
-      val name: String
-    )
-    """.trimIndent()
+    ) {
+      expectError(line = 1, col = 13)
+
+      output shouldBe """
+      /**
+       * comment
+       *
+       * @since $currentVersionDefault
+       */
+      data class Subject(
+        val name: String
+      )
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `single-line kdoc with tag is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /** @property name a name */
       data class Subject(
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
-    /**
-     * @property name a name
-     * @since $currentVersion
-     */
-    data class Subject(
-      val name: String
-    )
-    """.trimIndent()
+    ) {
+      expectError(line = 1, col = 27)
+
+      output shouldBe """
+      /**
+       * @property name a name
+       * @since $currentVersionDefault
+       */
+      data class Subject(
+        val name: String
+      )
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `since tag without version content is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -215,23 +237,28 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
-    /**
-     * comment
-     *
-     * @property name a name
-     * @since $currentVersion
-     */
-    data class Subject(
-      val name: String
-    )
-    """.trimIndent()
+    ) {
+      expectError(line = 6, col = 2, detail = "add '0.2.3' to `@since` tag")
+      expectError(line = 7, col = 4)
+
+      output shouldBe """
+      /**
+       * comment
+       *
+       * @property name a name
+       * @since $currentVersionDefault
+       */
+      data class Subject(
+        val name: String
+      )
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `multi line kdoc without tags has blank line before since tag`() {
 
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -240,22 +267,26 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
-    /**
-     * comment
-     *
-     * @since $currentVersion
-     */
-    data class Subject(
-      val name: String
-    )
-    """.trimIndent()
+    ) {
+      expectError(line = 3, col = 2)
+
+      output shouldBe """
+      /**
+       * comment
+       *
+       * @since $currentVersionDefault
+       */
+      data class Subject(
+        val name: String
+      )
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `multi line blank kdoc is auto-corrected`() {
 
-    rules.format(
+    format(
       """
       /**
        */
@@ -263,22 +294,22 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent()
-    ) shouldBe """
-    /** @since $currentVersion */
-    data class Subject(
-      val name: String
-    )
-    """.trimIndent()
+    ) {
+      expectError(line = 2, col = 2)
+
+      output shouldBe """
+      /** @since $currentVersionDefault */
+      data class Subject(
+        val name: String
+      )
+      """.trimIndent()
+    }
   }
 
   @Test
-  fun `a missing since is not an issue if the version is an -RC`() {
+  fun `a missing since does not emit if the version is an -RC`() {
 
-    val rules = setOf(
-      RuleProvider { NoSinceInKDocRule() }
-    )
-
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -289,24 +320,27 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent(),
-      editorConfigOverride = EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to "0.0.1-RC")
-    ) shouldBe
-      """
-      /**
-       * comment
-       *
-       * @property name a name
-       */
-      data class Subject(
-        val name: String
-      )
-      """.trimIndent()
+      currentVersion = "0.0.1-RC"
+    ) {
+
+      output shouldBe
+        """
+        /**
+         * comment
+         *
+         * @property name a name
+         */
+        data class Subject(
+          val name: String
+        )
+        """.trimIndent()
+    }
   }
 
   @Test
-  fun `existing since has no issue`() {
+  fun `existing since does not emit`() {
 
-    rules.format(
+    format(
       """
       /**
        * comment
@@ -318,8 +352,9 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent()
-    ) shouldBe
-      """
+    ) {
+
+      output shouldBe """
       /**
        * comment
        *
@@ -330,20 +365,19 @@ class NoSinceInKDocRuleTest : Tests {
         val name: String
       )
       """.trimIndent()
+    }
   }
 
-  override fun Set<RuleProvider>.format(
-    text: String,
-    filePath: String?,
-    editorConfigOverride: EditorConfigOverride
-  ): String = ktlintTestFormat(
-    text = text,
-    filePath = filePath,
-    editorConfigOverride = if (editorConfigOverride.properties.isEmpty()) {
-      EditorConfigOverride.from(PROJECT_VERSION_PROPERTY to currentVersion)
-    } else {
-      editorConfigOverride
-    },
-  )
-    .first
+  private fun KtLintResults.expectError(
+    line: Int,
+    col: Int,
+    detail: String = "add `@since $currentVersionDefault` to kdoc"
+  ) {
+    expectError(
+      line = line,
+      col = col,
+      ruleId = NoSinceInKDocRule.ID,
+      detail = detail
+    )
+  }
 }

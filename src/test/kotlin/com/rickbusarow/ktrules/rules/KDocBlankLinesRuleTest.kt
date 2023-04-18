@@ -16,20 +16,20 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.test.lint
+import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class KDocBlankLinesRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { KDocBlankLinesRule() }
   )
 
   @Test
   fun `a single blank line between paragraphs is ignored`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * paragraph one
@@ -47,7 +47,7 @@ class KDocBlankLinesRuleTest : Tests {
   @Test
   fun `a second blank line in between paragraphs is removed`() {
 
-    rules.format(
+    format(
       """
       /**
        * paragraph one
@@ -60,7 +60,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(4, 2, "consecutive blank lines in kdoc")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -70,13 +73,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `two extra blank lines between paragraphs are both removed`() {
 
-    rules.format(
+    format(
       """
       /**
        * paragraph one
@@ -90,7 +94,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(4, 2, "consecutive blank lines in kdoc")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -100,13 +107,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a leading blank line is removed`() {
 
-    rules.format(
+    format(
       """
       /**
        *
@@ -119,7 +127,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2, "leading blank line in kdoc")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -129,13 +140,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `two leading blank lines are both removed`() {
 
-    rules.format(
+    format(
       """
       /**
        *
@@ -149,7 +161,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2, "leading blank line in kdoc")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -159,13 +174,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a trailing blank line is removed`() {
 
-    rules.format(
+    format(
       """
       /**
        * paragraph one
@@ -178,7 +194,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(5, 2, "trailing blank line in kdoc")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -188,13 +207,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `two trailing blank lines are both removed`() {
 
-    rules.format(
+    format(
       """
       /**
        * paragraph one
@@ -208,7 +228,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(5, 2, "trailing blank line in kdoc")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -218,13 +241,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single blank line between unknown tags is removed`() {
 
-    rules.format(
+    format(
       """
       /**
        * paragraph one
@@ -238,7 +262,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(5, 2, "extra blank line before subsequent kdoc tag")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -249,13 +276,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single blank line between known tags is removed`() {
 
-    rules.format(
+    format(
       """
       /**
        * paragraph one
@@ -269,7 +297,10 @@ class KDocBlankLinesRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(5, 2, "extra blank line before subsequent kdoc tag")
+
+      output shouldBe """
       /**
        * paragraph one
        *
@@ -280,13 +311,14 @@ class KDocBlankLinesRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a paragraph break in a tag is left alone`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * paragraph one
@@ -302,5 +334,18 @@ class KDocBlankLinesRuleTest : Tests {
       )
       """.trimIndent()
     ) shouldBe emptyList()
+  }
+
+  private fun KtLintResults.expectError(
+    line: Int,
+    col: Int,
+    detail: String
+  ) {
+    expectError(
+      line = line,
+      col = col,
+      ruleId = KDocBlankLinesRule.ID,
+      detail = detail
+    )
   }
 }
