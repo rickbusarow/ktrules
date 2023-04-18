@@ -33,8 +33,8 @@ import org.jetbrains.kotlin.psi.psiUtil.parents
  * @since 1.0.4
  */
 class KDocIndentAfterLeadingAsteriskRule : Rule(
-  id = "kdoc-indent-after-leading-asterisk",
-  visitorModifiers = setOf(RunAfterRule("kdoc-leading-asterisk"))
+  id = ID,
+  visitorModifiers = setOf(RunAfterRule(KDocLeadingAsteriskRule.ID))
 ) {
 
   override fun beforeVisitChildNodes(
@@ -55,7 +55,7 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
         return
       }
 
-      emit(node.startOffset, "kdoc leading asterisk", true)
+      emit(node.startOffset, ERROR_MESSAGE, true)
 
       if (autoCorrect) {
 
@@ -66,5 +66,11 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
         nextLeaf.upsertWhitespaceBeforeMe(fix)
       }
     }
+  }
+
+  internal companion object {
+
+    const val ID = "kdoc-indent-after-leading-asterisk"
+    const val ERROR_MESSAGE = "kdoc indent after leading asterisk"
   }
 }

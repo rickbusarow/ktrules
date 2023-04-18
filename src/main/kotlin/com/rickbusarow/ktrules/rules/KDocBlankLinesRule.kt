@@ -38,7 +38,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  * @since 1.0.7
  */
 class KDocBlankLinesRule : Rule(
-  "kdoc-blank-lines",
+  ID,
   visitorModifiers = setOf(
     RunAfterRule("kdoc-leading-asterisk"),
   )
@@ -82,7 +82,7 @@ class KDocBlankLinesRule : Rule(
       }
 
       nextContent.isKDocTagName() && prevContent.isInKDocTag() -> {
-        emitAndMaybeFix("blank line before non-first kdoc tag")
+        emitAndMaybeFix("extra blank line before subsequent kdoc tag")
       }
 
       previousNewline.isKDocWhitespaceAfterLeadingAsterisk() -> {
@@ -91,5 +91,10 @@ class KDocBlankLinesRule : Rule(
 
       else -> return
     }
+  }
+
+  internal companion object {
+
+    const val ID = "kdoc-blank-lines"
   }
 }

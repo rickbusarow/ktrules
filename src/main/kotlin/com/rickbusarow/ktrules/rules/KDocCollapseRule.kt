@@ -43,11 +43,11 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
  * @since 1.0.7
  */
 class KDocCollapseRule : Rule(
-  "kdoc-collapse",
+  ID,
   visitorModifiers = setOf(
-    VisitorModifier.RunAfterRule("kdoc-content-wrapping"),
-    VisitorModifier.RunAfterRule("kdoc-leading-asterisk"),
-    VisitorModifier.RunAfterRule("kdoc-blank-lines"),
+    VisitorModifier.RunAfterRule(KDocContentWrappingRule.ID),
+    VisitorModifier.RunAfterRule(KDocLeadingAsteriskRule.ID),
+    VisitorModifier.RunAfterRule(KDocBlankLinesRule.ID),
   )
 ), UsesEditorConfigProperties {
 
@@ -75,6 +75,8 @@ class KDocCollapseRule : Rule(
     if (skipAll) return
     if (!node.isKDoc()) return
 
+    if (node.text.lines().size == 1) return
+
     val singleSection = node.getKDocSections()
       .filter { it.text.removeRegex("[* ]+").isNotBlank() }
       .singleOrNull()
@@ -100,7 +102,7 @@ class KDocCollapseRule : Rule(
 
     if (totalLength > maxLineLength) return
 
-    emit(node.startOffset, "kdoc collapse", true)
+    emit(node.startOffset, ERROR_MESSAGE, true)
 
     if (autoCorrect) {
 
@@ -157,4 +159,10 @@ class KDocCollapseRule : Rule(
   }
 
   private fun String.trimPreservingCodeBlockIndent() = removeRegex("^ {1,3}(?=[^ ])", "\\s$")
+
+  internal companion object {
+
+    const val ID = "kdoc-collapse"
+    const val ERROR_MESSAGE = "kdoc should be collapsed into a single line"
+  }
 }

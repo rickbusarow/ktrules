@@ -48,8 +48,27 @@ internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> by lazy {
   )
 }
 
-internal enum class WrappingStyle(val displayValue: String) {
+/** Represents the available algorithms for wrapping text. Each algorithm has different output.
+ * @property displayValue A human-readable representation of the wrapping style.
+ * @since 1.0.8
+ */
+enum class WrappingStyle(val displayValue: String) {
+  /**
+   * The GREEDY wrapping style aims to fill each line with as many words as possible, minimizing the
+   * number of lines. This approach might result in uneven line lengths, but its output is usually
+   * more predictable.
+   *
+   * @since 1.0.8
+   */
   GREEDY("greedy"),
+
+  /**
+   * The MINIMUM_RAGGED wrapping style tries to create lines with roughly equal lengths, reducing
+   * the raggedness of the text. This approach may have less predictable output compared to the
+   * GREEDY style, but often leads to a more visually appealing result.
+   *
+   * @since 1.0.8
+   */
   MINIMUM_RAGGED("equal")
 }
 

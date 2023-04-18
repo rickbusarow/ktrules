@@ -4,11 +4,14 @@ public final class com/rickbusarow/ktrules/KtRulesRuleSetProvider : com/pinteres
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocBlankLinesRule : com/pinterest/ktlint/core/Rule {
+	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocCollapseRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
+	public static final field ERROR_MESSAGE Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeFirstNode (Ljava/util/Map;)V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
@@ -18,6 +21,8 @@ public final class com/rickbusarow/ktrules/rules/KDocCollapseRule : com/pinteres
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocContentWrappingRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
+	public static final field ERROR_MESSAGE Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeFirstNode (Ljava/util/Map;)V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
@@ -27,11 +32,15 @@ public final class com/rickbusarow/ktrules/rules/KDocContentWrappingRule : com/p
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocIndentAfterLeadingAsteriskRule : com/pinterest/ktlint/core/Rule {
+	public static final field ERROR_MESSAGE Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocLeadingAsteriskRule : com/pinterest/ktlint/core/Rule {
+	public static final field ERROR_MESSAGE Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
@@ -57,6 +66,7 @@ public final class com/rickbusarow/ktrules/rules/NoLeadingBlankLinesRule : com/p
 }
 
 public final class com/rickbusarow/ktrules/rules/NoSinceInKDocRule : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
+	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeFirstNode (Ljava/util/Map;)V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
@@ -78,6 +88,14 @@ public final class com/rickbusarow/ktrules/rules/NoTrailingSpacesInRawStringLite
 public final class com/rickbusarow/ktrules/rules/NoUselessConstructorKeywordRule : com/pinterest/ktlint/core/Rule {
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/WrappingStyle : java/lang/Enum {
+	public static final field GREEDY Lcom/rickbusarow/ktrules/rules/WrappingStyle;
+	public static final field MINIMUM_RAGGED Lcom/rickbusarow/ktrules/rules/WrappingStyle;
+	public final fun getDisplayValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/rules/WrappingStyle;
+	public static fun values ()[Lcom/rickbusarow/ktrules/rules/WrappingStyle;
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/SortKt {

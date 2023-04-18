@@ -15,25 +15,20 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.LintError
 import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.core.api.EditorConfigOverride
-import io.kotest.matchers.shouldBe
-import org.intellij.lang.annotations.Language
+import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import org.junit.jupiter.api.Test
-import com.pinterest.ktlint.test.format as ktlintTestFormat
-import com.pinterest.ktlint.test.lint as ktlintTestLint
 
-class KDocIndentAfterLeadingAsteriskRuleTest {
+class KDocIndentAfterLeadingAsteriskRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { KDocIndentAfterLeadingAsteriskRule() }
   )
 
   @Test
   fun `a space is added for a default section comment`() {
 
-    rules.format(
+    format(
       """
       /**
        *comment
@@ -43,7 +38,10 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * comment
        */
@@ -51,13 +49,14 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a space is added for a known tag`() {
 
-    rules.format(
+    format(
       """
       /**
        *@property name desc
@@ -67,7 +66,10 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * @property name desc
        */
@@ -75,13 +77,14 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a space is added for an unknown tag`() {
 
-    rules.format(
+    format(
       """
       /**
        *@banana name desc
@@ -91,7 +94,10 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
       /**
        * @banana name desc
        */
@@ -99,13 +105,14 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `three spaces are added after a tag`() {
 
-    rules.format(
+    format(
       """
       /**
        * @property name desc
@@ -130,7 +137,19 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(3, 2)
+      expectError(4, 5)
+      expectError(4, 5)
+      expectError(5, 7)
+      expectError(5, 7)
+      expectError(9, 8)
+      expectError(11, 11)
+      expectError(11, 11)
+      expectError(13, 13)
+      expectError(13, 13)
+
+      output shouldBe """
       /**
        * @property name desc
        *   second line
@@ -153,13 +172,14 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a space is added for a collapsed default section comment`() {
 
-    rules.format(
+    format(
       """
       /**comment */
       data class Subject(
@@ -167,32 +187,25 @@ class KDocIndentAfterLeadingAsteriskRuleTest {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(1, 1)
+
+      output shouldBe """
       /** comment */
       data class Subject(
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
-  private fun Set<RuleProvider>.format(
-    @Language("kotlin")
-    text: String,
-    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.EMPTY_EDITOR_CONFIG_OVERRIDE
-  ): String = ktlintTestFormat(
-    text = text,
-    filePath = null,
-    editorConfigOverride = editorConfigOverride,
-  )
-    .first
-
-  private fun Set<RuleProvider>.lint(
-    @Language("kotlin")
-    text: String,
-    editorConfigOverride: EditorConfigOverride = EditorConfigOverride.EMPTY_EDITOR_CONFIG_OVERRIDE
-  ): List<LintError> = ktlintTestLint(
-    text = text,
-    editorConfigOverride = editorConfigOverride
-  )
+  private fun KtLintResults.expectError(line: Int, col: Int) {
+    expectError(
+      line = line,
+      col = col,
+      ruleId = KDocIndentAfterLeadingAsteriskRule.ID,
+      detail = KDocIndentAfterLeadingAsteriskRule.ERROR_MESSAGE
+    )
+  }
 }

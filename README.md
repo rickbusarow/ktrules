@@ -62,15 +62,22 @@ ktlint_kt-rules_wrapping_style = equal
 
 To use ktrules in your project, follow the documentation for your existing integration solution
 using third-party extensions. Typically, your plugin or custom tasks will have a Gradle
-configuration named `ktlint`. In this case, you would add the `ktrules` dependency to your project's
-build file like:
+configuration named `ktlint`.
 
-<!--doks maven-artifact:1-->
+In order to maintain compatibility with older versions of KtLint, KtRules publishes different
+artifacts which rely upon the different KtLint api versions. You should choose only one of these
+artifacts corresponding to the KtLint version your project is using.
+
+<!--doks maven-artifact:2, current-ktlint-version:1-->
 
 ```kotlin
 // build.gradle.kts
 dependencies {
-  ktlint("com.rickbusarow.ktrules:ktrules:1.0.7")
+  // Using the current KtLint (0.48.2) apis
+  ktlint("com.rickbusarow.ktrules:ktrules:1.0.6")
+
+  // ... or using the KtLint 0.47.x apis
+  ktlint("com.rickbusarow.ktrules:ktrules-47:1.0.6")
 }
 ```
 

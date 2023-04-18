@@ -38,7 +38,7 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
  *
  * @since 1.0.1
  */
-class KDocLeadingAsteriskRule : Rule("kdoc-leading-asterisk") {
+class KDocLeadingAsteriskRule : Rule(ID) {
   override fun beforeVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
@@ -84,7 +84,7 @@ class KDocLeadingAsteriskRule : Rule("kdoc-leading-asterisk") {
 
         val next = node.nextSibling() ?: return@forEach
 
-        emit(next.startOffset, "kdoc leading asterisk", true)
+        emit(next.startOffset, ERROR_MESSAGE, true)
 
         if (autoCorrect) {
 
@@ -106,5 +106,10 @@ class KDocLeadingAsteriskRule : Rule("kdoc-leading-asterisk") {
           }
         }
       }
+  }
+
+  internal companion object {
+    const val ID = "kdoc-leading-asterisk"
+    const val ERROR_MESSAGE = "kdoc leading asterisk"
   }
 }

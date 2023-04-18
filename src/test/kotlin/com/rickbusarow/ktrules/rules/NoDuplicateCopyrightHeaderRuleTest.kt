@@ -20,7 +20,7 @@ import org.junit.jupiter.api.TestFactory
 
 class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { NoDuplicateCopyrightHeaderRule() }
   )
 
@@ -55,7 +55,6 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -90,7 +89,6 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |package com.test
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 
@@ -125,7 +123,6 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |import java.io.Serializable
       |
       |class MyClass : Serializable
-      |
       """.trimMargin()
   }
 
@@ -160,7 +157,6 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |@file:Suppress("MAGIC_NUMBER")
       |
       |class MyClass
-      |
       """.trimMargin()
   }
 }

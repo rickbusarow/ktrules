@@ -16,20 +16,20 @@
 package com.rickbusarow.ktrules.rules
 
 import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.test.lint
+import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class KDocLeadingAsteriskRuleTest : Tests {
 
-  val rules = setOf(
+  override val rules = setOf(
     RuleProvider { KDocLeadingAsteriskRule() }
   )
 
   @Test
   fun `asterisks are added to the default section`() {
 
-    rules.format(
+    format(
       """
       /**
        extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex ea
@@ -48,7 +48,13 @@ class KDocLeadingAsteriskRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(2, 2)
+      expectError(7, 4)
+      expectError(8, 12)
+      expectError(13, 10)
+
+      output shouldBe """
       /**
        * extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex ea
        * desegrunt fugiat nulla pariatur. Excepteur sint occaecat cupidatat
@@ -65,13 +71,14 @@ class KDocLeadingAsteriskRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single blank line after a tag and before kdoc end is fixed`() {
 
-    rules.format(
+    format(
       """
       /**
        * @property age a number, probably
@@ -82,7 +89,10 @@ class KDocLeadingAsteriskRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(4, 2)
+
+      output shouldBe """
       /**
        * @property age a number, probably
        *
@@ -91,13 +101,14 @@ class KDocLeadingAsteriskRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single blank line before kdoc end is fixed`() {
 
-    rules.format(
+    format(
       """
       /**
        * extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex ea
@@ -108,7 +119,10 @@ class KDocLeadingAsteriskRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe """
+    ) {
+      expectError(4, 2)
+
+      output shouldBe """
       /**
        * extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex ea
        *
@@ -117,13 +131,14 @@ class KDocLeadingAsteriskRuleTest : Tests {
         val name: String,
         val age: Int
       )
-    """.trimIndent()
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `a single-line kdoc does not have an asterisk added`() {
 
-    rules.lint(
+    lint(
       """
       /** comment */
       class Subject
@@ -134,7 +149,7 @@ class KDocLeadingAsteriskRuleTest : Tests {
   @Test
   fun `a single-line tagged kdoc does not have an asterisk added`() {
 
-    rules.lint(
+    lint(
       """
       /** @orange tangerine */
       class Subject
@@ -145,7 +160,7 @@ class KDocLeadingAsteriskRuleTest : Tests {
   @Test
   fun `a kdoc with all its asterisks is left alone`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * extercitatrekvsuion nostrud exerc mco laboris nisteghi ut  laboris nisteghi ut liquip ex ea
@@ -162,7 +177,7 @@ class KDocLeadingAsteriskRuleTest : Tests {
   @Test
   fun `a kdoc with all its asterisks and tags is left alone`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * extercitatrekvsuion nostrud exerc mco laboris nisteghi ut aliquip ex ea
@@ -182,5 +197,14 @@ class KDocLeadingAsteriskRuleTest : Tests {
       )
       """.trimIndent()
     ) shouldBe emptyList()
+  }
+
+  private fun KtLintResults.expectError(line: Int, col: Int) {
+    expectError(
+      line = line,
+      col = col,
+      ruleId = KDocLeadingAsteriskRule.ID,
+      detail = KDocLeadingAsteriskRule.ERROR_MESSAGE
+    )
   }
 }
