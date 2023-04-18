@@ -41,6 +41,7 @@ import org.ec4j.core.parser.ErrorHandler
 import org.jetbrains.changelog.date
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
+import org.jetbrains.kotlin.gradle.targets.js.npm.SemVer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.ConfigurableKtLintTask
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
@@ -106,7 +107,9 @@ dependencies {
 }
 
 val VERSION_CURRENT = libs.versions.ktrules.dev.get()
-val VERSION_RELEASED = libs.versions.ktrules.released.get()
+val VERSION_RELEASED = VERSION_CURRENT
+  .takeIf { SemVer.from(it).preRelease.isNullOrEmpty() }
+  ?: libs.versions.ktrules.released.get()
 val GROUP = "com.rickbusarow.ktrules"
 val website = "https://www.github.com/rbusarow/ktrules/"
 
@@ -117,6 +120,11 @@ doks {
     sampleCodeSource.from(fileTree(projectDir.resolve("src/test/kotlin")) {
       include("**/*.kt")
     })
+
+    rule("current-ktlint-version") {
+      regex = "(current KtLint \\().*?(\\))"
+      replacement = "$1${libs.versions.ktlint.lib.get()}$2"
+    }
 
     rule("maven-artifact") {
       regex = maven(group = Regex.escape(GROUP))
@@ -615,7 +623,8 @@ githubRelease {
     val lastVersionRegex = """## \[(.*?)]$dateSuffixRegex""".toRegex()
 
     // capture everything in between '## [<this version>]' and a new line which starts with '## '
-    val versionSectionRegex = """$currentVersionRegex\n([\s\S]*?)(?=\n+$lastVersionRegex)""".toRegex()
+    val versionSectionRegex =
+      """$currentVersionRegex\n([\s\S]*?)(?=\n+$lastVersionRegex)""".toRegex()
 
     versionSectionRegex
       .find(file("CHANGELOG.md").readText())
