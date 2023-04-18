@@ -22,7 +22,7 @@ import com.pinterest.ktlint.core.ast.isWhiteSpace
 import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
 import com.pinterest.ktlint.core.ast.nextLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
-import com.rickbusarow.ktrules.rules.internal.psi.findIndent
+import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocEnd
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceBeforeLeadingAsterisk
@@ -58,7 +58,7 @@ class KDocLeadingAsteriskRule : Rule("kdoc-leading-asterisk") {
 
     val kdoc = kdocNode.psi.parent as KDoc
 
-    val indent = kdoc.findIndent()
+    val indent = kdoc.fileIndent(additionalOffset = 1)
     val newlineIndent = "\n$indent"
 
     kdoc.node.childrenDepthFirst()

@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
-import com.rickbusarow.ktrules.rules.internal.psi.sectionTextWithoutLeadingAsterisks
+import com.rickbusarow.ktrules.rules.internal.psi.tagTextWithoutLeadingAsterisks
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
@@ -38,7 +38,7 @@ class KDocTagSectionExtractionTest : Tests {
       """
     )
       .getDefaultSection()
-    val sectionText = tag.sectionTextWithoutLeadingAsterisks()
+    val sectionText = tag.tagTextWithoutLeadingAsterisks()
 
     sectionText shouldBe """
       | paragraph
@@ -62,7 +62,7 @@ class KDocTagSectionExtractionTest : Tests {
     )
       .getAllTags()
       .last()
-    val sectionText = tag.sectionTextWithoutLeadingAsterisks()
+    val sectionText = tag.tagTextWithoutLeadingAsterisks()
 
     sectionText shouldBe """
       | @property name paragraph
@@ -89,7 +89,7 @@ class KDocTagSectionExtractionTest : Tests {
       """
     )
       .getAllTags()
-      .map { it.sectionTextWithoutLeadingAsterisks() }
+      .map { it.tagTextWithoutLeadingAsterisks() }
 
     sections[0] shouldBe """
         | First line second line

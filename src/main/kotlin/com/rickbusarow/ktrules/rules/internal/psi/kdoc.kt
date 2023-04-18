@@ -17,6 +17,7 @@ package com.rickbusarow.ktrules.rules.internal.psi
 
 import com.pinterest.ktlint.core.ast.ElementType
 import com.pinterest.ktlint.core.ast.children
+import com.pinterest.ktlint.core.ast.isLeaf
 import com.pinterest.ktlint.core.ast.isWhiteSpace
 import com.pinterest.ktlint.core.ast.nextSibling
 import com.pinterest.ktlint.core.ast.prevLeaf
@@ -24,6 +25,7 @@ import com.pinterest.ktlint.core.ast.prevSibling
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
+import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.parents
 
@@ -197,4 +199,28 @@ internal fun ASTNode.isKDocCodeBlockEndText(): Boolean {
 
   return prevSibling { !it.isWhiteSpace() && !it.isKDocLeadingAsterisk() }
     .isKDocCodeBlockText()
+}
+
+/** */
+internal fun ASTNode.getKDocSections(): Sequence<ASTNode> {
+  check(isKDoc()) { "Only call `getKDocSections()` from the KDoc root element." }
+  return childrenDepthFirst { !it.parent.isKDocSection() }
+    .filter { it.isKDocSection() }
+}
+
+/** */
+internal fun ASTNode.getTagTextWithoutLeadingAsterisks(): String {
+  check(isKDocTag() || isKDocSection()) {
+    "Only call `getTagTextWithoutLeadingAsterisks()` from a KDOC_TAG or KDOC_SECTION."
+  }
+  return (psi as KDocTag).tagTextWithoutLeadingAsterisks()
+}
+
+internal fun ASTNode.getKDocTextWithoutLeadingAsterisks(): String {
+  return childrenDepthFirst()
+    .filter { it.isLeaf() }
+    .toList()
+    .dropLastWhile { it.isKDocWhitespaceAfterLeadingAsterisk() }
+    .joinToString("") { it.text }
+    .replaceIndentByMargin(newIndent = "", marginPrefix = "*")
 }

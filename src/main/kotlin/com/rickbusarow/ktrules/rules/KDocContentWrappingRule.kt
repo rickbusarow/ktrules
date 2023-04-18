@@ -35,7 +35,7 @@ import com.rickbusarow.ktrules.rules.internal.markdown.wrap
 import com.rickbusarow.ktrules.rules.internal.prefixIfNot
 import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.createFileFromText
-import com.rickbusarow.ktrules.rules.internal.psi.findIndent
+import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
 import com.rickbusarow.ktrules.rules.internal.psi.getKDocSection
 import com.rickbusarow.ktrules.rules.internal.psi.isInKDocDefaultSection
@@ -45,8 +45,8 @@ import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagOrSection
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceAfterLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
 import com.rickbusarow.ktrules.rules.internal.psi.parent
-import com.rickbusarow.ktrules.rules.internal.psi.sectionTextWithoutLeadingAsterisks
 import com.rickbusarow.ktrules.rules.internal.psi.startOffset
+import com.rickbusarow.ktrules.rules.internal.psi.tagTextWithoutLeadingAsterisks
 import com.rickbusarow.ktrules.rules.wrapping.GreedyWrapper
 import com.rickbusarow.ktrules.rules.wrapping.MinimumRaggednessWrapper
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
@@ -120,7 +120,7 @@ class KDocContentWrappingRule : Rule(
 
     val kdoc = kdocNode.psi as KDoc
 
-    val starIndent = kdoc.findIndent()
+    val starIndent = kdoc.fileIndent(additionalOffset = 1)
 
     val tags = kdoc.getAllTags()
 
@@ -297,7 +297,7 @@ class KDocContentWrappingRule : Rule(
 
       val beforeAnyTags = tag.node.isInKDocDefaultSection() && tagIndex == 0
 
-      val sectionText = tag.sectionTextWithoutLeadingAsterisks()
+      val sectionText = tag.tagTextWithoutLeadingAsterisks()
 
       val maxLength = maxLineLength - (starIndent.length + 1)
 

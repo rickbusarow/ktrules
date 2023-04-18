@@ -74,7 +74,7 @@ internal fun PsiElement?.isInKDocDefaultSection(): Boolean {
   return tag.parent is KDoc
 }
 
-internal fun <T : KDocTag> T.sectionTextWithoutLeadingAsterisks(): String {
+internal fun <T : KDocTag> T.tagTextWithoutLeadingAsterisks(): String {
 
   val shouldTrim = node.nextSibling().isKDocSection()
 
@@ -87,7 +87,7 @@ internal fun <T : KDocTag> T.sectionTextWithoutLeadingAsterisks(): String {
   }
 
   return node.childrenDepthFirst()
-    .filter { it.psi != this@sectionTextWithoutLeadingAsterisks }
+    .filter { it.psi != this@tagTextWithoutLeadingAsterisks }
     .filter { it.isKDocTag() || it.isLeaf() }
     .takeWhile { !it.isKDocTag() }
     .toList()
@@ -110,10 +110,10 @@ internal fun KDocTag.isBlank(): Boolean {
 
 internal val PsiElement.startOffset: Int get() = textRange.startOffset
 
-internal fun KDoc.findIndent(): String {
+internal fun PsiElement.fileIndent(additionalOffset: Int): String {
   val fileLines = containingFile.text.lineSequence()
 
-  var acc = startOffset + 1
+  var acc = startOffset + additionalOffset
 
   val numSpaces = fileLines.mapNotNull {
     if (it.length + 1 < acc) {

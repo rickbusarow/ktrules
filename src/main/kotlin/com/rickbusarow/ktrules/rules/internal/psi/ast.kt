@@ -86,7 +86,7 @@ internal fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
 internal fun ASTNode.nextSiblings(): Sequence<ASTNode> =
   generateSequence(nextSibling()) { it.nextSibling() }
 
-/** */
+/**     this might be a code block */
 internal fun ASTNode.nextLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
   generateSequence(nextLeaf(includeEmpty = includeEmpty)) { it.nextLeaf(includeEmpty = includeEmpty) }
 
@@ -121,4 +121,25 @@ internal fun ASTNode.childrenBreadthFirst(
   children()
     .filter(predicate)
     .toList()
+}
+
+/** */
+internal fun ASTNode.fileIndent(additionalOffset: Int): String {
+  return psi.fileIndent(additionalOffset = additionalOffset)
+}
+
+/** */
+internal fun ASTNode.removeAllChildren(shouldRemove: (ASTNode) -> Boolean = { true }) {
+  children()
+    .toList()
+    .filter(shouldRemove)
+    .forEach { removeChild(it) }
+}
+
+/** */
+internal fun ASTNode.removeAllChildrenRecursive(shouldRemove: (ASTNode) -> Boolean) {
+  removeAllChildren(shouldRemove)
+  children()
+    .toList()
+    .forEach { it.removeAllChildrenRecursive(shouldRemove) }
 }
