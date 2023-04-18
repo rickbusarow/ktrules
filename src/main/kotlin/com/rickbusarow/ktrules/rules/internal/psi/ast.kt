@@ -48,7 +48,7 @@ internal fun ASTNode?.isFile(): Boolean = this?.elementType == ElementType.FILE
 /** @since 1.0.6 */
 internal fun ASTNode?.isTopLevel(): Boolean = this?.parent.isFile()
 
-/**  */
+/** @since 1.0.7 */
 internal fun ASTNode?.isWhiteSpaceOrBlank(): Boolean {
 
   contract {
@@ -71,22 +71,26 @@ internal fun ASTNode.isFirstChild(): Boolean = prevSibling() == null
 /** @since 1.0.4 */
 internal fun ASTNode.prevSibling(): ASTNode? = prevSibling { true }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.prevSiblings(): Sequence<ASTNode> =
   generateSequence(prevSibling()) { it.prevSibling() }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.prevLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
   generateSequence(prevLeaf(includeEmpty = includeEmpty)) { it.prevLeaf(includeEmpty = includeEmpty) }
 
 /** @since 1.0.4 */
 internal fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.nextSiblings(): Sequence<ASTNode> =
   generateSequence(nextSibling()) { it.nextSibling() }
 
-/**     this might be a code block */
+/**
+ *     this might be a code block 
+ *
+ * @since 1.0.7
+ */
 internal fun ASTNode.nextLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
   generateSequence(nextLeaf(includeEmpty = includeEmpty)) { it.nextLeaf(includeEmpty = includeEmpty) }
 
@@ -123,12 +127,12 @@ internal fun ASTNode.childrenBreadthFirst(
     .toList()
 }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.fileIndent(additionalOffset: Int): String {
   return psi.fileIndent(additionalOffset = additionalOffset)
 }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.removeAllChildren(shouldRemove: (ASTNode) -> Boolean = { true }) {
   children()
     .toList()
@@ -136,7 +140,7 @@ internal fun ASTNode.removeAllChildren(shouldRemove: (ASTNode) -> Boolean = { tr
     .forEach { removeChild(it) }
 }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.removeAllChildrenRecursive(shouldRemove: (ASTNode) -> Boolean) {
   removeAllChildren(shouldRemove)
   children()

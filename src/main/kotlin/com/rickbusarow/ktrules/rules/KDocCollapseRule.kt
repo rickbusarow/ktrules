@@ -39,6 +39,8 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 
 /**
  * Collapse short KDoc comments into a single line, like `/** my comment */`
+ *
+ * @since 1.0.7
  */
 class KDocCollapseRule : Rule(
   "kdoc-collapse",

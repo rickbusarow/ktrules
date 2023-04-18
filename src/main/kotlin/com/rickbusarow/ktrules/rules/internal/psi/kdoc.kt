@@ -140,7 +140,7 @@ internal fun ASTNode?.isInKDocDefaultSection(): Boolean {
   return this == defaultSection || parents().any { it == defaultSection }
 }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode?.isKDocWhitespaceAfterKDocStart(): Boolean {
 
   if (!isWhiteSpaceOrBlank()) return false
@@ -168,7 +168,7 @@ internal fun ASTNode?.isKDocEnd(): Boolean = this != null && elementType == Elem
 /** @since 1.0.4 */
 internal fun ASTNode?.isKDocStart(): Boolean = this != null && elementType == ElementType.KDOC_START
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode?.isKDoc(): Boolean = this != null && elementType == ElementType.KDOC
 
 /** @since 1.0.4 */
@@ -201,14 +201,14 @@ internal fun ASTNode.isKDocCodeBlockEndText(): Boolean {
     .isKDocCodeBlockText()
 }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.getKDocSections(): Sequence<ASTNode> {
   check(isKDoc()) { "Only call `getKDocSections()` from the KDoc root element." }
   return childrenDepthFirst { !it.parent.isKDocSection() }
     .filter { it.isKDocSection() }
 }
 
-/** */
+/** @since 1.0.7 */
 internal fun ASTNode.getTagTextWithoutLeadingAsterisks(): String {
   check(isKDocTag() || isKDocSection()) {
     "Only call `getTagTextWithoutLeadingAsterisks()` from a KDOC_TAG or KDOC_SECTION."

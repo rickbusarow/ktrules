@@ -34,6 +34,8 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /**
  * Ensures that there are no consecutive or extraneous blank lines within a KDoc comment's content
+ *
+ * @since 1.0.7
  */
 class KDocBlankLinesRule : Rule(
   "kdoc-blank-lines",
