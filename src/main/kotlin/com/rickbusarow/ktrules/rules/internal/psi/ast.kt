@@ -86,11 +86,7 @@ internal fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
 internal fun ASTNode.nextSiblings(): Sequence<ASTNode> =
   generateSequence(nextSibling()) { it.nextSibling() }
 
-/**
- *     this might be a code block 
- *
- * @since 1.0.7
- */
+/** @since 1.0.7 */
 internal fun ASTNode.nextLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
   generateSequence(nextLeaf(includeEmpty = includeEmpty)) { it.nextLeaf(includeEmpty = includeEmpty) }
 

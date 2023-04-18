@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.0.8-SNAPSHOT (unreleased)
+
 ## [1.0.7] - 2023-04-18
 
 ### Fixed
