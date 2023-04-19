@@ -24,9 +24,11 @@ import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtLambdaArgument
 import org.jetbrains.kotlin.psi.psiUtil.getCallNameExpression
 
-/*** Ensures calls to Gradle's `withType(...)` use `configureEach { }` for the lambda. 
+/**
+ * Ensures calls to Gradle's `withType(...)` use `configureEach { }` for the lambda.
  *
- * @since 1.0.9*/
+ * @since 1.0.9
+ */
 class NoWithTypeWithLambdaRule : Rule(ID) {
 
   override fun beforeVisitChildNodes(
