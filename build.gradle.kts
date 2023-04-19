@@ -141,7 +141,7 @@ doks {
   }
 }
 
-tasks.withType<DoksTask> {
+tasks.withType<DoksTask>().configureEach {
   mustRunAfter(tasks.withType<KotlinCompile>())
   mustRunAfter("apiDump")
 }
@@ -171,7 +171,7 @@ val updateEditorConfigVersion by tasks.registering {
   }
 }
 
-tasks.withType<ConfigurableKtLintTask> {
+tasks.withType<ConfigurableKtLintTask>().configureEach {
   source(buildFile)
 
   source(file("settings.gradle.kts"))
@@ -214,16 +214,16 @@ kotlin {
     languageVersion.set(JavaLanguageVersion.of(libs.versions.jdk.get().toInt()))
   }
 
-  plugins.withType<MavenPublishBasePlugin> {
+  plugins.withType<MavenPublishBasePlugin>().configureEach {
     extensions.configure<JavaPluginExtension> {
       sourceCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
     }
-    tasks.withType<JavaCompile> {
+    tasks.withType<JavaCompile>().configureEach {
       options.release.set(libs.versions.jvmTarget.get().substringAfterLast('.').toInt())
     }
   }
 
-  tasks.withType<KotlinCompile> {
+  tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
       allWarningsAsErrors = false
 
@@ -246,7 +246,7 @@ val buildTests by tasks.registering { dependsOn("testClasses") }
 // 'Entry classpath.index is a duplicate but no duplicate handling strategy has been set.'
 // when executing a Jar task
 // https://github.com/gradle/gradle/issues/17236
-tasks.withType<Jar> {
+tasks.withType<Jar>().configureEach {
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -289,7 +289,7 @@ extensions.configure<DetektExtension> {
   parallel = true
 }
 
-tasks.withType<Detekt> {
+tasks.withType<Detekt>().configureEach {
 
   autoCorrect = false
   parallel = true
@@ -330,7 +330,7 @@ sequenceOf(
   DetektCreateBaselineTask::class.java,
   DetektGenerateConfigTask::class.java
 ).forEach { type ->
-  tasks.withType(type) { group = "detekt" }
+  tasks.withType(type).configureEach { group = "detekt" }
 }
 
 // By default, `check` only handles the PSI Detekt task.  This adds the type resolution tasks.
@@ -404,13 +404,13 @@ configure<MavenPublishBaseExtension> {
   configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaHtml"), sourcesJar = true))
 }
 
-tasks.withType(PublishToMavenRepository::class.java) {
+tasks.withType(PublishToMavenRepository::class.java).configureEach {
   notCompatibleWithConfigurationCache("See https://github.com/gradle/gradle/issues/13468")
 }
-tasks.withType(Jar::class.java) {
+tasks.withType(Jar::class.java).configureEach {
   notCompatibleWithConfigurationCache("")
 }
-tasks.withType(Sign::class.java) {
+tasks.withType(Sign::class.java).configureEach {
   notCompatibleWithConfigurationCache("")
   // skip signing for -SNAPSHOT publishing
   onlyIf { !VERSION_CURRENT.endsWith("SNAPSHOT") }
@@ -438,7 +438,7 @@ val checkVersionIsNotSnapshot by tasks.registering {
   }
 }
 
-tasks.withType(AbstractDokkaLeafTask::class.java) {
+tasks.withType(AbstractDokkaLeafTask::class.java).configureEach {
 
   // Dokka doesn't support configuration caching
   notCompatibleWithConfigurationCache("Dokka doesn't support configuration caching")
@@ -483,7 +483,7 @@ tasks.withType(AbstractDokkaLeafTask::class.java) {
   }
 }
 
-tasks.withType<SpotlessTask> {
+tasks.withType<SpotlessTask>().configureEach {
   mustRunAfter("apiDump")
 }
 
