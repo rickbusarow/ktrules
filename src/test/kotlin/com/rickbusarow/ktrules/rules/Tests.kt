@@ -171,6 +171,12 @@ interface Tests {
       remaining.remove(expected)
     }
 
+    fun expectNoErrors() {
+      "All errors:\n${allLintErrors.joinToString("\n")}\n\n".asClue {
+        allLintErrors.shouldBeEmpty()
+      }
+    }
+
     internal fun checkNoMoreErrors() {
       remaining.shouldBeEmpty()
     }

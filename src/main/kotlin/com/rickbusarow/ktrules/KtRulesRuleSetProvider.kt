@@ -33,6 +33,7 @@ import com.rickbusarow.ktrules.rules.NoSinceInKDocRule
 import com.rickbusarow.ktrules.rules.NoSpaceInTargetedAnnotationRule
 import com.rickbusarow.ktrules.rules.NoTrailingSpacesInRawStringLiteralRule
 import com.rickbusarow.ktrules.rules.NoUselessConstructorKeywordRule
+import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
 
 @AutoService(RuleSetProviderV2::class)
 class KtRulesRuleSetProvider : RuleSetProviderV2(
@@ -60,7 +61,8 @@ class KtRulesRuleSetProvider : RuleSetProviderV2(
       RuleProvider { NoSinceInKDocRule() },
       RuleProvider { NoSpaceInTargetedAnnotationRule() },
       RuleProvider { NoTrailingSpacesInRawStringLiteralRule() },
-      RuleProvider { NoUselessConstructorKeywordRule() }
+      RuleProvider { NoUselessConstructorKeywordRule() },
+      RuleProvider { NoWithTypeWithLambdaRule() }
     )
   }
 }

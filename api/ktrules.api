@@ -90,6 +90,13 @@ public final class com/rickbusarow/ktrules/rules/NoUselessConstructorKeywordRule
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
 
+public final class com/rickbusarow/ktrules/rules/NoWithTypeWithLambdaRule : com/pinterest/ktlint/core/Rule {
+	public static final field ERROR_MESSAGE Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
 public final class com/rickbusarow/ktrules/rules/WrappingStyle : java/lang/Enum {
 	public static final field GREEDY Lcom/rickbusarow/ktrules/rules/WrappingStyle;
 	public static final field MINIMUM_RAGGED Lcom/rickbusarow/ktrules/rules/WrappingStyle;

@@ -2,6 +2,11 @@
 
 ## 1.0.9-SNAPSHOT (unreleased)
 
+### Added
+
+- `no-gradle-with-type-with-lambda` ensures calls to Gradle's `withType(...)`
+  use `configureEach { }` for the lambda.
+
 ## [1.0.8] - 2023-04-18
 
 ### Fixed

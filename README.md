@@ -27,6 +27,7 @@ ktlint_kt-rules_kdoc-leading-asterisk = enabled
 ktlint_kt-rules_kdoc-tag-order = enabled
 ktlint_kt-rules_kdoc-tag-param-or-property = enabled
 ktlint_kt-rules_no-duplicate-copyright-header = enabled
+ktlint_kt-rules_no-gradle-with-type-with-lambda = enabled
 ktlint_kt-rules_no-leading-blank-lines = enabled
 ktlint_kt-rules_no-since-in-kdoc = enabled
 ktlint_kt-rules_no-space-in-annotation-with-target = enabled
@@ -53,6 +54,7 @@ ktlint_kt-rules_wrapping_style = equal
 |       `kdoc-tag-param-or-property`        |                     ensures that KDoc tags use `@property` for vals or vars, and `@param` for non-property parameters.                     |
 |      `no-duplicate-copyright-header`      |                                            ensures that each file has only one copyright header                                            |
 |         `no-leading-blank-lines`          |                                           ensures that there are no leading blank lines in files                                           |
+|     `no-gradle-with-type-with-lambda`     |                              nsures calls to Gradle's `withType(...)` use `configureEach { }` for the lambda.                              |
 |            `no-since-in-kdoc`             |                                            ensures that there is no @since tag in KDoc comments                                            |
 |   `no-space-in-annotation-with-target`    | ensures that targeted annotations (annotations with a target specifier such as @get:, @set:, etc.) have no space before or after the colon |
 | `no-trailing-space-in-raw-string-literal` |                                      ensures that there are no trailing spaces in raw string literals                                      |

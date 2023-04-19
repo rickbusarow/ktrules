@@ -53,6 +53,7 @@ class EditorConfigPropertiesTest : Tests {
       ktlint_kt-rules_kdoc-tag-order = enabled
       ktlint_kt-rules_kdoc-tag-param-or-property = enabled
       ktlint_kt-rules_no-duplicate-copyright-header = enabled
+      ktlint_kt-rules_no-gradle-with-type-with-lambda = enabled
       ktlint_kt-rules_no-leading-blank-lines = enabled
       ktlint_kt-rules_no-since-in-kdoc = enabled
       ktlint_kt-rules_no-space-in-annotation-with-target = enabled
@@ -74,8 +75,7 @@ class EditorConfigPropertiesTest : Tests {
 
     defaultConfig
       .lines()
-      .mapNotNull { ruleReg.find(it)?.destructured?.component1() }
-      .sorted() shouldBe ids
+      .mapNotNull { ruleReg.find(it)?.destructured?.component1() } shouldBe ids
   }
 
   fun test(action: Environment.() -> Unit) {

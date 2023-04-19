@@ -23,19 +23,21 @@ import com.rickbusarow.ktrules.rules.internal.prefix
 import com.rickbusarow.ktrules.rules.internal.trees.breadthFirstTraversal
 import com.rickbusarow.ktrules.rules.internal.trees.depthFirstTraversal
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.com.intellij.psi.PsiFileFactory
-import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocSection
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 import kotlin.LazyThreadSafetyMode.NONE
 
+internal fun PsiElement.ktPsiFactory(): KtPsiFactory {
+  return KtPsiFactory(project, markGenerated = true)
+}
+
 internal fun PsiElement.createFileFromText(text: String): KtFile {
-  return PsiFileFactory.getInstance(project)
-    .createFileFromText("tmp.kt", KotlinLanguage.INSTANCE, text) as KtFile
+  return ktPsiFactory().createFile("tmp.kt", text)
 }
 
 internal fun KDoc.getAllTags(): List<KDocTag> {
