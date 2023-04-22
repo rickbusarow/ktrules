@@ -15,12 +15,16 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfigProperty
+import com.rickbusarow.ktrules.compat.EditorConfigProperty
 import org.ec4j.core.model.PropertyType.LowerCasingPropertyType
 import org.ec4j.core.model.PropertyType.PropertyValueParser
 import org.ec4j.core.model.PropertyType.PropertyValueParser.EnumValueParser
 
 internal const val RULES_PREFIX = "ktlint_kt-rules"
+
+/** This property moves */
+internal val MAX_LINE_LENGTH_PROPERTY: EditorConfigProperty<Int>
+  get() = com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
 
 internal val ALL_PROPERTIES by lazy {
   setOf(
@@ -47,7 +51,9 @@ internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> by lazy {
   )
 }
 
-/** Represents the available algorithms for wrapping text. Each algorithm has different output.
+/**
+ * Represents the available algorithms for wrapping text. Each algorithm has different output.
+ *
  * @property displayValue A human-readable representation of the wrapping style.
  * @since 1.0.8
  */

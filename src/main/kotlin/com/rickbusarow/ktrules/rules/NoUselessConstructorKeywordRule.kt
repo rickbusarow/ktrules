@@ -15,11 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.parent
-import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.rules.internal.psi.parent
+import com.rickbusarow.ktrules.rules.internal.psi.prevLeaf
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.psi.KtPrimaryConstructor
 

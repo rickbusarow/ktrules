@@ -15,19 +15,18 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TAG
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TAG_NAME
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TEXT
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.WHITE_SPACE
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.children
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
-import com.pinterest.ktlint.rule.engine.core.api.nextSibling
-import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.EditorConfig
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.rules.internal.psi.children
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
+import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagName
+import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
+import com.rickbusarow.ktrules.rules.internal.psi.prevLeaf
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafElement
@@ -36,7 +35,6 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag.SINCE
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
-import org.jetbrains.kotlin.psi.psiUtil.collectDescendantsOfType
 
 /**
  * Finds Kdoc comments which don't have a `@since <version>` annotation.
@@ -111,8 +109,6 @@ class NoSinceInKDocRule : Rule(
     }
   }
 
-  private fun KDoc.getAllTags(): List<KDocTag> = collectDescendantsOfType()
-
   private fun KDoc.findSinceTag(): KDocTag? {
     // Pre-existing 'since' tags which are parsed before visiting will show up as KDocTag. They're
     // nested inside KDocSections, so they don't show up using AST's non-recursive traversals.
@@ -120,13 +116,13 @@ class NoSinceInKDocRule : Rule(
     // so it shows up with simple AST traversal.  Note that the PSI version has a name of 'since'
     // but the AST version node is '@since'.  This is consistent whether the tag is added manually
     // here, or if it's parsed that way from source.
-    return collectDescendantsOfType<KDocTag> { it.name == "since" }
-      .singleOrNull()
+    return getAllTags()
+      .singleOrNull { it.name == "since" }
       ?: node.children()
-        .filter { it.elementType == KDOC_TAG }
+        .filter { it.isKDocTag() }
         .filter { kdocTag ->
           kdocTag.children()
-            .filter { it.elementType == KDOC_TAG_NAME }
+            .filter { it.isKDocTagName() }
             .any { it.text == "@since" }
         }
         .singleOrNull()
@@ -175,17 +171,17 @@ class NoSinceInKDocRule : Rule(
       kdocNode.addChild(PsiWhiteSpaceImpl(" "), closingTag)
     }
 
-    CompositeElement(KDOC_TAG).also { tagComposite ->
+    CompositeElement(ElementType.KDOC_TAG).also { tagComposite ->
       kdocNode.addChild(tagComposite, closingTag)
 
       if (firstNewNode == null) {
         firstNewNode = tagComposite
       }
 
-      tagComposite.addChild(LeafPsiElement(KDOC_TAG_NAME, "@since"))
+      tagComposite.addChild(LeafPsiElement(ElementType.KDOC_TAG_NAME, "@since"))
 
       // tagComposite.addChild(PsiWhiteSpaceImpl(" "))
-      tagComposite.addChild(LeafPsiElement(KDOC_TEXT, " $version"))
+      tagComposite.addChild(LeafPsiElement(ElementType.KDOC_TEXT, " $version"))
     }
 
     // The AST will automatically add a whitespace between the previous node and the first one we
@@ -193,10 +189,10 @@ class NoSinceInKDocRule : Rule(
     // remove the new whitespace **before** the ones we've added.
     val previousLeaf = firstNewNode?.prevLeaf(true) as? LeafElement
     when (previousLeaf?.elementType) {
-      WHITE_SPACE -> kdocNode.removeChild(previousLeaf)
-      KDOC_TEXT -> previousLeaf.treeParent.replaceChild(
+      ElementType.WHITE_SPACE -> kdocNode.removeChild(previousLeaf)
+      ElementType.KDOC_TEXT -> previousLeaf.treeParent.replaceChild(
         previousLeaf,
-        LeafPsiElement(KDOC_TEXT, previousLeaf.text.trimEnd())
+        LeafPsiElement(ElementType.KDOC_TEXT, previousLeaf.text.trimEnd())
       )
     }
 
@@ -234,7 +230,7 @@ class NoSinceInKDocRule : Rule(
       "Expected to be adding a version to a `@since` tag, but instead it's `$text`."
     }
 
-    node.addChild(LeafPsiElement(KDOC_TEXT, " $version"), null)
+    node.addChild(LeafPsiElement(ElementType.KDOC_TEXT, " $version"), null)
   }
 
   internal companion object {

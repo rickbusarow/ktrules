@@ -15,20 +15,19 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_LEADING_ASTERISK
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_START
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule
-import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.compat.mustRunAfter
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocStart
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpaceWithNewline
+import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.parent
+import com.rickbusarow.ktrules.rules.internal.psi.parents
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
-import org.jetbrains.kotlin.psi.psiUtil.parents
 
 /**
  * Ensures that there's a space after every leading asterisk in a KDoc comment, except for blank
@@ -40,10 +39,7 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
   ID,
   ABOUT,
   visitorModifiers = setOf(
-    RunAfterRule(
-      KDocLeadingAsteriskRule.ID,
-      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-    )
+    mustRunAfter(KDocLeadingAsteriskRule.ID)
   )
 ) {
 
@@ -53,7 +49,7 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    if (node.elementType == KDOC_LEADING_ASTERISK || node.elementType == KDOC_START) {
+    if (node.isKDocLeadingAsterisk() || node.isKDocStart()) {
       val nextLeaf = node.nextLeaf(true) ?: return
 
       val childOfTag = node.parents().any { it.isKDocTag() }

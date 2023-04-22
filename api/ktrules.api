@@ -8,6 +8,12 @@ public final class com/rickbusarow/ktrules/KtRulesRuleSetProvider$Companion {
 	public final fun getABOUT ()Lcom/pinterest/ktlint/rule/engine/core/api/Rule$About;
 }
 
+public final class com/rickbusarow/ktrules/compat/AliasKt {
+	public static final fun RuleProvider (Lkotlin/jvm/functions/Function0;)Lcom/pinterest/ktlint/rule/engine/core/api/RuleProvider;
+	public static final fun dependsOn-SVcM_i8 (Ljava/lang/String;)Lcom/pinterest/ktlint/rule/engine/core/api/Rule$VisitorModifier$RunAfterRule;
+	public static final fun mustRunAfter-SVcM_i8 (Ljava/lang/String;)Lcom/pinterest/ktlint/rule/engine/core/api/Rule$VisitorModifier$RunAfterRule;
+}
+
 public final class com/rickbusarow/ktrules/rules/KDocBlankLinesRule : com/pinterest/ktlint/rule/engine/core/api/Rule {
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
@@ -100,5 +106,119 @@ public final class com/rickbusarow/ktrules/rules/WrappingStyle : java/lang/Enum 
 
 public final class com/rickbusarow/ktrules/rules/internal/SortKt {
 	public static final fun sortedWith (Ljava/lang/Iterable;[Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/psi/AstKt {
+	public static final fun childrenBreadthFirst (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun childrenBreadthFirst (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun childrenDepthFirst (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun childrenDepthFirst (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun fileIndent (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;I)Ljava/lang/String;
+	public static final fun getParent (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun isBlank (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isCopyrightHeader (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isFile (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isFirstChild (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isScript (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isTopLevel (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isWhiteSpaceOrBlank (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun nextLeaves (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Z)Lkotlin/sequences/Sequence;
+	public static synthetic fun nextLeaves$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+	public static final fun nextSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextSiblings (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun parents (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun parentsWithSelf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun prevLeaves (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Z)Lkotlin/sequences/Sequence;
+	public static synthetic fun prevLeaves$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+	public static final fun prevSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevSiblings (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun removeAllChildren (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun removeAllChildren$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun removeAllChildrenRecursive (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/psi/CompatKt {
+	public static final fun children (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
+	public static final fun firstChildLeafOrSelf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun getColumn (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)I
+	public static final fun isCodeLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isPartOfComment (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isPartOfString (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isRegularStringWithNewline (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isRoot (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isWhiteSpace (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isWhiteSpaceWithNewline (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isWhiteSpaceWithoutNewline (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun lastChildLeafOrSelf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextCodeLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZZ)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun nextCodeLeaf$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZZILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextCodeSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZZ)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun nextLeaf$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZZILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextLeafAny (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextLeafStrict (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun nextSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun nextSibling$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun parent (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lorg/jetbrains/kotlin/com/intellij/psi/tree/IElementType;Z)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun parent (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun parent$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lorg/jetbrains/kotlin/com/intellij/psi/tree/IElementType;ZILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun parent$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevCodeLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Z)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun prevCodeLeaf$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevCodeSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Z)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun prevLeaf$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevLeafAny (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun prevSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun prevSibling$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun replaceWhitespaceWith (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Ljava/lang/String;)V
+	public static final fun upsertWhitespaceAfterMe (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Ljava/lang/String;)V
+	public static final fun upsertWhitespaceBeforeMe (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Ljava/lang/String;)V
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/psi/PsiKt {
+	public static final fun childrenBreadthFirst (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Lkotlin/sequences/Sequence;
+	public static final fun childrenBreadthFirst (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun childrenDepthFirst (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Lkotlin/sequences/Sequence;
+	public static final fun childrenDepthFirst (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun createFileFromText (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Ljava/lang/String;)Lorg/jetbrains/kotlin/psi/KtFile;
+	public static final fun fileIndent (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;I)Ljava/lang/String;
+	public static final fun getAllTags (Lorg/jetbrains/kotlin/kdoc/psi/api/KDoc;)Ljava/util/List;
+	public static final fun getCallNameExpression (Lorg/jetbrains/kotlin/psi/KtCallElement;)Lorg/jetbrains/kotlin/psi/KtSimpleNameExpression;
+	public static final fun getKDocSection (Lorg/jetbrains/kotlin/kdoc/psi/impl/KDocTag;)Lorg/jetbrains/kotlin/kdoc/psi/impl/KDocSection;
+	public static final fun getStartOffset (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)I
+	public static final fun getValueParameterList (Lorg/jetbrains/kotlin/psi/KtNamedDeclaration;)Lorg/jetbrains/kotlin/psi/KtParameterList;
+	public static final fun getValueParameters (Lorg/jetbrains/kotlin/psi/KtNamedDeclaration;)Ljava/util/List;
+	public static final fun isBlank (Lorg/jetbrains/kotlin/kdoc/psi/impl/KDocTag;)Z
+	public static final fun isInKDocDefaultSection (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
+	public static final fun isKDocDefaultSection (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
+	public static final fun isKDocFirstSectionAfterDefault (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
+	public static final fun isKDocSectionWithTagChildren (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
+	public static final fun isKDocTag (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
+	public static final fun isKDocTagWithTagChildren (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
+	public static final fun ktPsiFactory (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Lorg/jetbrains/kotlin/psi/KtPsiFactory;
+	public static final fun tagTextWithoutLeadingAsterisks (Lorg/jetbrains/kotlin/kdoc/psi/impl/KDocTag;)Ljava/lang/String;
+}
+
+public abstract class com/rickbusarow/ktrules/rules/internal/trees/AbstractTreePrinter {
+	public fun <init> ()V
+	public fun <init> (C)V
+	public synthetic fun <init> (CILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun children (Ljava/lang/Object;)Lkotlin/sequences/Sequence;
+	public abstract fun parent (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun printTreeString (Ljava/lang/Object;)V
+	public abstract fun simpleClassName (Ljava/lang/Object;)Ljava/lang/String;
+	public abstract fun text (Ljava/lang/Object;)Ljava/lang/String;
+	public final fun treeString (Ljava/lang/Object;)Ljava/lang/String;
+	public abstract fun typeName (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/trees/Traversals {
+	public static final field INSTANCE Lcom/rickbusarow/ktrules/rules/internal/trees/Traversals;
+	public final fun breadthFirstTraversal (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public final fun depthFirstTraversal (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
 }
 

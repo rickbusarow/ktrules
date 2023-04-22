@@ -15,19 +15,18 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_END
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpace
-import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocEnd
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceBeforeLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpace
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpaceWithNewline
+import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
 import com.rickbusarow.ktrules.rules.internal.psi.parent
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
@@ -95,7 +94,7 @@ class KDocLeadingAsteriskRule : Rule(ID, ABOUT) {
           parent.removeChild(node)
 
           repeat(numLines) { i ->
-            if (i == numLines - 1 && next.elementType == KDOC_END) {
+            if (i == numLines - 1 && next.elementType == ElementType.KDOC_END) {
               parent.addChild(PsiWhiteSpaceImpl(newlineIndent.dropLast(1)), next)
             } else {
               parent.addChild(PsiWhiteSpaceImpl(newlineIndent), next)

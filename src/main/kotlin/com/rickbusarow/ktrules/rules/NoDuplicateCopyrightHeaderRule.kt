@@ -15,16 +15,16 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.isCopyrightHeader
 import com.rickbusarow.ktrules.rules.internal.psi.isFile
 import com.rickbusarow.ktrules.rules.internal.psi.isScript
 import com.rickbusarow.ktrules.rules.internal.psi.isTopLevel
+import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.parentsWithSelf
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 

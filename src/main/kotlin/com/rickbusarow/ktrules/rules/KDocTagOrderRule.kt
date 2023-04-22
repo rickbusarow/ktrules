@@ -15,19 +15,19 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TAG_NAME
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.WHITE_SPACE
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
+import com.rickbusarow.ktrules.rules.internal.psi.getValueParameters
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpace
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpaceWithNewline
 import com.rickbusarow.ktrules.rules.internal.sortedWith
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
-import org.jetbrains.kotlin.psi.psiUtil.getValueParameters
 
 /**
  * Sorts KDoc tags by their declaration order in the class or function.
@@ -54,13 +54,13 @@ class KDocTagOrderRule : Rule(ID, ABOUT) {
 
       val sortedKdocTags = kdocTags.sortedWith(
         { tag ->
-          val tagName = tag.findChildByType(KDOC_TAG_NAME)?.text
+          val tagName = tag.findChildByType(ElementType.KDOC_TAG_NAME)?.text
 
           tagName !in setOf("@param", "@property")
         },
         { tag ->
 
-          when (val tagName = tag.findChildByType(KDOC_TAG_NAME)?.text.orEmpty()) {
+          when (val tagName = tag.findChildByType(ElementType.KDOC_TAG_NAME)?.text.orEmpty()) {
             "@param", "@property" -> {
 
               val paramName = tag.findChildByType(ElementType.KDOC_MARKDOWN_LINK)?.text
@@ -79,7 +79,7 @@ class KDocTagOrderRule : Rule(ID, ABOUT) {
       kdocTags.forEachIndexed { index, kdocTag ->
 
         if (kdocTag != sortedKdocTags[index]) {
-          val tagName = kdocTag.findChildByType(KDOC_TAG_NAME)?.text.orEmpty()
+          val tagName = kdocTag.findChildByType(ElementType.KDOC_TAG_NAME)?.text.orEmpty()
           emit(
             kdocTag.startOffset,
             "KDoc tag order is incorrect. $tagName should be sorted.",
@@ -92,8 +92,8 @@ class KDocTagOrderRule : Rule(ID, ABOUT) {
 
             // Ensure correct whitespace before the sorted tag
             val prevTag = sortedTag.treePrev ?: return@forEachIndexed
-            if (prevTag.elementType == WHITE_SPACE && prevTag.text != "\n") {
-              val newWhiteSpace = LeafPsiElement(WHITE_SPACE, "\n")
+            if (prevTag.isWhiteSpace() && !prevTag.isWhiteSpaceWithNewline()) {
+              val newWhiteSpace = LeafPsiElement(ElementType.WHITE_SPACE, "\n")
               sortedTag.treeParent.replaceChild(prevTag, newWhiteSpace)
             }
           }

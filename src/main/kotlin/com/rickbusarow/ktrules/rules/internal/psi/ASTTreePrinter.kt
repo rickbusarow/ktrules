@@ -17,7 +17,7 @@ package com.rickbusarow.ktrules.rules.internal.psi
 
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
-import com.pinterest.ktlint.rule.engine.core.api.children as ktlintChildren
+import com.rickbusarow.ktrules.rules.internal.psi.children as realChildren
 
 /**
  * prints a tree starting at any arbitrary psi element, showing all its children types and their
@@ -33,7 +33,7 @@ internal class ASTTreePrinter(
   override fun ASTNode.typeName(): String = elementType.toString()
   override fun ASTNode.parent(): ASTNode? = parent
   override fun ASTNode.simpleClassName(): String = this::class.java.simpleName
-  override fun ASTNode.children(): Sequence<ASTNode> = ktlintChildren()
+  override fun ASTNode.children(): Sequence<ASTNode> = realChildren()
 
   companion object {
 

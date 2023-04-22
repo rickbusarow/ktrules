@@ -15,12 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.api.Code
-import com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
-import com.pinterest.ktlint.rule.engine.api.KtLintRuleEngine
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.rickbusarow.ktrules.compat.Code
+import com.rickbusarow.ktrules.compat.EditorConfigOverride
+import com.rickbusarow.ktrules.compat.KtLintRuleEngine
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.compat.RuleProvider
 import com.rickbusarow.ktrules.rules.internal.dots
 import com.rickbusarow.ktrules.rules.internal.wrapIn
 import io.kotest.assertions.asClue

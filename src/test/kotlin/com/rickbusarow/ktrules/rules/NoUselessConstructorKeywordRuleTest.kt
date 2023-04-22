@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProvider
 import org.junit.jupiter.api.Test
 
 class NoUselessConstructorKeywordRuleTest : Tests {

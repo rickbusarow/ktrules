@@ -676,9 +676,11 @@ style:
   ForbiddenImport:
     active: true
     imports:
-      - 'org.jetbrains.kotlin.psi.psiUtil.children'
-      - 'org.jetbrains.kotlin.psi.psiUtil.endOffset'
-      - 'org.jetbrains.kotlin.psi.psiUtil.startOffset'
+      - 'com.pinterest.ktlint.rule.engine.api.*'
+      - 'com.pinterest.ktlint.rule.engine.core.api.*'
+      - 'com.pinterest.ktlint.rule.engine.core.api.ElementType.*'
+      - 'com.pinterest.ktlint.rule.engine.core.api.Rule.*'
+      - 'org.jetbrains.kotlin.psi.psiUtil.*'
     forbiddenPatterns: ""
     excludes: [ "**/build-logic/**" ]
   ForbiddenMethodCall:

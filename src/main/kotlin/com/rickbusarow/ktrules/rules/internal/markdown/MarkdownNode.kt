@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules.internal.markdown
 
 import com.rickbusarow.ktrules.rules.internal.checkNotNull
-import com.rickbusarow.ktrules.rules.internal.trees.depthFirstTraversal
+import com.rickbusarow.ktrules.rules.internal.trees.Traversals.depthFirstTraversal
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
@@ -294,10 +294,10 @@ internal fun MarkdownNode.firstChildOfType(vararg types: IElementType): Markdown
 
 /** @since 1.0.4 */
 internal fun MarkdownNode.childrenDepthFirst(): Sequence<MarkdownNode> {
-  return depthFirstTraversal(MarkdownNode::children)
+  return depthFirstTraversal(this) { children }
 }
 
 /** @since 1.0.4 */
 internal inline fun MarkdownNode.childrenDepthFirst(
   crossinline predicate: (MarkdownNode) -> Boolean
-): Sequence<MarkdownNode> = depthFirstTraversal { children.filter(predicate) }
+): Sequence<MarkdownNode> = depthFirstTraversal(this) { children.filter(predicate) }

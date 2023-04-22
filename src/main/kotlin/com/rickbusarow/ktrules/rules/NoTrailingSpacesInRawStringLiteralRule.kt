@@ -15,11 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.LITERAL_STRING_TEMPLATE_ENTRY
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 
@@ -52,7 +52,7 @@ class NoTrailingSpacesInRawStringLiteralRule : Rule(ID, ABOUT) {
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    if (node.elementType == LITERAL_STRING_TEMPLATE_ENTRY) {
+    if (node.elementType == ElementType.LITERAL_STRING_TEMPLATE_ENTRY) {
 
       val stringPartNode = node.nextLeaf(true) ?: return
 

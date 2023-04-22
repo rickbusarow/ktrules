@@ -18,10 +18,10 @@
 package com.rickbusarow.ktrules
 
 import com.google.auto.service.AutoService
-import com.pinterest.ktlint.cli.ruleset.core.api.RuleSetProviderV3
-import com.pinterest.ktlint.rule.engine.core.api.Rule.About
-import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
-import com.pinterest.ktlint.rule.engine.core.api.RuleSetId
+import com.rickbusarow.ktrules.compat.RuleAbout
+import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleSetId
+import com.rickbusarow.ktrules.compat.RuleSetProvider
 import com.rickbusarow.ktrules.rules.KDocBlankLinesRule
 import com.rickbusarow.ktrules.rules.KDocCollapseRule
 import com.rickbusarow.ktrules.rules.KDocContentWrappingRule
@@ -37,8 +37,8 @@ import com.rickbusarow.ktrules.rules.NoTrailingSpacesInRawStringLiteralRule
 import com.rickbusarow.ktrules.rules.NoUselessConstructorKeywordRule
 import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
 
-@AutoService(RuleSetProviderV3::class)
-class KtRulesRuleSetProvider : RuleSetProviderV3(
+@AutoService(RuleSetProvider::class)
+class KtRulesRuleSetProvider : RuleSetProvider(
   id = RuleSetId("kt-rules")
 ) {
 
@@ -63,7 +63,7 @@ class KtRulesRuleSetProvider : RuleSetProviderV3(
 
   companion object {
     /** */
-    val ABOUT: About = About(
+    val ABOUT: RuleAbout = RuleAbout(
       maintainer = "Rick Busarow",
       repositoryUrl = "https://www.github.com/rbusarow/ktrules",
       issueTrackerUrl = "https://www.github.com/rbusarow/ktrules/issues",

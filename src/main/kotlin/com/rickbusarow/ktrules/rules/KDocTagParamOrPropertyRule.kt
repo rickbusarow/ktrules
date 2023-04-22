@@ -15,19 +15,19 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.AT_PARAM
 import com.rickbusarow.ktrules.rules.internal.psi.AT_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
+import com.rickbusarow.ktrules.rules.internal.psi.getValueParameters
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag
 import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
-import org.jetbrains.kotlin.psi.psiUtil.getValueParameters
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**

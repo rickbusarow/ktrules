@@ -15,25 +15,19 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule
-import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.children
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
-import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.rule.engine.core.api.lastChildLeafOrSelf
-import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
-import com.pinterest.ktlint.rule.engine.core.api.upsertWhitespaceAfterMe
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.EditorConfig
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
 import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.markdown.MarkdownNode
 import com.rickbusarow.ktrules.rules.internal.markdown.wrap
 import com.rickbusarow.ktrules.rules.internal.prefixIfNot
+import com.rickbusarow.ktrules.rules.internal.psi.children
 import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.createFileFromText
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
@@ -44,10 +38,14 @@ import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagOrSection
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceAfterLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpaceWithNewline
+import com.rickbusarow.ktrules.rules.internal.psi.lastChildLeafOrSelf
+import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
 import com.rickbusarow.ktrules.rules.internal.psi.parent
 import com.rickbusarow.ktrules.rules.internal.psi.startOffset
 import com.rickbusarow.ktrules.rules.internal.psi.tagTextWithoutLeadingAsterisks
+import com.rickbusarow.ktrules.rules.internal.psi.upsertWhitespaceAfterMe
 import com.rickbusarow.ktrules.rules.wrapping.GreedyWrapper
 import com.rickbusarow.ktrules.rules.wrapping.MinimumRaggednessWrapper
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
@@ -68,20 +66,13 @@ class KDocContentWrappingRule : Rule(
   ID,
   ABOUT,
   visitorModifiers = setOf(
-    RunAfterRule(
-      KDocLeadingAsteriskRule.ID,
-      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-    ),
-    RunAfterRule(
-      KDocIndentAfterLeadingAsteriskRule.ID,
-      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-    )
+    mustRunAfter(KDocLeadingAsteriskRule.ID),
+    mustRunAfter(KDocIndentAfterLeadingAsteriskRule.ID)
   ),
   usesEditorConfigProperties = setOf(MAX_LINE_LENGTH_PROPERTY, WRAPPING_STYLE_PROPERTY)
 ) {
 
-  private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY
-  private var maxLineLength: Int = maxLineLengthProperty.defaultValue
+  private var maxLineLength: Int = MAX_LINE_LENGTH_PROPERTY.defaultValue
 
   private val markdownParser by lazy(NONE) {
     // This has to use the GFMFlavourDescriptor so that it can parse tables.
@@ -102,7 +93,7 @@ class KDocContentWrappingRule : Rule(
 
   override fun beforeFirstNode(editorConfig: EditorConfig) {
 
-    maxLineLength = editorConfig[maxLineLengthProperty]
+    maxLineLength = editorConfig[MAX_LINE_LENGTH_PROPERTY]
     wrappingStyle = editorConfig[WRAPPING_STYLE_PROPERTY]
     super.beforeFirstNode(editorConfig)
   }

@@ -15,24 +15,23 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TEXT
-import com.pinterest.ktlint.rule.engine.core.api.Rule
-import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-import com.pinterest.ktlint.rule.engine.core.api.RuleId
-import com.pinterest.ktlint.rule.engine.core.api.children
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
-import com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
-import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpace
-import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
-import com.pinterest.ktlint.rule.engine.core.api.upsertWhitespaceBeforeMe
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
+import com.rickbusarow.ktrules.compat.EditorConfig
+import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.compat.mustRunAfter
+import com.rickbusarow.ktrules.rules.internal.psi.children
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getKDocSections
 import com.rickbusarow.ktrules.rules.internal.psi.getKDocTextWithoutLeadingAsterisks
 import com.rickbusarow.ktrules.rules.internal.psi.isKDoc
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocSection
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpace
+import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpaceWithNewline
+import com.rickbusarow.ktrules.rules.internal.psi.prevLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.removeAllChildren
+import com.rickbusarow.ktrules.rules.internal.psi.upsertWhitespaceBeforeMe
 import com.rickbusarow.ktrules.rules.internal.removeRegex
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
@@ -47,18 +46,9 @@ class KDocCollapseRule : Rule(
   ID,
   ABOUT,
   visitorModifiers = setOf(
-    VisitorModifier.RunAfterRule(
-      KDocContentWrappingRule.ID,
-      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-    ),
-    VisitorModifier.RunAfterRule(
-      KDocLeadingAsteriskRule.ID,
-      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-    ),
-    VisitorModifier.RunAfterRule(
-      KDocBlankLinesRule.ID,
-      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-    ),
+    mustRunAfter(KDocContentWrappingRule.ID),
+    mustRunAfter(KDocLeadingAsteriskRule.ID),
+    mustRunAfter(KDocBlankLinesRule.ID),
   ),
   usesEditorConfigProperties = setOf(MAX_LINE_LENGTH_PROPERTY, WRAPPING_STYLE_PROPERTY)
 ) {
@@ -142,7 +132,7 @@ class KDocCollapseRule : Rule(
         else -> " "
       }
 
-      defaultSection.addChild(LeafPsiElement(KDOC_TEXT, newDefaultSectionText), null)
+      defaultSection.addChild(LeafPsiElement(ElementType.KDOC_TEXT, newDefaultSectionText), null)
 
       val whiteSpaceBeforeEnd = kdocEnd.prevLeaf(includeEmpty = true)
         .takeIf { it.isWhiteSpace() }

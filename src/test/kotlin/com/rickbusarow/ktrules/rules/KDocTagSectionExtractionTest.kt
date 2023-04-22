@@ -16,10 +16,10 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
+import com.rickbusarow.ktrules.rules.internal.psi.getChildOfType
 import com.rickbusarow.ktrules.rules.internal.psi.tagTextWithoutLeadingAsterisks
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 import org.junit.jupiter.api.Test
 
 class KDocTagSectionExtractionTest : Tests {
