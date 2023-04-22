@@ -37,8 +37,10 @@ import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import kotlin.LazyThreadSafetyMode.NONE
 
-/*** @return a [KtPsiFactory] instance for the project of this [PsiElement]. 
- * @since 1.1.0*/
+/**
+ * @return a [KtPsiFactory] instance for the project of this [PsiElement].
+ * @since 1.1.0
+ */
 fun PsiElement.ktPsiFactory(): KtPsiFactory {
   return KtPsiFactory(project, markGenerated = true)
 }
@@ -52,8 +54,10 @@ fun PsiElement.createFileFromText(text: String): KtFile {
   return ktPsiFactory().createFile("tmp.kt", text)
 }
 
-/*** @return a list of all [KDocTag]s in this [KDoc]. 
- * @since 1.1.0*/
+/**
+ * @return a list of all [KDocTag]s in this [KDoc].
+ * @since 1.1.0
+ */
 fun KDoc.getAllTags(): List<KDocTag> {
   return childrenDepthFirst()
     .filterIsInstance<KDocTag>()
@@ -70,14 +74,18 @@ fun PsiElement?.isKDocTag(): Boolean {
   return this != null && node.isKDocTag()
 }
 
-/*** @return `true` if this [PsiElement] is a KDoc section with tag children, `false` otherwise. 
- * @since 1.1.0*/
+/**
+ * @return `true` if this [PsiElement] is a KDoc section with tag children, `false` otherwise.
+ * @since 1.1.0
+ */
 fun PsiElement?.isKDocSectionWithTagChildren(): Boolean {
   return this != null && node.isKDocSectionWithTagChildren()
 }
 
-/*** @return `true` if this [PsiElement] is a KDoc tag with tag children, `false` otherwise. 
- * @since 1.1.0*/
+/**
+ * @return `true` if this [PsiElement] is a KDoc tag with tag children, `false` otherwise.
+ * @since 1.1.0
+ */
 fun PsiElement?.isKDocTagWithTagChildren(): Boolean {
   return this != null && node.isKDocTagWithTagChildren()
 }
@@ -152,8 +160,8 @@ fun <T : KDocTag> T.tagTextWithoutLeadingAsterisks(): String {
 /**
  * @return the [KDocSection] of this [KDocTag]. If the receiver tag is a [KDocSection], it will
  *   return itself.
- * @throws IllegalArgumentException if this [KDocTag] doesn't have a [KDocSection] parent.
  * @since 1.1.0
+ * @throws IllegalArgumentException if this [KDocTag] doesn't have a [KDocSection] parent.
  */
 fun KDocTag.getKDocSection(): KDocSection {
   return this as? KDocSection ?: getStrictParentOfType<KDocSection>()
@@ -162,8 +170,10 @@ fun KDocTag.getKDocSection(): KDocSection {
     }
 }
 
-/*** @return `true` if this [KDocTag] is blank, `false` otherwise. 
- * @since 1.1.0*/
+/**
+ * @return `true` if this [KDocTag] is blank, `false` otherwise.
+ * @since 1.1.0
+ */
 fun KDocTag.isBlank(): Boolean {
   return node.children()
     .filter { !it.isKDocLeadingAsterisk() }
@@ -171,8 +181,10 @@ fun KDocTag.isBlank(): Boolean {
     .isBlank()
 }
 
-/*** @return the start offset of this [PsiElement]. 
- * @since 1.1.0*/
+/**
+ * @return the start offset of this [PsiElement].
+ * @since 1.1.0
+ */
 val PsiElement.startOffset: Int get() = textRange.startOffset
 
 /**
@@ -201,8 +213,10 @@ fun PsiElement.fileIndent(additionalOffset: Int): String {
   return " ".repeat(numSpaces)
 }
 
-/*** @return a depth-first [Sequence] of this [PsiElement]'s descendants. 
- * @since 1.1.0*/
+/**
+ * @return a depth-first [Sequence] of this [PsiElement]'s descendants.
+ * @since 1.1.0
+ */
 fun PsiElement.childrenDepthFirst(): Sequence<PsiElement> {
   return depthFirstTraversal(this) { children.toList() }
 }
@@ -220,8 +234,10 @@ inline fun PsiElement.childrenDepthFirst(crossinline predicate: (PsiElement) -> 
   return depthFirstTraversal(this) { children.filter(predicate) }
 }
 
-/*** @return a breadth-first [Sequence] of this [PsiElement]'s descendants. 
- * @since 1.1.0*/
+/**
+ * @return a breadth-first [Sequence] of this [PsiElement]'s descendants.
+ * @since 1.1.0
+ */
 fun PsiElement.childrenBreadthFirst(): Sequence<PsiElement> {
   return breadthFirstTraversal(this) { children.toList() }
 }
@@ -240,14 +256,18 @@ inline fun PsiElement.childrenBreadthFirst(crossinline predicate: (PsiElement) -
   return breadthFirstTraversal(this) { children.filter(predicate) }
 }
 
-/*** @return `true` if this [PsiElement] is a descendant of [T], `false` otherwise. 
- * @since 1.1.0*/
+/**
+ * @return `true` if this [PsiElement] is a descendant of [T], `false` otherwise.
+ * @since 1.1.0
+ */
 inline fun <reified T : PsiElement> PsiElement.isPartOf(): Boolean {
   return getNonStrictParentOfType<T>() != null
 }
 
-/*** @return the [KtSimpleNameExpression] of the call name, or `null`. 
- * @since 1.1.0*/
+/**
+ * @return the [KtSimpleNameExpression] of the call name, or `null`.
+ * @since 1.1.0
+ */
 fun KtCallElement.getCallNameExpression(): KtSimpleNameExpression? {
   val calleeExpression = calleeExpression ?: return null
 
@@ -258,26 +278,34 @@ fun KtCallElement.getCallNameExpression(): KtSimpleNameExpression? {
   }
 }
 
-/*** @return the strict parent of type [T], or `null`. 
- * @since 1.1.0*/
+/**
+ * @return the strict parent of type [T], or `null`.
+ * @since 1.1.0
+ */
 inline fun <reified T : PsiElement> PsiElement.getStrictParentOfType(): T? {
   return PsiTreeUtil.getParentOfType(this, T::class.java, true)
 }
 
-/*** @return the non-strict parent of type [T], or `null`. 
- * @since 1.1.0*/
+/**
+ * @return the non-strict parent of type [T], or `null`.
+ * @since 1.1.0
+ */
 inline fun <reified T : PsiElement> PsiElement.getNonStrictParentOfType(): T? {
   return PsiTreeUtil.getParentOfType(this, T::class.java, false)
 }
 
-/*** @return the list of [KtParameter]s representing the value parameters. 
- * @since 1.1.0*/
+/**
+ * @return the list of [KtParameter]s representing the value parameters.
+ * @since 1.1.0
+ */
 fun KtNamedDeclaration.getValueParameters(): List<KtParameter> {
   return getValueParameterList()?.parameters.orEmpty()
 }
 
-/*** @return the [KtParameterList] of the value parameters, or `null`. 
- * @since 1.1.0*/
+/**
+ * @return the [KtParameterList] of the value parameters, or `null`.
+ * @since 1.1.0
+ */
 fun KtNamedDeclaration.getValueParameterList(): KtParameterList? {
   return when (this) {
     is KtCallableDeclaration -> valueParameterList
@@ -286,8 +314,10 @@ fun KtNamedDeclaration.getValueParameterList(): KtParameterList? {
   }
 }
 
-/*** @return the first child of type [T], or `null`. 
- * @since 1.1.0*/
+/**
+ * @return the first child of type [T], or `null`.
+ * @since 1.1.0
+ */
 inline fun <reified T : PsiElement> PsiElement.getChildOfType(): T? {
   return PsiTreeUtil.getChildOfType(this, T::class.java)
 }

@@ -160,7 +160,8 @@ fun ASTNode.removeAllChildrenRecursive(shouldRemove: (ASTNode) -> Boolean) {
     .forEach { it.removeAllChildrenRecursive(shouldRemove) }
 }
 
-/*** All ancestors of the receiver node, starting with the immediate parent 
- *
- * @since 1.1.0*/
+/**
+ * @return all ancestors of the receiver node, starting with the immediate parent
+ * @since 1.1.0
+ */
 fun ASTNode.parents(): Sequence<ASTNode> = generateSequence(treeParent) { node -> node.treeParent }

@@ -15,9 +15,11 @@
 
 package com.rickbusarow.ktrules.rules.internal.trees
 
-/*** Depth-first and breadth-first traversals of any tree 
+/**
+ * Depth-first and breadth-first traversals of any tree
  *
- * @since 1.1.0*/
+ * @since 1.1.0
+ */
 object Traversals {
 
   /**

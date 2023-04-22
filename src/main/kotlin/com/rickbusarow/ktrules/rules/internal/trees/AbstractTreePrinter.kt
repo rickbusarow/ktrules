@@ -36,29 +36,34 @@ abstract class AbstractTreePrinter<T : Any>(
 
   private var currentColorIndex = 0
 
-  /*** Returns the simple class name of an object of type [T]. 
-   *
-   * @since 1.1.0*/
+  /**
+   * @return the simple class name of an object of type [T].
+   * @since 1.1.0
+   */
   abstract fun T.simpleClassName(): String
 
-  /*** Returns the parent of an object of type [T]. 
-   *
-   * @since 1.1.0*/
+  /**
+   * @return the parent of an object of type [T].
+   * @since 1.1.0
+   */
   abstract fun T.parent(): T?
 
-  /*** Returns the type name of an object of type [T]. 
-   *
-   * @since 1.1.0*/
+  /**
+   * @return the type name of an object of type [T].
+   * @since 1.1.0
+   */
   abstract fun T.typeName(): String
 
-  /*** Returns the text representation of an object of type [T]. 
-   *
-   * @since 1.1.0*/
+  /**
+   * @return the text representation of an object of type [T].
+   * @since 1.1.0
+   */
   abstract fun T.text(): String
 
-  /*** Returns the children of an object of type [T] as a [Sequence]. 
-   *
-   * @since 1.1.0*/
+  /**
+   * @return the children of an object of type [T] as a [Sequence].
+   * @since 1.1.0
+   */
   abstract fun T.children(): Sequence<T>
 
   /**
