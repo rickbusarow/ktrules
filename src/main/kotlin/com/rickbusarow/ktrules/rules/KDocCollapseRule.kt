@@ -15,17 +15,18 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.api.EditorConfigProperties
-import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
-import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
-import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_TEXT
-import com.pinterest.ktlint.core.ast.children
-import com.pinterest.ktlint.core.ast.isWhiteSpace
-import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.core.ast.prevLeaf
-import com.pinterest.ktlint.core.ast.upsertWhitespaceBeforeMe
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TEXT
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpace
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
+import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
+import com.pinterest.ktlint.rule.engine.core.api.upsertWhitespaceBeforeMe
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getKDocSections
 import com.rickbusarow.ktrules.rules.internal.psi.getKDocTextWithoutLeadingAsterisks
@@ -44,26 +45,33 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
  */
 class KDocCollapseRule : Rule(
   ID,
+  ABOUT,
   visitorModifiers = setOf(
-    VisitorModifier.RunAfterRule(KDocContentWrappingRule.ID),
-    VisitorModifier.RunAfterRule(KDocLeadingAsteriskRule.ID),
-    VisitorModifier.RunAfterRule(KDocBlankLinesRule.ID),
-  )
-), UsesEditorConfigProperties {
+    VisitorModifier.RunAfterRule(
+      KDocContentWrappingRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    ),
+    VisitorModifier.RunAfterRule(
+      KDocLeadingAsteriskRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    ),
+    VisitorModifier.RunAfterRule(
+      KDocBlankLinesRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    ),
+  ),
+  usesEditorConfigProperties = setOf(MAX_LINE_LENGTH_PROPERTY, WRAPPING_STYLE_PROPERTY)
+) {
 
-  private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY
-  private var maxLineLength: Int = maxLineLengthProperty.defaultValue
-
-  override val editorConfigProperties: List<EditorConfigProperty<*>>
-    get() = listOf(maxLineLengthProperty, WRAPPING_STYLE_PROPERTY)
+  private var maxLineLength: Int = MAX_LINE_LENGTH_PROPERTY.defaultValue
 
   private val skipAll by lazy { maxLineLength < 0 }
 
-  override fun beforeFirstNode(editorConfigProperties: EditorConfigProperties) {
+  override fun beforeFirstNode(editorConfig: EditorConfig) {
 
-    maxLineLength = editorConfigProperties.getEditorConfigValue(maxLineLengthProperty)
+    maxLineLength = editorConfig[MAX_LINE_LENGTH_PROPERTY]
 
-    super.beforeFirstNode(editorConfigProperties)
+    super.beforeFirstNode(editorConfig)
   }
 
   override fun beforeVisitChildNodes(
@@ -162,7 +170,7 @@ class KDocCollapseRule : Rule(
 
   internal companion object {
 
-    const val ID = "kdoc-collapse"
+    val ID = RuleId("kt-rules:kdoc-collapse")
     const val ERROR_MESSAGE = "kdoc should be collapsed into a single line"
   }
 }

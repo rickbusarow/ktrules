@@ -15,10 +15,12 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_TAG_NAME
-import com.pinterest.ktlint.core.ast.ElementType.WHITE_SPACE
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TAG_NAME
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.WHITE_SPACE
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import com.rickbusarow.ktrules.rules.internal.sortedWith
@@ -32,7 +34,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getValueParameters
  *
  * @since 1.0.4
  */
-class KDocTagOrderRule : Rule(id = "kdoc-tag-order") {
+class KDocTagOrderRule : Rule(ID, ABOUT) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -98,5 +100,9 @@ class KDocTagOrderRule : Rule(id = "kdoc-tag-order") {
         }
       }
     }
+  }
+
+  internal companion object {
+    val ID = RuleId("kt-rules:kdoc-tag-order")
   }
 }

@@ -15,9 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType.LITERAL_STRING_TEMPLATE_ENTRY
-import com.pinterest.ktlint.core.ast.nextLeaf
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.LITERAL_STRING_TEMPLATE_ENTRY
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 
@@ -42,7 +44,7 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
  *
  * @since 1.0.1
  */
-class NoTrailingSpacesInRawStringLiteralRule : Rule("no-trailing-space-in-raw-string-literal") {
+class NoTrailingSpacesInRawStringLiteralRule : Rule(ID, ABOUT) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -59,7 +61,7 @@ class NoTrailingSpacesInRawStringLiteralRule : Rule("no-trailing-space-in-raw-st
       if (stringPartNode.nextLeaf(true)?.text != "\n") return
 
       val violationOffset = stringPartNode.startOffset + stringPartNode.text.trimEnd().length
-      emit(violationOffset, "Trailing space(s) in literal string template", true)
+      emit(violationOffset, ERROR_MESSAGE, true)
 
       stringPartNode.removeTrailingSpaces()
     }
@@ -73,4 +75,9 @@ class NoTrailingSpacesInRawStringLiteralRule : Rule("no-trailing-space-in-raw-st
   }
 
   private fun String.hasTrailingSpace() = takeLast(1) == " "
+
+  internal companion object {
+    val ID = RuleId("kt-rules:no-trailing-space-in-raw-string-literal")
+    const val ERROR_MESSAGE = "Trailing space(s) in literal string template"
+  }
 }

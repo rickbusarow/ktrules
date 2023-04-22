@@ -15,15 +15,19 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.Rule.VisitorModifier.RunAfterRule
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_LEADING_ASTERISK
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_START
-import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.core.ast.nextLeaf
-import com.pinterest.ktlint.core.ast.upsertWhitespaceBeforeMe
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_LEADING_ASTERISK
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_START
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
+import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
+import com.rickbusarow.ktrules.rules.internal.psi.parent
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.psi.psiUtil.parents
 
 /**
@@ -33,8 +37,14 @@ import org.jetbrains.kotlin.psi.psiUtil.parents
  * @since 1.0.4
  */
 class KDocIndentAfterLeadingAsteriskRule : Rule(
-  id = ID,
-  visitorModifiers = setOf(RunAfterRule(KDocLeadingAsteriskRule.ID))
+  ID,
+  ABOUT,
+  visitorModifiers = setOf(
+    RunAfterRule(
+      KDocLeadingAsteriskRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    )
+  )
 ) {
 
   override fun beforeVisitChildNodes(
@@ -59,18 +69,18 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
 
       if (autoCorrect) {
 
-        val existingSpaces = nextLeaf.text.takeWhile { it == ' ' }.length
+        val trimmed = nextLeaf.text.trimStart()
 
-        val fix = leading.drop(existingSpaces)
+        val newNode = LeafPsiElement(nextLeaf.elementType, "$leading$trimmed")
 
-        nextLeaf.upsertWhitespaceBeforeMe(fix)
+        nextLeaf.parent!!.replaceChild(nextLeaf, newNode)
       }
     }
   }
 
   internal companion object {
 
-    const val ID = "kdoc-indent-after-leading-asterisk"
+    val ID = RuleId("kt-rules:kdoc-indent-after-leading-asterisk")
     const val ERROR_MESSAGE = "kdoc indent after leading asterisk"
   }
 }

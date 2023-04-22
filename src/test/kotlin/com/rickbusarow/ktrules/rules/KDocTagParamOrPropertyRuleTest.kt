@@ -15,8 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.test.lint
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 

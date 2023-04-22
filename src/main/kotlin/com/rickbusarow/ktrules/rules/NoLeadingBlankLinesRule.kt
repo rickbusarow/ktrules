@@ -15,9 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.children
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /**
@@ -25,7 +27,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  *
  * @since 1.0.1
  */
-class NoLeadingBlankLinesRule : Rule("no-leading-blank-lines") {
+class NoLeadingBlankLinesRule : Rule(ID, ABOUT) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -44,9 +46,14 @@ class NoLeadingBlankLinesRule : Rule("no-leading-blank-lines") {
         // file will look the way it's supposed to.
         .filter { it.elementType == ElementType.WHITE_SPACE }
         .forEach { leadingWhiteSpace ->
-          emit(leadingWhiteSpace.startOffset, "leading blank lines", true)
+          emit(leadingWhiteSpace.startOffset, ERROR_MESSAGE, true)
           node.removeChild(leadingWhiteSpace)
         }
     }
+  }
+
+  internal companion object {
+    val ID = RuleId("kt-rules:no-leading-blank-lines")
+    const val ERROR_MESSAGE = "leading blank lines"
   }
 }

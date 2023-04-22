@@ -15,12 +15,14 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_END
-import com.pinterest.ktlint.core.ast.isWhiteSpace
-import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.core.ast.nextLeaf
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_END
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpace
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
+import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocEnd
@@ -38,7 +40,7 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
  *
  * @since 1.0.1
  */
-class KDocLeadingAsteriskRule : Rule(ID) {
+class KDocLeadingAsteriskRule : Rule(ID, ABOUT) {
   override fun beforeVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
@@ -109,7 +111,7 @@ class KDocLeadingAsteriskRule : Rule(ID) {
   }
 
   internal companion object {
-    const val ID = "kdoc-leading-asterisk"
+    val ID = RuleId("kt-rules:kdoc-leading-asterisk")
     const val ERROR_MESSAGE = "kdoc leading asterisk"
   }
 }

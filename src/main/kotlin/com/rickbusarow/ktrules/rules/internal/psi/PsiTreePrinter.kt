@@ -28,19 +28,16 @@ internal class PsiTreePrinter(
   whitespaceChar: Char = ' '
 ) : AbstractTreePrinter<PsiElement>(whitespaceChar) {
 
-  override fun depthFirstChildren(root: PsiElement): Sequence<PsiElement> {
-    return root.childrenDepthFirst()
-  }
-
   override fun PsiElement.text(): String = text
   override fun PsiElement.typeName(): String = node.elementType.toString()
   override fun PsiElement.parent(): PsiElement? = parent
   override fun PsiElement.simpleClassName(): String = this::class.java.simpleName
+  override fun PsiElement.children(): Sequence<PsiElement> = children.asSequence()
 
   companion object {
 
     internal fun <T : PsiElement> T.printEverything(
       whitespaceChar: Char = ' '
-    ): T = apply { PsiTreePrinter(whitespaceChar).visitRoot(this) }
+    ): T = apply { PsiTreePrinter(whitespaceChar).printTreeString(this) }
   }
 }

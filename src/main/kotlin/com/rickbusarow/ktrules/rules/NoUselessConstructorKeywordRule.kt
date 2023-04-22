@@ -15,10 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.parent
-import com.pinterest.ktlint.core.ast.prevLeaf
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.parent
+import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.psi.KtPrimaryConstructor
 
@@ -35,7 +36,10 @@ import org.jetbrains.kotlin.psi.KtPrimaryConstructor
  *
  * @since 1.0.1
  */
-class NoUselessConstructorKeywordRule : Rule("no-useless-constructor-keyword") {
+class NoUselessConstructorKeywordRule : com.pinterest.ktlint.rule.engine.core.api.Rule(
+  ID,
+  KtRulesRuleSetProvider.ABOUT
+) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -56,5 +60,9 @@ class NoUselessConstructorKeywordRule : Rule("no-useless-constructor-keyword") {
         constructorNode.removeChild(leadingWhitespaceNode)
       }
     }
+  }
+
+  internal companion object {
+    val ID = RuleId("kt-rules:no-useless-constructor-keyword")
   }
 }

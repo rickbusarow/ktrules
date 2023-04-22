@@ -15,11 +15,14 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.Rule.VisitorModifier.RunAfterRule
-import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.core.ast.nextLeaf
-import com.pinterest.ktlint.core.ast.prevLeaf
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
+import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
+import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.isInKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDoc
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocEnd
@@ -39,8 +42,12 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  */
 class KDocBlankLinesRule : Rule(
   ID,
+  ABOUT,
   visitorModifiers = setOf(
-    RunAfterRule("kdoc-leading-asterisk"),
+    RunAfterRule(
+      KDocLeadingAsteriskRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    ),
   )
 ) {
   override fun beforeVisitChildNodes(
@@ -95,6 +102,6 @@ class KDocBlankLinesRule : Rule(
 
   internal companion object {
 
-    const val ID = "kdoc-blank-lines"
+    val ID = RuleId("kt-rules:kdoc-blank-lines")
   }
 }

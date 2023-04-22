@@ -15,18 +15,18 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.api.EditorConfigProperties
-import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
-import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_TAG
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_TAG_NAME
-import com.pinterest.ktlint.core.ast.ElementType.KDOC_TEXT
-import com.pinterest.ktlint.core.ast.ElementType.WHITE_SPACE
-import com.pinterest.ktlint.core.ast.children
-import com.pinterest.ktlint.core.ast.nextSibling
-import com.pinterest.ktlint.core.ast.prevLeaf
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TAG
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TAG_NAME
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.KDOC_TEXT
+import com.pinterest.ktlint.rule.engine.core.api.ElementType.WHITE_SPACE
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
+import com.pinterest.ktlint.rule.engine.core.api.nextSibling
+import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
@@ -43,21 +43,21 @@ import org.jetbrains.kotlin.psi.psiUtil.collectDescendantsOfType
  *
  * @since 1.0.1
  */
-class NoSinceInKDocRule : Rule(id = ID),
-  UsesEditorConfigProperties {
+class NoSinceInKDocRule : Rule(
+  ruleId = ID,
+  about = ABOUT,
+  usesEditorConfigProperties = setOf(PROJECT_VERSION_PROPERTY)
+) {
 
   private var currentVersion: String? = null
-
-  override val editorConfigProperties: List<EditorConfigProperty<*>>
-    get() = listOf(PROJECT_VERSION_PROPERTY)
 
   private val skipAll by lazy {
     currentVersion?.matches(".*?-.*$".toRegex()) == true
   }
 
-  override fun beforeFirstNode(editorConfigProperties: EditorConfigProperties) {
+  override fun beforeFirstNode(editorConfig: EditorConfig) {
 
-    val version = editorConfigProperties.getEditorConfigValue(PROJECT_VERSION_PROPERTY)
+    val version = editorConfig[PROJECT_VERSION_PROPERTY]
       ?: System.getProperty("ktrules.project_version")
 
     if (version != null) {
@@ -184,8 +184,8 @@ class NoSinceInKDocRule : Rule(id = ID),
 
       tagComposite.addChild(LeafPsiElement(KDOC_TAG_NAME, "@since"))
 
-      tagComposite.addChild(PsiWhiteSpaceImpl(" "))
-      tagComposite.addChild(LeafPsiElement(KDOC_TEXT, version))
+      // tagComposite.addChild(PsiWhiteSpaceImpl(" "))
+      tagComposite.addChild(LeafPsiElement(KDOC_TEXT, " $version"))
     }
 
     // The AST will automatically add a whitespace between the previous node and the first one we
@@ -234,14 +234,11 @@ class NoSinceInKDocRule : Rule(id = ID),
       "Expected to be adding a version to a `@since` tag, but instead it's `$text`."
     }
 
-    val tag = collectDescendantsOfType<LeafPsiElement>().last()
-    val old = tag.text
-
-    tag.rawReplaceWithText("$old $version")
+    node.addChild(LeafPsiElement(KDOC_TEXT, " $version"), null)
   }
 
   internal companion object {
 
-    const val ID = "no-since-in-kdoc"
+    val ID = RuleId("kt-rules:no-since-in-kdoc")
   }
 }

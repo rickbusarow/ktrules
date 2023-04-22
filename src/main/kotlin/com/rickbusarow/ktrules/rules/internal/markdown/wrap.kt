@@ -17,7 +17,7 @@ package com.rickbusarow.ktrules.rules.internal.markdown
 
 import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.prefix
-import com.rickbusarow.ktrules.rules.internal.remove
+import com.rickbusarow.ktrules.rules.internal.removeRegex
 import com.rickbusarow.ktrules.rules.wrapping.StringWrapper
 import com.rickbusarow.ktrules.rules.wrapping.StringWrapper.Companion.splitWords
 import org.intellij.markdown.MarkdownElementTypes
@@ -102,12 +102,12 @@ private fun MarkdownNode.getChildText(
     }
 
     isBlockQuoteTokenOrBlockQuoteTokenInWhiteSpace() -> {
+      val beforeBracket = text.removeRegex("> ?")
       when {
-        isBlockQuoteTokenInWhiteSpace() && !nextSibling()
-          .isEOL() -> text.remove("""> ?""".toRegex())
+        isBlockQuoteTokenInWhiteSpace() && !nextSibling().isEOL() -> beforeBracket
 
         beforeAnyTags || paragraphCount == 0 -> {
-          "> ".repeat(countParentBlockQuotes())
+          beforeBracket + "> ".repeat(countParentBlockQuotes())
         }
 
         else -> "> ".repeat(countParentBlockQuotes())

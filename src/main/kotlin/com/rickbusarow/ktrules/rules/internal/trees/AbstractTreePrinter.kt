@@ -15,109 +15,196 @@
 
 package com.rickbusarow.ktrules.rules.internal.trees
 
-internal abstract class AbstractTreePrinter<T : Any>(
+import com.rickbusarow.ktrules.rules.internal.mapLines
+import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.colorized
+import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.SIMPLE
+import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.TYPE
+
+/**
+ * Base class for printing a tree structure of objects of type [T].
+ *
+ * @param T any type of node
+ * @property whitespaceChar the character to use for replacing
+ *   whitespaces in the node text when printing. Default is ' '.
+ */
+abstract class AbstractTreePrinter<T : Any>(
   private val whitespaceChar: Char = ' '
 ) {
-  private val levels = mutableMapOf<T, Int>()
-  private val dashes = "------------------------------------------------------------"
-
   private val elementSimpleNameMap = mutableMapOf<T, String>()
   private val elementTypeNameMap = mutableMapOf<T, String>()
 
+  private var currentColorIndex = 0
+
+  /** Returns the simple class name of an object of type [T]. */
   abstract fun T.simpleClassName(): String
+
+  /** Returns the parent of an object of type [T]. */
   abstract fun T.parent(): T?
+
+  /** Returns the type name of an object of type [T]. */
   abstract fun T.typeName(): String
+
+  /** Returns the text representation of an object of type [T]. */
   abstract fun T.text(): String
 
-  abstract fun depthFirstChildren(root: T): Sequence<T>
+  /** Returns the children of an object of type [T] as a [Sequence]. */
+  abstract fun T.children(): Sequence<T>
 
-  fun visitRoot(rootNode: T) {
-
-    depthFirstChildren(rootNode)
-      .forEach { node ->
-
-        val thisName = node.uniqueSimpleName()
-        val parentName = (node.parent()?.uniqueTypeName() ?: "----")
-
-        val parentLevel = node.parent()?.let { parent -> levels[parent] } ?: 0
-        levels[node] = parentLevel + 1
-
-        printNode(
-          elementSimpleName = thisName,
-          elementType = node.typeName(),
-          parentName = parentName,
-          parentType = node.parent()?.typeName() ?: "----",
-          nodeText = node.text().replace(" ", "$whitespaceChar"),
-          level = parentLevel + 1
-        )
-      }
+  /**
+   * Prints the tree structure of an object of type [T] to the console.
+   *
+   * @param [rootNode] the root node of the tree.
+   */
+  fun printTreeString(rootNode: T) {
+    println(treeString(rootNode))
   }
 
-  private fun printNode(
-    elementSimpleName: String,
-    elementType: String,
-    parentName: String,
-    parentType: String,
-    nodeText: String,
-    level: Int
-  ) {
-    println(
-      buildString {
-        append("   $dashes")
-        append("   $elementSimpleName")
-        append("   -- type: $elementType")
-        append("   -- parent: $parentName")
-        append("   -- parent type: $parentType")
-        append('\n')
-        append('\n')
-        append(
-          "   %|$nodeText".replaceIndentByMargin(
-            newIndent = "",
-            marginPrefix = "%|"
-          ).prependIndent("│")
-        )
-        append('\n')
-      }
-        .lines()
-        .let {
-          it.dropLast(1) + it.last().replaceFirst(" ", "└─")
-        }
-        .joinToString("\n")
-        .prependIndent("│   ".repeat(level))
-    )
+  /**
+   * Returns the tree structure of an object of type [T] as a string.
+   *
+   * @param [rootNode] the root node of the tree.
+   * @return the tree structure as a string.
+   */
+  fun treeString(rootNode: T): String {
+    return buildTreeString(rootNode, 0)
   }
 
-  private fun T.uniqueTypeName(): String = uniqueName(NameType.TYPE)
+  private fun buildTreeString(rootNode: T, indentLevel: Int): String {
+    val indent = "╎  ".repeat(indentLevel)
 
-  private fun T.uniqueSimpleName(): String = uniqueName(NameType.SIMPLE)
+    val thisName = rootNode.uniqueSimpleName()
+
+    fun String.colorized(): String {
+      // return this
+      return colorized(getCurrentColor())
+    }
+
+    val parentName = (rootNode.parent()?.uniqueSimpleName() ?: "null")
+    val parentType = rootNode.parent()?.typeName() ?: "null"
+
+    val childrenText = rootNode.children()
+      .joinToString("\n") { child ->
+        buildTreeString(child, indentLevel + 1)
+      }
+
+    val typeName = rootNode.typeName()
+
+    @Suppress("MagicNumber")
+    return buildString {
+
+      val header =
+        "$thisName [type: $typeName] [parent: $parentName] [parent type: $parentType]"
+
+      val text = rootNode.text().replace(" ", "$whitespaceChar")
+
+      val headerLength = header.countVisibleChars()
+
+      val len = maxOf(headerLength + 4, text.lines().maxOf { it.countVisibleChars() })
+
+      val headerBoxStart = "┏━".colorized()
+
+      val headerBoxEnd = ("━".repeat((len - 3) - headerLength) + "┓").colorized()
+
+      append("$indent$headerBoxStart $header $headerBoxEnd")
+
+      append('\n')
+      append(indent)
+      append("┣${"━".repeat(len)}┫".colorized())
+      append('\n')
+
+      val paddedText = text.mapLines { line ->
+
+        val pipe = "┃".colorized()
+
+        "$indent$pipe${line.padEnd(len)}$pipe"
+      }
+
+      append(paddedText)
+
+      append('\n')
+      append(indent)
+      append("┗${"━".repeat(len)}┛".colorized())
+
+      if (childrenText.isNotEmpty()) {
+        append("\n")
+        append(childrenText)
+      }
+    }
+  }
+
+  private fun T.uniqueSimpleName(): String = uniqueName(SIMPLE)
 
   private fun T.uniqueName(nameType: NameType): String {
     val map = when (nameType) {
-      NameType.SIMPLE -> elementSimpleNameMap
-      NameType.TYPE -> elementTypeNameMap
+      SIMPLE -> elementSimpleNameMap
+      TYPE -> elementTypeNameMap
     }
 
     return map.getOrPut(this@uniqueName) {
       val count = map.keys.count {
-        if (nameType == NameType.SIMPLE) {
+        if (nameType == SIMPLE) {
           it.simpleClassName() == simpleClassName()
         } else {
           it.typeName() == typeName()
         }
       }
 
-      val name = if (nameType == NameType.SIMPLE) simpleClassName() else typeName()
+      val name = if (nameType == SIMPLE) simpleClassName() else typeName()
 
-      if (count == 0) {
+      val unique = if (count == 0) {
         name
       } else {
         "$name (${count + 1})"
       }
+
+      unique.colorized(getNextColor())
     }
+  }
+
+  private fun getCurrentColor(): Color = Color.values()[currentColorIndex]
+
+  private fun getNextColor(): Color {
+    currentColorIndex = (currentColorIndex + 1) % Color.values().size
+    return getCurrentColor()
+  }
+
+  private fun String.countVisibleChars(): Int {
+    val regex = "\u001B\\[[;\\d]*m".toRegex()
+    val plainStr = regex.replace(this, "")
+    return plainStr.length
   }
 
   private enum class NameType {
     SIMPLE,
     TYPE
+  }
+
+  @Suppress("MagicNumber")
+  private enum class Color(val code: Int) {
+    BLUE(34),
+    CYAN(36),
+    DARK_GRAY(90),
+    GREEN(32),
+    LIGHT_BLUE(94),
+    LIGHT_CYAN(96),
+    LIGHT_GRAY(37),
+    LIGHT_GREEN(92),
+    LIGHT_MAGENTA(95),
+    LIGHT_RED(91),
+    LIGHT_YELLOW(93),
+    MAGENTA(35),
+    RED(31),
+    YELLOW(33);
+
+    companion object {
+
+      private val supported = "win" !in System.getProperty("os.name").lowercase()
+
+      fun String.colorized(color: Color) = if (supported) {
+        "\u001B[${color.code}m$this\u001B[0m"
+      } else {
+        this
+      }
+    }
   }
 }
