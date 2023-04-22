@@ -15,10 +15,12 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.children
-import com.pinterest.ktlint.core.ast.isWhiteSpace
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpace
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /**
@@ -35,7 +37,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  *
  * @since 1.0.1
  */
-class NoSpaceInTargetedAnnotationRule : Rule("no-space-in-annotation-with-target") {
+class NoSpaceInTargetedAnnotationRule : Rule(ID, ABOUT) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -47,8 +49,13 @@ class NoSpaceInTargetedAnnotationRule : Rule("no-space-in-annotation-with-target
 
       val whitespace = node.children().firstOrNull { it.isWhiteSpace() } ?: return
 
-      emit(node.startOffset, "no space after annotation target", true)
+      emit(node.startOffset, ERROR_MESSAGE, true)
       node.removeChild(whitespace)
     }
+  }
+
+  internal companion object {
+    val ID = RuleId("kt-rules:no-space-in-annotation-with-target")
+    const val ERROR_MESSAGE = "no space after annotation target"
   }
 }

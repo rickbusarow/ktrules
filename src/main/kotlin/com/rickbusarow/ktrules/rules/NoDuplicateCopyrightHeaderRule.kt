@@ -15,9 +15,11 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.nextLeaf
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.isCopyrightHeader
 import com.rickbusarow.ktrules.rules.internal.psi.isFile
@@ -35,7 +37,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  *
  * @since 1.0.1
  */
-class NoDuplicateCopyrightHeaderRule : Rule("no-duplicate-copyright-header") {
+class NoDuplicateCopyrightHeaderRule : Rule(ID, ABOUT) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -63,12 +65,17 @@ class NoDuplicateCopyrightHeaderRule : Rule("no-duplicate-copyright-header") {
 
           val trailingWhitespace = commentNode.nextLeaf(includeEmpty = true)
 
-          emit(commentNode.startOffset, "duplicate copyright header", true)
+          emit(commentNode.startOffset, ERROR_MESSAGE, true)
           node.removeChild(commentNode)
           if (trailingWhitespace != null) {
             node.removeChild(trailingWhitespace)
           }
         }
     }
+  }
+
+  internal companion object {
+    val ID = RuleId("kt-rules:no-duplicate-copyright-header")
+    const val ERROR_MESSAGE = "duplicate copyright header"
   }
 }

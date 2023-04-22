@@ -655,6 +655,22 @@ class MarkdownNodeWrappingTest : Tests {
   }
 
   @Test
+  fun `a block quote with one leading space keeps that space`() {
+
+    wrap(
+      """
+      |My quote:
+      |
+      | > This is a quote
+      """.trimMargin(),
+    ) shouldBe """
+      |My quote:
+      |
+      | > This is a quote
+    """.trimMargin()
+  }
+
+  @Test
   fun `a block quote which could be unwrapped is unwrapped`() {
 
     wrap(

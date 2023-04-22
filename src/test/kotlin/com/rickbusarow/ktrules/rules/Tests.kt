@@ -15,10 +15,12 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.LintError
-import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.core.api.EditorConfigOverride
-import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.pinterest.ktlint.rule.engine.api.Code
+import com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
+import com.pinterest.ktlint.rule.engine.api.KtLintRuleEngine
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.dots
 import com.rickbusarow.ktrules.rules.internal.wrapIn
 import io.kotest.assertions.asClue
@@ -28,8 +30,6 @@ import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
 import java.util.stream.Stream
-import com.pinterest.ktlint.test.format as ktlintTestFormat
-import com.pinterest.ktlint.test.lint as ktlintTestLint
 import io.kotest.matchers.shouldBe as kotestShouldBe
 
 interface Tests {
@@ -51,7 +51,7 @@ interface Tests {
   fun Set<RuleProvider>.format(
     @Language("kotlin")
     text: String,
-    filePath: String? = null,
+    script: Boolean = false,
     wrappingStyle: WrappingStyle = wrappingStyleDefault,
     lineLength: Int = lineLengthDefault,
     currentVersion: String = currentVersionDefault,
@@ -61,17 +61,17 @@ interface Tests {
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
         PROJECT_VERSION_PROPERTY to currentVersion
       ),
-  ): String = ktlintTestFormat(
-    text = text.trimIndent(),
-    filePath = filePath,
-    editorConfigOverride = editorConfigOverride,
+  ): String = KtLintRuleEngine(
+    ruleProviders = rules,
+    editorConfigOverride = editorConfigOverride
+  ).format(
+    Code.fromSnippet(text.trimIndent(), script = script)
   )
-    .first
 
   fun format(
     @Language("kotlin")
     text: String,
-    filePath: String? = null,
+    script: Boolean = false,
     wrappingStyle: WrappingStyle = wrappingStyleDefault,
     lineLength: Int = lineLengthDefault,
     currentVersion: String = currentVersionDefault,
@@ -83,13 +83,25 @@ interface Tests {
       ),
     assertions: KtLintResults.() -> Unit
   ) {
-    val pair = rules.ktlintTestFormat(
-      text = text.trimIndent(),
-      filePath = filePath,
-      editorConfigOverride = editorConfigOverride,
-    )
+    val errors = mutableListOf<KtLintResults.Error>()
+    val outputString = KtLintRuleEngine(
+      ruleProviders = rules,
+      editorConfigOverride = editorConfigOverride
+    ).format(
+      Code.fromSnippet(text.trimIndent(), script = script)
+    ) { lintError, corrected ->
+      errors.add(
+        KtLintResults.Error(
+          line = lintError.line,
+          col = lintError.col,
+          ruleId = lintError.ruleId.value,
+          detail = lintError.detail,
+          corrected = corrected
+        )
+      )
+    }
 
-    val results = KtLintResults(output = pair.first, allLintErrors = pair.second)
+    val results = KtLintResults(output = outputString, allLintErrors = errors)
 
     results.assertions()
 
@@ -98,7 +110,7 @@ interface Tests {
 
   fun Set<RuleProvider>.lint(
     text: String,
-    filePath: String? = null,
+    script: Boolean = false,
     wrappingStyle: WrappingStyle = wrappingStyleDefault,
     lineLength: Int = lineLengthDefault,
     currentVersion: String = currentVersionDefault,
@@ -108,15 +120,28 @@ interface Tests {
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
         PROJECT_VERSION_PROPERTY to currentVersion
       )
-  ): List<LintError> = ktlintTestLint(
-    text = text.trimIndent(),
-    filePath = filePath,
-    editorConfigOverride = editorConfigOverride
-  )
+  ): List<KtLintResults.Error> = buildList {
+    KtLintRuleEngine(
+      ruleProviders = rules,
+      editorConfigOverride = editorConfigOverride
+    ).lint(
+      Code.fromSnippet(text.trimIndent(), script = script)
+    ) { lintError ->
+      add(
+        KtLintResults.Error(
+          line = lintError.line,
+          col = lintError.col,
+          ruleId = lintError.ruleId.value,
+          detail = lintError.detail,
+          corrected = false
+        )
+      )
+    }
+  }
 
   fun lint(
     text: String,
-    filePath: String? = null,
+    script: Boolean = false,
     wrappingStyle: WrappingStyle = wrappingStyleDefault,
     lineLength: Int = lineLengthDefault,
     editorConfigOverride: EditorConfigOverride =
@@ -124,11 +149,24 @@ interface Tests {
         MAX_LINE_LENGTH_PROPERTY to lineLength,
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
       )
-  ): List<LintError> = rules.ktlintTestLint(
-    text = text.trimIndent(),
-    filePath = filePath,
-    editorConfigOverride = editorConfigOverride
-  )
+  ): List<KtLintResults.Error> = buildList {
+    KtLintRuleEngine(
+      ruleProviders = rules,
+      editorConfigOverride = editorConfigOverride
+    ).lint(
+      Code.fromSnippet(text.trimIndent(), script = script)
+    ) { lintError ->
+      add(
+        KtLintResults.Error(
+          line = lintError.line,
+          col = lintError.col,
+          ruleId = lintError.ruleId.value,
+          detail = lintError.detail,
+          corrected = false
+        )
+      )
+    }
+  }
 
   fun <T> Iterable<T>.container(
     name: (T) -> String,
@@ -148,7 +186,7 @@ interface Tests {
 
   data class KtLintResults(
     val output: String,
-    val allLintErrors: List<LintError>
+    val allLintErrors: List<Error>
   ) {
 
     private val remaining = allLintErrors.toMutableList()
@@ -156,15 +194,38 @@ interface Tests {
     fun expectError(
       line: Int,
       col: Int,
+      ruleId: RuleId,
+      detail: String,
+      corrected: Boolean = true
+    ) {
+      expectError(
+        line = line,
+        col = col,
+        ruleId = ruleId.value,
+        detail = detail,
+        corrected = corrected
+      )
+    }
+
+    fun expectError(
+      line: Int,
+      col: Int,
       ruleId: String,
       detail: String,
+      corrected: Boolean = true
     ) {
-      val expected = LintError(line = line, col = col, ruleId = ruleId, detail = detail)
+      val expected = Error(
+        line = line,
+        col = col,
+        ruleId = ruleId,
+        detail = detail,
+        corrected = corrected
+      )
 
       "All errors:\n${allLintErrors.joinToString("\n")}\n\n".asClue {
 
         "The next error should be: $expected".asClue {
-          remaining.first() kotestShouldBe expected
+          remaining.firstOrNull() kotestShouldBe expected
         }
       }
 
@@ -178,7 +239,17 @@ interface Tests {
     }
 
     internal fun checkNoMoreErrors() {
-      remaining.shouldBeEmpty()
+      "All errors:\n${allLintErrors.joinToString("\n")}\n\n".asClue {
+        remaining.shouldBeEmpty()
+      }
     }
+
+    data class Error(
+      val line: Int,
+      val col: Int,
+      val ruleId: String,
+      val detail: String,
+      val corrected: Boolean
+    )
   }
 }

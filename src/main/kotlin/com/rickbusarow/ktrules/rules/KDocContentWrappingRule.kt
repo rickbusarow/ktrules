@@ -15,18 +15,19 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.Rule.VisitorModifier.RunAfterRule
-import com.pinterest.ktlint.core.api.EditorConfigProperties
-import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
-import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
-import com.pinterest.ktlint.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.children
-import com.pinterest.ktlint.core.ast.isWhiteSpaceWithNewline
-import com.pinterest.ktlint.core.ast.lastChildLeafOrSelf
-import com.pinterest.ktlint.core.ast.nextLeaf
-import com.pinterest.ktlint.core.ast.upsertWhitespaceAfterMe
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule
+import com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpaceWithNewline
+import com.pinterest.ktlint.rule.engine.core.api.lastChildLeafOrSelf
+import com.pinterest.ktlint.rule.engine.core.api.nextLeaf
+import com.pinterest.ktlint.rule.engine.core.api.upsertWhitespaceAfterMe
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
 import com.rickbusarow.ktrules.rules.internal.letIf
@@ -64,12 +65,20 @@ import kotlin.LazyThreadSafetyMode.NONE
  * @since 1.0.0
  */
 class KDocContentWrappingRule : Rule(
-  id = ID,
+  ID,
+  ABOUT,
   visitorModifiers = setOf(
-    RunAfterRule("kdoc-leading-asterisk"),
-    RunAfterRule("kdoc-indent-after-leading-asterisk")
-  )
-), UsesEditorConfigProperties {
+    RunAfterRule(
+      KDocLeadingAsteriskRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    ),
+    RunAfterRule(
+      KDocIndentAfterLeadingAsteriskRule.ID,
+      REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+    )
+  ),
+  usesEditorConfigProperties = setOf(MAX_LINE_LENGTH_PROPERTY, WRAPPING_STYLE_PROPERTY)
+) {
 
   private val maxLineLengthProperty = MAX_LINE_LENGTH_PROPERTY
   private var maxLineLength: Int = maxLineLengthProperty.defaultValue
@@ -79,9 +88,6 @@ class KDocContentWrappingRule : Rule(
     // The CommonMarkFlavourDescriptor does not recognize tables.
     MarkdownParser(GFMFlavourDescriptor())
   }
-
-  override val editorConfigProperties: List<EditorConfigProperty<*>>
-    get() = listOf(maxLineLengthProperty, WRAPPING_STYLE_PROPERTY)
 
   private var wrappingStyle: WrappingStyle = WRAPPING_STYLE_PROPERTY.defaultValue
 
@@ -94,11 +100,11 @@ class KDocContentWrappingRule : Rule(
 
   private val skipAll by lazy { maxLineLength < 0 }
 
-  override fun beforeFirstNode(editorConfigProperties: EditorConfigProperties) {
+  override fun beforeFirstNode(editorConfig: EditorConfig) {
 
-    maxLineLength = editorConfigProperties.getEditorConfigValue(maxLineLengthProperty)
-    wrappingStyle = editorConfigProperties.getEditorConfigValue(WRAPPING_STYLE_PROPERTY)
-    super.beforeFirstNode(editorConfigProperties)
+    maxLineLength = editorConfig[maxLineLengthProperty]
+    wrappingStyle = editorConfig[WRAPPING_STYLE_PROPERTY]
+    super.beforeFirstNode(editorConfig)
   }
 
   override fun beforeVisitChildNodes(
@@ -131,6 +137,7 @@ class KDocContentWrappingRule : Rule(
       emit(tag.startOffset, ERROR_MESSAGE, true)
 
       if (autoCorrect) {
+
         tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent, tags = tags)
       }
     }
@@ -266,29 +273,32 @@ class KDocContentWrappingRule : Rule(
 
       val newTagNode = newTag.node
 
-      if (nextTagIsInSameSection) {
+      when {
+        nextTagIsInSameSection -> {
 
-        repeat(2) {
-          val toDelete = newTagNode.children()
-            .lastOrNull()
-            .takeIf { newNode ->
-              newNode.isKDocWhitespaceAfterLeadingAsterisk() ||
-                newNode.isKDocLeadingAsterisk() ||
-                newNode.isWhiteSpaceWithNewline()
-            }
-            ?: return@repeat
+          repeat(2) {
+            val toDelete = newTagNode.children()
+              .lastOrNull()
+              .takeIf { newNode ->
+                newNode.isKDocWhitespaceAfterLeadingAsterisk() ||
+                  newNode.isKDocLeadingAsterisk() ||
+                  newNode.isWhiteSpaceWithNewline()
+              }
+              ?: return@repeat
 
-          newTagNode.removeChild(toDelete)
+            newTagNode.removeChild(toDelete)
+          }
+
+          if (tagIndex == 0) {
+            newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
+          }
         }
 
-        if (tagIndex == 0) {
+        nextTagOrNull != null &&
+          newTagNode.lastChildLeafOrSelf().isKDocLeadingAsterisk() -> {
+
           newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
         }
-      } else if (nextTagOrNull != null && newTagNode.lastChildLeafOrSelf()
-          .isKDocLeadingAsterisk()
-      ) {
-
-        newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
       }
     }
 
@@ -312,13 +322,24 @@ class KDocContentWrappingRule : Rule(
           addKDocLeadingSpace = true
         )
 
-      (tag to wrapped).takeIf { it.second != sectionText }
+      if (wrapped != sectionText) {
+
+        println("##################################################### sectionText")
+        println(sectionText)
+        println("##################################################### wrapped")
+        println(wrapped)
+        println("#####################################################")
+
+        tag to wrapped
+      } else {
+        null
+      }
     }
   }
 
   internal companion object {
 
-    const val ID = "kdoc-content-wrapping"
+    val ID = RuleId("kt-rules:kdoc-content-wrapping")
     const val ERROR_MESSAGE = "kdoc content wrapping"
   }
 }

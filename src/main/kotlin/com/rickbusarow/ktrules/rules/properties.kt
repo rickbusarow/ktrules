@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty
+import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfigProperty
 import org.ec4j.core.model.PropertyType.LowerCasingPropertyType
 import org.ec4j.core.model.PropertyType.PropertyValueParser
 import org.ec4j.core.model.PropertyType.PropertyValueParser.EnumValueParser
@@ -41,7 +41,6 @@ internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> by lazy {
     name = projectVersionPropertyType.name,
     type = projectVersionPropertyType,
     defaultValue = null,
-    defaultAndroidValue = null,
     propertyMapper = { property, _ ->
       property?.sourceValue?.trim('"', '\'')
     },
@@ -85,7 +84,6 @@ internal val WRAPPING_STYLE_PROPERTY: EditorConfigProperty<WrappingStyle> by laz
     name = wrappingStylePropertyType.name,
     type = wrappingStylePropertyType,
     defaultValue = WrappingStyle.MINIMUM_RAGGED,
-    defaultAndroidValue = WrappingStyle.MINIMUM_RAGGED,
     propertyMapper = { property, _ ->
 
       val name = property?.sourceValue?.trim('"', '\'')

@@ -16,7 +16,6 @@
 package com.rickbusarow.ktrules
 
 import com.rickbusarow.ktrules.rules.ALL_PROPERTIES
-import com.rickbusarow.ktrules.rules.RULES_PREFIX
 import com.rickbusarow.ktrules.rules.Tests
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -32,11 +31,11 @@ class EditorConfigPropertiesTest : Tests {
       KtRulesRuleSetProvider().getRuleProviders()
     }
 
-    val ids by lazy {
-      ruleProviders.map { it.createNewRuleInstance().id }
-        .sorted()
-        .plus(ALL_PROPERTIES.map { it.name.removePrefix("${RULES_PREFIX}_") })
+    val ruleIds by lazy {
+      ruleProviders.map { it.createNewRuleInstance().ruleId.value }.sorted()
     }
+
+    val propertyIds by lazy { ALL_PROPERTIES.map { it.name } }
 
     @Suppress("EditorConfigEmptySection")
     val defaultConfig =
@@ -71,11 +70,31 @@ class EditorConfigPropertiesTest : Tests {
   @Test
   fun `defaultConfig property matches all defined rule IDs`() = test {
 
-    val ruleReg = """ktlint_kt-rules_(.*?) ?=.*""".toRegex()
+    val ruleReg = """ktlint_(kt-rules_.*?) ?=.*""".toRegex()
 
-    defaultConfig
+    val parsedRuleIds = defaultConfig
       .lines()
-      .mapNotNull { ruleReg.find(it)?.destructured?.component1() } shouldBe ids
+      .takeWhile { it.isNotBlank() }
+      .mapNotNull {
+        ruleReg.find(it)?.destructured?.component1()?.replace("_", ":")
+      }
+
+    parsedRuleIds shouldBe ruleIds
+  }
+
+  @Test
+  fun `defaultConfig property matches all defined config property IDs`() = test {
+
+    val ruleReg = """(ktlint_kt-rules_.*?) ?=.*""".toRegex()
+
+    val parsedPropertyIds = defaultConfig
+      .lines()
+      .dropWhile { it.isNotBlank() }
+      .mapNotNull {
+        ruleReg.find(it)?.destructured?.component1()
+      }
+
+    parsedPropertyIds shouldBe propertyIds
   }
 
   fun test(action: Environment.() -> Unit) {

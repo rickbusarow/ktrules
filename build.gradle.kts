@@ -69,21 +69,38 @@ plugins {
   alias(libs.plugins.kotlinx.binaryCompatibility)
   alias(libs.plugins.jetbrains.changelog)
   // alias(libs.plugins.shadowJar)
+  alias(libs.plugins.moduleCheck)
   alias(libs.plugins.spotless)
   alias(libs.plugins.vanniktech.publish)
 }
 
+moduleCheck {
+  deleteUnused = true
+  checks {
+    depths = true
+    sortDependencies = true
+  }
+  reports {
+    depths.enabled = true
+    graphs {
+      enabled = true
+      outputDir = "$buildDir/reports/modulecheck/graphs"
+    }
+  }
+}
+
 dependencies {
+
+  api(libs.ktlint.cli.ruleset.core)
+  api(libs.ktlint.rule.engine.core)
 
   compileOnly(libs.google.auto.service.annotations)
   compileOnly(libs.kotlin.compiler)
 
-  implementation(libs.ktlint.core)
-
-  implementation(libs.jetbrains.markdown)
-  implementation(libs.ec4j.core)
-
   detektPlugins(libs.detekt.rules.libraries)
+
+  implementation(libs.ec4j.core)
+  implementation(libs.jetbrains.markdown)
 
   ksp(libs.zacSweers.auto.service.ksp)
 
@@ -95,12 +112,13 @@ dependencies {
   testImplementation(libs.kotest.assertions.core.jvm)
   testImplementation(libs.kotest.assertions.shared)
   testImplementation(libs.kotest.common)
-  testImplementation(libs.kotest.runner.junit5.jvm)
   testImplementation(libs.kotest.extensions)
   testImplementation(libs.kotest.property.jvm)
+  testImplementation(libs.kotest.runner.junit5.jvm)
   testImplementation(libs.kotlin.compiler)
   testImplementation(libs.kotlin.reflect)
   testImplementation(libs.ktlint.core)
+  testImplementation(libs.ktlint.rule.engine)
   testImplementation(libs.ktlint.ruleset.standard)
   testImplementation(libs.ktlint.test)
   testImplementation(libs.slf4j.api)
@@ -347,6 +365,7 @@ val fix by tasks.registering {
   dependsOn("doks")
   dependsOn("formatKotlin")
   dependsOn("spotlessApply")
+  dependsOn("moduleCheckAuto")
   dependsOn(deleteEmptyDirs)
 }
 

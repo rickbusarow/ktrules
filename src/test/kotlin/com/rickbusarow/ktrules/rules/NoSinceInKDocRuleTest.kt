@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import org.junit.jupiter.api.Test
 
@@ -239,7 +239,6 @@ class NoSinceInKDocRuleTest : Tests {
       """.trimIndent()
     ) {
       expectError(line = 6, col = 2, detail = "add '0.2.3' to `@since` tag")
-      expectError(line = 7, col = 4)
 
       output shouldBe """
       /**

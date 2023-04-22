@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import org.junit.jupiter.api.Test
 
 class KDocTagOrderRuleTest : Tests {

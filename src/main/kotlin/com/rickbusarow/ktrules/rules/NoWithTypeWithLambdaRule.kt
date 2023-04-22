@@ -15,8 +15,10 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.ktPsiFactory
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.psi.KtCallExpression
@@ -29,7 +31,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getCallNameExpression
  *
  * @since 1.0.9
  */
-class NoWithTypeWithLambdaRule : Rule(ID) {
+class NoWithTypeWithLambdaRule : Rule(ID, ABOUT) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -75,7 +77,7 @@ class NoWithTypeWithLambdaRule : Rule(ID) {
   }
 
   internal companion object {
-    const val ID = "no-gradle-with-type-with-lambda"
+    val ID = RuleId("kt-rules:no-gradle-with-type-with-lambda")
     const val ERROR_MESSAGE = "Use 'configureEach' instead of passing a lambda to 'withType'"
   }
 }

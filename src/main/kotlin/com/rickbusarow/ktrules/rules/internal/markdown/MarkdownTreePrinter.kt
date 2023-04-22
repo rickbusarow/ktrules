@@ -30,10 +30,7 @@ internal class MarkdownTreePrinter(
   override fun MarkdownNode.simpleClassName(): String = this::class.java.simpleName
   override fun MarkdownNode.typeName(): String = elementType.toString()
   override fun MarkdownNode.text(): String = text
-
-  override fun depthFirstChildren(root: MarkdownNode): Sequence<MarkdownNode> {
-    return root.childrenDepthFirst()
-  }
+  override fun MarkdownNode.children(): Sequence<MarkdownNode> = children.asSequence()
 
   override fun MarkdownNode.parent(): MarkdownNode? = parent
 
@@ -43,7 +40,7 @@ internal class MarkdownTreePrinter(
     internal fun MarkdownNode.printEverything(
       whitespaceChar: Char = ' '
     ) = apply {
-      MarkdownTreePrinter(whitespaceChar).visitRoot(this)
+      MarkdownTreePrinter(whitespaceChar).printTreeString(this)
     }
   }
 }

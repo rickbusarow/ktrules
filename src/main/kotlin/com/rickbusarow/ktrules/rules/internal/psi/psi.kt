@@ -15,9 +15,10 @@
 
 package com.rickbusarow.ktrules.rules.internal.psi
 
-import com.pinterest.ktlint.core.ast.children
-import com.pinterest.ktlint.core.ast.isLeaf
-import com.pinterest.ktlint.core.ast.prevLeaf
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.pinterest.ktlint.rule.engine.core.api.isLeaf
+import com.pinterest.ktlint.rule.engine.core.api.nextSibling
+import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
 import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.prefix
 import com.rickbusarow.ktrules.rules.internal.trees.breadthFirstTraversal

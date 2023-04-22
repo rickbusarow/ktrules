@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import org.junit.jupiter.api.Test
 
@@ -140,13 +140,9 @@ class KDocIndentAfterLeadingAsteriskRuleTest : Tests {
     ) {
       expectError(3, 2)
       expectError(4, 5)
-      expectError(4, 5)
-      expectError(5, 7)
       expectError(5, 7)
       expectError(9, 8)
       expectError(11, 11)
-      expectError(11, 11)
-      expectError(13, 13)
       expectError(13, 13)
 
       output shouldBe """

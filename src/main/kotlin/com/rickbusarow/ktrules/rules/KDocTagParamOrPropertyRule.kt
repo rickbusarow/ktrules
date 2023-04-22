@@ -15,8 +15,10 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.Rule
-import com.pinterest.ktlint.core.ast.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.Rule
+import com.pinterest.ktlint.rule.engine.core.api.RuleId
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.rules.internal.psi.AT_PARAM
 import com.rickbusarow.ktrules.rules.internal.psi.AT_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
@@ -34,7 +36,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  *
  * @since 1.0.5
  */
-class KDocTagParamOrPropertyRule : Rule(id = "kdoc-tag-param-or-property") {
+class KDocTagParamOrPropertyRule : Rule(ID, ABOUT) {
 
   private val tagNames by lazy(NONE) {
     setOf(KDocKnownTag.AT_PARAM, KDocKnownTag.AT_PROPERTY)
@@ -127,5 +129,9 @@ class KDocTagParamOrPropertyRule : Rule(id = "kdoc-tag-param-or-property") {
       oldTagTypeNameNode,
       LeafPsiElement(ElementType.KDOC_TAG_NAME, newTypeNameText).node
     )
+  }
+
+  internal companion object {
+    val ID = RuleId("kt-rules:kdoc-tag-param-or-property")
   }
 }

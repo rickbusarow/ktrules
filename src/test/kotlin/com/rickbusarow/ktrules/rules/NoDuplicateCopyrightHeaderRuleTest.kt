@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import org.junit.jupiter.api.TestFactory
 
 class NoDuplicateCopyrightHeaderRuleTest : Tests {
@@ -26,9 +26,9 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
   @TestFactory
   fun `consecutive duplicate file license header is removed`() = listOf(
-    "script" to "foo.kts",
-    "normal" to "foo.kt"
-  ).test({ it.first }) { (_, filePath) ->
+    "script" to true,
+    "normal" to true
+  ).test({ it.first }) { (_, script) ->
 
     rules.format(
       """
@@ -45,7 +45,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin(),
-      filePath = filePath
+      script = script
     ) shouldBe
       """
       |/*
@@ -60,9 +60,9 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
   @TestFactory
   fun `duplicate file license header after package declaration is removed`() = listOf(
-    "script" to "foo.kts",
-    "normal" to "foo.kt"
-  ).test({ it.first }) { (_, filePath) ->
+    "script" to true,
+    "normal" to true
+  ).test({ it.first }) { (_, script) ->
 
     rules.format(
       """
@@ -79,7 +79,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin(),
-      filePath = filePath
+      script = script
     ) shouldBe
       """
       |/*
@@ -94,9 +94,9 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
   @TestFactory
   fun `duplicate file license header after import is removed`() = listOf(
-    "script" to "foo.kts",
-    "normal" to "foo.kt"
-  ).test({ it.first }) { (_, filePath) ->
+    "script" to true,
+    "normal" to true
+  ).test({ it.first }) { (_, script) ->
 
     rules.format(
       """
@@ -113,7 +113,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |class MyClass : Serializable
       |
       """.trimMargin(),
-      filePath = filePath
+      script = script
     ) shouldBe
       """
       |/*
@@ -128,9 +128,9 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
   @TestFactory
   fun `duplicate file license header after file annotation is removed`() = listOf(
-    "script" to "foo.kts",
-    "normal" to "foo.kt"
-  ).test({ it.first }) { (_, filePath) ->
+    "script" to true,
+    "normal" to true
+  ).test({ it.first }) { (_, script) ->
 
     rules.format(
       """
@@ -147,7 +147,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin(),
-      filePath = filePath
+      script = script
     ) shouldBe
       """
       |/*

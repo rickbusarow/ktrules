@@ -15,13 +15,13 @@
 
 package com.rickbusarow.ktrules.rules.internal.psi
 
-import com.pinterest.ktlint.core.ast.ElementType
-import com.pinterest.ktlint.core.ast.children
-import com.pinterest.ktlint.core.ast.isLeaf
-import com.pinterest.ktlint.core.ast.isWhiteSpace
-import com.pinterest.ktlint.core.ast.nextSibling
-import com.pinterest.ktlint.core.ast.prevLeaf
-import com.pinterest.ktlint.core.ast.prevSibling
+import com.pinterest.ktlint.rule.engine.core.api.ElementType
+import com.pinterest.ktlint.rule.engine.core.api.children
+import com.pinterest.ktlint.rule.engine.core.api.isLeaf
+import com.pinterest.ktlint.rule.engine.core.api.isWhiteSpace
+import com.pinterest.ktlint.rule.engine.core.api.nextSibling
+import com.pinterest.ktlint.rule.engine.core.api.prevLeaf
+import com.pinterest.ktlint.rule.engine.core.api.prevSibling
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc

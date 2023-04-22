@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.pinterest.ktlint.core.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -884,6 +884,33 @@ class KDocContentWrappingRuleTest : Tests {
   }
 
   @Test
+  fun `a single bullet point list in the default section is wrapped`() {
+
+    format(
+      text = """
+        /**
+         * My outline:
+         *
+         * - This is a long sentence which should be wrapped when the line length is shorter.
+         */
+        class TestClass(val name: String)
+      """.trimIndent(),
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
+      /**
+       * My outline:
+       *
+       * - This is a long sentence which should be
+       *   wrapped when the line length is shorter.
+       */
+      class TestClass(val name: String)
+      """.trimIndent()
+    }
+  }
+
+  @Test
   fun `a block quote in the default section is wrapped`() {
 
     format(
@@ -896,7 +923,6 @@ class KDocContentWrappingRuleTest : Tests {
         class TestClass(val name: String)
       """.trimIndent(),
     ) {
-      expectError(2, 2)
       expectError(2, 2)
 
       output shouldBe """
@@ -965,7 +991,6 @@ class KDocContentWrappingRuleTest : Tests {
         class TestClass(val name: String)
       """.trimIndent(),
     ) {
-      expectError(2, 2)
       expectError(2, 2)
 
       output shouldBe """

@@ -18,8 +18,10 @@
 package com.rickbusarow.ktrules
 
 import com.google.auto.service.AutoService
-import com.pinterest.ktlint.core.RuleProvider
-import com.pinterest.ktlint.core.RuleSetProviderV2
+import com.pinterest.ktlint.cli.ruleset.core.api.RuleSetProviderV3
+import com.pinterest.ktlint.rule.engine.core.api.Rule.About
+import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
+import com.pinterest.ktlint.rule.engine.core.api.RuleSetId
 import com.rickbusarow.ktrules.rules.KDocBlankLinesRule
 import com.rickbusarow.ktrules.rules.KDocCollapseRule
 import com.rickbusarow.ktrules.rules.KDocContentWrappingRule
@@ -35,16 +37,9 @@ import com.rickbusarow.ktrules.rules.NoTrailingSpacesInRawStringLiteralRule
 import com.rickbusarow.ktrules.rules.NoUselessConstructorKeywordRule
 import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
 
-@AutoService(RuleSetProviderV2::class)
-class KtRulesRuleSetProvider : RuleSetProviderV2(
-  id = "kt-rules",
-  about = About(
-    maintainer = "Rick Busarow",
-    description = "miscellaneous Ktlint rules",
-    license = "Apache 2.0",
-    repositoryUrl = "https://www.github.com/rbusarow/ktrules",
-    issueTrackerUrl = "https://www.github.com/rbusarow/ktrules/issues",
-  )
+@AutoService(RuleSetProviderV3::class)
+class KtRulesRuleSetProvider : RuleSetProviderV3(
+  id = RuleSetId("kt-rules")
 ) {
 
   override fun getRuleProviders(): Set<RuleProvider> {
@@ -63,6 +58,15 @@ class KtRulesRuleSetProvider : RuleSetProviderV2(
       RuleProvider { NoTrailingSpacesInRawStringLiteralRule() },
       RuleProvider { NoUselessConstructorKeywordRule() },
       RuleProvider { NoWithTypeWithLambdaRule() }
+    )
+  }
+
+  companion object {
+    /** */
+    val ABOUT: About = About(
+      maintainer = "Rick Busarow",
+      repositoryUrl = "https://www.github.com/rbusarow/ktrules",
+      issueTrackerUrl = "https://www.github.com/rbusarow/ktrules/issues",
     )
   }
 }
