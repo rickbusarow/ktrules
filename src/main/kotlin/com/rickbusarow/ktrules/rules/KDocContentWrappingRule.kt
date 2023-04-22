@@ -314,13 +314,6 @@ class KDocContentWrappingRule : Rule(
         )
 
       if (wrapped != sectionText) {
-
-        println("##################################################### sectionText")
-        println(sectionText)
-        println("##################################################### wrapped")
-        println(wrapped)
-        println("#####################################################")
-
         tag to wrapped
       } else {
         null
