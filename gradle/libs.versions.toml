@@ -26,7 +26,6 @@ jmailen-kotlinter = "3.14.0"
 johnrengelman-shadow = "8.1.1"
 kotest = "5.6.1"
 kotlinx-binaryCompatibility = "0.13.1"
-kotlinx-knit = "0.4.0"
 ktlint-plugin = "11.3.1"
 prettier-lib = "2.8.4"
 prettier-plugin-sh = "0.12.8"
@@ -49,7 +48,6 @@ jetbrains-changelog = { id = "org.jetbrains.changelog", version.ref = "jetbrains
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "jmailen-kotlinter" }
 kotlinx-binaryCompatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binaryCompatibility" }
-kotlinx-knit = { id = "kotlinx-knit", version.ref = "kotlinx-knit" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-plugin" }
 moduleCheck = { id = "com.rickbusarow.module-check", version.ref = "rickBusarow-moduleCheck" }
 shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "johnrengelman-shadow" }
@@ -133,7 +131,6 @@ rickBusarow-ktrules = { module = "com.rickbusarow.ktrules:ktrules", version.ref 
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
-vanniktech-publish-base = { module = "com.vanniktech:gradle-maven-publish-plugin-base", version.ref = "vanniktech-publish" }
 vanniktech-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "vanniktech-publish" }
 
 zacSweers-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:1.0.0"
