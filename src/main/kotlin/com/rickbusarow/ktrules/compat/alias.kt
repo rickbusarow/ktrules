@@ -32,6 +32,8 @@ typealias RunAfterRuleMode = com.pinterest.ktlint.rule.engine.core.api.Rule.Visi
 /**
  * just delegates to [com.pinterest.ktlint.rule.engine.core.api.RuleProvider.invoke] so that the IDE
  * doesn't try to import the original
+ *
+ * @since 1.1.0
  */
 inline fun RuleProvider(crossinline provider: () -> Rule): RuleProvider =
   RuleProvider.invoke { provider() }
@@ -44,6 +46,7 @@ inline fun RuleProvider(crossinline provider: () -> Rule): RuleProvider =
  * @return A [RunAfterRule] with the specified rule ID and
  *   [com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED]
  *   mode.
+ * @since 1.1.0
  */
 fun mustRunAfter(ruleId: RuleId): RunAfterRule = RunAfterRule(
   ruleId,
@@ -58,6 +61,7 @@ fun mustRunAfter(ruleId: RuleId): RunAfterRule = RunAfterRule(
  * @return A [RunAfterRule] with the specified rule ID and
  *   [com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED]
  *   mode.
+ * @since 1.1.0
  */
 fun dependsOn(ruleId: RuleId): RunAfterRule = RunAfterRule(
   ruleId,

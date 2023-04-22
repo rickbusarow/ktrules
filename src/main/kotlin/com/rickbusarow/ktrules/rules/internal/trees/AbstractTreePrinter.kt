@@ -26,6 +26,7 @@ import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType
  * @param T any type of node
  * @property whitespaceChar the character to use for replacing whitespaces in the node text when
  *   printing. Default is ' '.
+ * @since 1.1.0
  */
 abstract class AbstractTreePrinter<T : Any>(
   private val whitespaceChar: Char = ' '
@@ -35,25 +36,36 @@ abstract class AbstractTreePrinter<T : Any>(
 
   private var currentColorIndex = 0
 
-  /** Returns the simple class name of an object of type [T]. */
+  /*** Returns the simple class name of an object of type [T]. 
+   *
+   * @since 1.1.0*/
   abstract fun T.simpleClassName(): String
 
-  /** Returns the parent of an object of type [T]. */
+  /*** Returns the parent of an object of type [T]. 
+   *
+   * @since 1.1.0*/
   abstract fun T.parent(): T?
 
-  /** Returns the type name of an object of type [T]. */
+  /*** Returns the type name of an object of type [T]. 
+   *
+   * @since 1.1.0*/
   abstract fun T.typeName(): String
 
-  /** Returns the text representation of an object of type [T]. */
+  /*** Returns the text representation of an object of type [T]. 
+   *
+   * @since 1.1.0*/
   abstract fun T.text(): String
 
-  /** Returns the children of an object of type [T] as a [Sequence]. */
+  /*** Returns the children of an object of type [T] as a [Sequence]. 
+   *
+   * @since 1.1.0*/
   abstract fun T.children(): Sequence<T>
 
   /**
    * Prints the tree structure of an object of type [T] to the console.
    *
    * @param [rootNode] the root node of the tree.
+   * @since 1.1.0
    */
   fun printTreeString(rootNode: T) {
     println(treeString(rootNode))
@@ -64,6 +76,7 @@ abstract class AbstractTreePrinter<T : Any>(
    *
    * @param [rootNode] the root node of the tree.
    * @return the tree structure as a string.
+   * @since 1.1.0
    */
   fun treeString(rootNode: T): String {
     return buildTreeString(rootNode, 0)

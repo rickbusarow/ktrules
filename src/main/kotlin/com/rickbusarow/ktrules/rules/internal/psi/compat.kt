@@ -22,7 +22,8 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType
 
-/** @return a sequence of the children of this [ASTNode]. */
+/*** @return a sequence of the children of this [ASTNode]. 
+ * @since 1.1.0*/
 fun ASTNode.children(): Sequence<ASTNode> =
   generateSequence(firstChildNode) { node -> node.treeNext }
 
@@ -31,6 +32,7 @@ fun ASTNode.children(): Sequence<ASTNode> =
  *
  * @param includeEmpty If true, includes empty nodes in the search; otherwise, skips them.
  * @return The previous leaf [ASTNode] or null if there is none.
+ * @since 1.1.0
  */
 fun ASTNode.prevLeaf(includeEmpty: Boolean = false): ASTNode? {
   var n = this.prevLeafAny()
@@ -48,6 +50,7 @@ fun ASTNode.prevLeaf(includeEmpty: Boolean = false): ASTNode? {
  *
  * @param p The predicate that the resulting [ASTNode] must satisfy.
  * @return The previous leaf [ASTNode] or null if there is none.
+ * @since 1.1.0
  */
 fun ASTNode.prevLeaf(p: (ASTNode) -> Boolean): ASTNode? {
   var n = this.prevLeafAny()
@@ -61,6 +64,7 @@ fun ASTNode.prevLeaf(p: (ASTNode) -> Boolean): ASTNode? {
  * Finds the previous leaf [ASTNode] relative to the receiver without any conditions.
  *
  * @return The previous leaf [ASTNode] or null if there is none.
+ * @since 1.1.0
  */
 fun ASTNode.prevLeafAny(): ASTNode? {
   val prevSibling = treePrev
@@ -74,6 +78,7 @@ fun ASTNode.prevLeafAny(): ASTNode? {
  * Finds the last child leaf of this [ASTNode] or the node itself if it has no children.
  *
  * @return The last child leaf [ASTNode] or the node itself.
+ * @since 1.1.0
  */
 fun ASTNode.lastChildLeafOrSelf(): ASTNode {
   var n = this
@@ -92,6 +97,7 @@ fun ASTNode.lastChildLeafOrSelf(): ASTNode {
  *
  * @param includeEmpty If true, includes empty nodes in the search; otherwise, skips them.
  * @return The previous code leaf [ASTNode] or null if there is none.
+ * @since 1.1.0
  */
 fun ASTNode.prevCodeLeaf(includeEmpty: Boolean = false): ASTNode? {
   var n = prevLeaf(includeEmpty)
@@ -101,11 +107,13 @@ fun ASTNode.prevCodeLeaf(includeEmpty: Boolean = false): ASTNode? {
   return n
 }
 
-/** @return the previous code sibling [ASTNode] by filtering out white spaces and comments. */
+/*** @return the previous code sibling [ASTNode] by filtering out white spaces and comments. 
+ * @since 1.1.0*/
 fun ASTNode.prevCodeSibling(): ASTNode? =
   prevSibling { it.elementType != ElementType.WHITE_SPACE && !it.isPartOfComment() }
 
-/** @return the previous sibling [ASTNode] that satisfies the given [predicate]. */
+/*** @return the previous sibling [ASTNode] that satisfies the given [predicate]. 
+ * @since 1.1.0*/
 inline fun ASTNode.prevSibling(predicate: (ASTNode) -> Boolean = { true }): ASTNode? {
   var n = this.treePrev
   while (n != null) {
@@ -121,6 +129,7 @@ inline fun ASTNode.prevSibling(predicate: (ASTNode) -> Boolean = { true }): ASTN
  * @param includeEmpty If true, includes empty leaf nodes in the search.
  * @param skipSubtree If true, skips the subtree during the search.
  * @return the next code leaf [ASTNode] by filtering out white spaces and comments.
+ * @since 1.1.0
  */
 fun ASTNode.nextCodeLeaf(
   includeEmpty: Boolean = false,
@@ -133,11 +142,13 @@ fun ASTNode.nextCodeLeaf(
   return n
 }
 
-/** @return the next code sibling [ASTNode] by filtering out white spaces and comments. */
+/*** @return the next code sibling [ASTNode] by filtering out white spaces and comments. 
+ * @since 1.1.0*/
 fun ASTNode.nextCodeSibling(): ASTNode? =
   nextSibling { it.elementType != ElementType.WHITE_SPACE && !it.isPartOfComment() }
 
-/** @return the next sibling [ASTNode] that satisfies the given [predicate]. */
+/*** @return the next sibling [ASTNode] that satisfies the given [predicate]. 
+ * @since 1.1.0*/
 inline fun ASTNode.nextSibling(predicate: (ASTNode) -> Boolean = { true }): ASTNode? {
   var n = this.treeNext
   while (n != null) {
@@ -154,6 +165,7 @@ inline fun ASTNode.nextSibling(predicate: (ASTNode) -> Boolean = { true }): ASTN
  *   from the receiver node.
  * @param predicate returns true for the matching predicate
  * @return the parent [ASTNode] that satisfies the given [predicate].
+ * @since 1.1.0
  */
 fun ASTNode.parent(
   strict: Boolean = true,
@@ -174,6 +186,7 @@ fun ASTNode.parent(
  * @param strict If true, the search starts from the receiver node's parent; otherwise, it starts
  *   from the receiver node.
  * @return the parent [ASTNode] with the given [elementType].
+ * @since 1.1.0
  */
 fun ASTNode.parent(
   elementType: IElementType,
@@ -193,6 +206,7 @@ fun ASTNode.parent(
  * @param includeEmpty If true, includes empty leaf nodes in the search.
  * @param skipSubtree If true, skips the subtree during the search.
  * @return the next leaf [ASTNode] based on the given parameters.
+ * @since 1.1.0
  */
 fun ASTNode.nextLeaf(
   includeEmpty: Boolean = false,
@@ -207,7 +221,8 @@ fun ASTNode.nextLeaf(
   return n
 }
 
-/** @return the next leaf [ASTNode] that satisfies the given predicate [p]. */
+/*** @return the next leaf [ASTNode] that satisfies the given predicate [p]. 
+ * @since 1.1.0*/
 fun ASTNode.nextLeaf(p: (ASTNode) -> Boolean): ASTNode? {
   var n = this.nextLeafAny()
   while (n != null && !p(n)) {
@@ -216,7 +231,8 @@ fun ASTNode.nextLeaf(p: (ASTNode) -> Boolean): ASTNode? {
   return n
 }
 
-/** @return the next leaf [ASTNode] without any specific conditions. */
+/*** @return the next leaf [ASTNode] without any specific conditions. 
+ * @since 1.1.0*/
 fun ASTNode.nextLeafAny(): ASTNode? {
   var n = this
   if (n.firstChildNode != null) {
@@ -228,7 +244,8 @@ fun ASTNode.nextLeafAny(): ASTNode? {
   return n.nextLeafStrict()
 }
 
-/** @return the next leaf [ASTNode] by traversing the tree strictly. */
+/*** @return the next leaf [ASTNode] by traversing the tree strictly. 
+ * @since 1.1.0*/
 fun ASTNode.nextLeafStrict(): ASTNode? {
   val nextSibling: ASTNode? = treeNext
   if (nextSibling != null) {
@@ -237,7 +254,8 @@ fun ASTNode.nextLeafStrict(): ASTNode? {
   return treeParent?.nextLeafStrict()
 }
 
-/** @return the first child leaf [ASTNode] or the receiver node if it has no children. */
+/*** @return the first child leaf [ASTNode] or the receiver node if it has no children. 
+ * @since 1.1.0*/
 fun ASTNode.firstChildLeafOrSelf(): ASTNode {
   var n = this
   if (n.firstChildNode != null) {
@@ -253,16 +271,21 @@ fun ASTNode.firstChildLeafOrSelf(): ASTNode {
  * Check if the given [ASTNode] is a code leaf. E.g. it must be a leaf and may not be a whitespace
  * or be part of a comment. @return true if the receiver node is a leaf, not a whitespace, and not
  * part of a comment
+ *
+ * @since 1.1.0
  */
 fun ASTNode.isCodeLeaf(): Boolean = isLeaf() && !isWhiteSpace() && !isPartOfComment()
 
-/** @return true if the node is part of a KDoc comment, block comment, or end-of-line comment */
+/*** @return true if the node is part of a KDoc comment, block comment, or end-of-line comment 
+ * @since 1.1.0*/
 fun ASTNode.isPartOfComment(): Boolean = parent(strict = false) { it.psi is PsiComment } != null
 
 /**
  * Updates or inserts a new whitespace element with [text] before the given node. If the node itself
  * is a whitespace then its contents is replaced with [text]. If the node is a (nested) composite
  * element, the whitespace element is added after the previous leaf node.
+ *
+ * @since 1.1.0
  */
 fun ASTNode.upsertWhitespaceBeforeMe(text: String) {
   if (this is LeafElement) {
@@ -290,6 +313,8 @@ fun ASTNode.upsertWhitespaceBeforeMe(text: String) {
  * Updates or inserts a new whitespace element with [text] after the given node. If the node itself
  * is a whitespace then its contents is replaced with [text]. If the node is a (nested) composite
  * element, the whitespace element is added after the last child leaf.
+ *
+ * @since 1.1.0
  */
 fun ASTNode.upsertWhitespaceAfterMe(text: String) {
   if (this is LeafElement) {
@@ -314,6 +339,7 @@ fun ASTNode.upsertWhitespaceAfterMe(text: String) {
  *
  * @throws IllegalArgumentException if the receiver [ASTNode] does not have a WHITE_SPACE element
  *   type.
+ * @since 1.1.0
  */
 fun ASTNode.replaceWhitespaceWith(text: String) {
   require(this.elementType == ElementType.WHITE_SPACE)
@@ -322,7 +348,9 @@ fun ASTNode.replaceWhitespaceWith(text: String) {
   }
 }
 
-/** Returns the column number of the receiver [ASTNode]. */
+/*** Returns the column number of the receiver [ASTNode]. 
+ *
+ * @since 1.1.0*/
 val ASTNode.column: Int
   get() {
     var leaf = this.prevLeaf()
@@ -338,26 +366,33 @@ val ASTNode.column: Int
     return offsetToTheLeft + 1
   }
 
-/** @return true if the [ASTNode] is part of a string, false otherwise. */
+/*** @return true if the [ASTNode] is part of a string, false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode.isPartOfString(): Boolean = parent(ElementType.STRING_TEMPLATE, strict = false) != null
 
-/** @return true if the [ASTNode] is white space, false otherwise. */
+/*** @return true if the [ASTNode] is white space, false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode?.isWhiteSpace(): Boolean = this != null && elementType == ElementType.WHITE_SPACE
 
-/** @return true if the [ASTNode] is white space with a newline, false otherwise. */
+/*** @return true if the [ASTNode] is white space with a newline, false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode?.isWhiteSpaceWithNewline(): Boolean =
   this != null && elementType == ElementType.WHITE_SPACE && textContains('\n')
 
-/** @return true if the [ASTNode] is white space with a newline, false otherwise. */
+/*** @return true if the [ASTNode] is white space with a newline, false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode?.isRegularStringWithNewline(): Boolean =
   this != null && elementType == ElementType.REGULAR_STRING_PART && textContains('\n')
 
-/** @return true if the [ASTNode] is white space without a newline, false otherwise. */
+/*** @return true if the [ASTNode] is white space without a newline, false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode?.isWhiteSpaceWithoutNewline(): Boolean =
   this != null && elementType == ElementType.WHITE_SPACE && !textContains('\n')
 
-/** @return true if the [ASTNode] is a root, false otherwise. */
+/*** @return true if the [ASTNode] is a root, false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode.isRoot(): Boolean = elementType == ElementType.FILE
 
-/** @return true if the [ASTNode] is a leaf (has no children), false otherwise. */
+/*** @return true if the [ASTNode] is a leaf (has no children), false otherwise. 
+ * @since 1.1.0*/
 fun ASTNode.isLeaf(): Boolean = firstChildNode == null

@@ -62,7 +62,7 @@ class KtRulesRuleSetProvider : RuleSetProvider(
   }
 
   companion object {
-    /** */
+    /** @since 1.1.0 */
     val ABOUT: RuleAbout = RuleAbout(
       maintainer = "Rick Busarow",
       repositoryUrl = "https://www.github.com/rbusarow/ktrules",

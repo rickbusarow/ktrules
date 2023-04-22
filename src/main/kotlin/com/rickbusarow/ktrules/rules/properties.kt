@@ -22,7 +22,9 @@ import org.ec4j.core.model.PropertyType.PropertyValueParser.EnumValueParser
 
 internal const val RULES_PREFIX = "ktlint_kt-rules"
 
-/** This property moves */
+/*** This property moves 
+ *
+ * @since 1.1.0*/
 internal val MAX_LINE_LENGTH_PROPERTY: EditorConfigProperty<Int>
   get() = com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
 

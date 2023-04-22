@@ -15,7 +15,9 @@
 
 package com.rickbusarow.ktrules.rules.internal.trees
 
-/** Depth-first and breadth-first traversals of any tree */
+/*** Depth-first and breadth-first traversals of any tree 
+ *
+ * @since 1.1.0*/
 object Traversals {
 
   /**
@@ -25,6 +27,7 @@ object Traversals {
    * @param t The root element of the tree/graph.
    * @param childrenFactory A lambda that returns the children of a given element.
    * @return A depth-first traversal sequence for the tree/graph.
+   * @since 1.1.0
    */
   inline fun <T : Any> depthFirstTraversal(
     t: T,
@@ -53,6 +56,7 @@ object Traversals {
    * @param t The root element of the tree/graph.
    * @param childrenFactory A lambda that returns the children of a given element.
    * @return A breadth-first traversal sequence for the tree/graph.
+   * @since 1.1.0
    */
   inline fun <T : Any> breadthFirstTraversal(
     t: T,
