@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
-import com.rickbusarow.ktrules.rules.Tests.KtLintResults
+import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -336,7 +336,7 @@ class KDocBlankLinesRuleTest : Tests {
     ) shouldBe emptyList()
   }
 
-  private fun KtLintResults.expectError(
+  private fun KtLintTestResult.expectError(
     line: Int,
     col: Int,
     detail: String

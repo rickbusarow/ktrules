@@ -23,7 +23,6 @@ import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
-import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.markdown.MarkdownNode
 import com.rickbusarow.ktrules.rules.internal.markdown.wrap
 import com.rickbusarow.ktrules.rules.internal.prefixIfNot
@@ -32,17 +31,15 @@ import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.createFileFromText
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
-import com.rickbusarow.ktrules.rules.internal.psi.getKDocSection
+import com.rickbusarow.ktrules.rules.internal.psi.isBlank
 import com.rickbusarow.ktrules.rules.internal.psi.isInKDocDefaultSection
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
-import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagOrSection
-import com.rickbusarow.ktrules.rules.internal.psi.isKDocWhitespaceAfterLeadingAsterisk
-import com.rickbusarow.ktrules.rules.internal.psi.isWhiteSpaceWithNewline
-import com.rickbusarow.ktrules.rules.internal.psi.lastChildLeafOrSelf
 import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
 import com.rickbusarow.ktrules.rules.internal.psi.parent
+import com.rickbusarow.ktrules.rules.internal.psi.removeAllChildren
+import com.rickbusarow.ktrules.rules.internal.psi.removeLastChildrenWhile
 import com.rickbusarow.ktrules.rules.internal.psi.startOffset
 import com.rickbusarow.ktrules.rules.internal.psi.tagTextWithoutLeadingAsterisks
 import com.rickbusarow.ktrules.rules.internal.psi.upsertWhitespaceAfterMe
@@ -128,7 +125,7 @@ class KDocContentWrappingRule : RuleCompat(
 
       if (autoCorrect) {
 
-        tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent, tags = tags)
+        tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent)
       }
     }
   }
@@ -136,8 +133,7 @@ class KDocContentWrappingRule : RuleCompat(
   private fun KDocTag.fix(
     wrapped: String,
     kdoc: KDoc,
-    starIndent: String,
-    tags: List<KDocTag>
+    starIndent: String
   ) {
 
     val inKDocDefaultSection = node.isInKDocDefaultSection()
@@ -145,44 +141,22 @@ class KDocContentWrappingRule : RuleCompat(
 
     val singleLineKDoc = wrappedLines.size == 1 && kdoc.text.lines().size == 1
 
-    val wrappedAsKDoc = getWrappedAsKDoc(
+    val wrappedAsKDoc = getWrappedAsKDocString(
       singleLineKDoc = singleLineKDoc,
       wrapped = wrapped,
       wrappedLines = wrappedLines,
       inKDocDefaultSection = inKDocDefaultSection,
-      starIndent = starIndent,
-      isLastTag = tags.lastOrNull() == this@fix
-    )
-
-    val tagIndex = tags.indexOf(this)
-
-    val nextTagOrNull = tags.getOrNull(tagIndex + 1)
-    val nextTagIsInSameSection = nextTagOrNull?.getKDocSection() == getKDocSection()
-
-    val wrappedSection = getWrappedSectionPsi(
-      wrappedAsKdoc = wrappedAsKDoc,
-      nextTagIsInSameSection = nextTagIsInSameSection,
-      tagIndex = tagIndex,
-      nextTagOrNull = nextTagOrNull
+      starIndent = starIndent
     )
 
     val toDelete = node.children()
       .takeWhile { !it.isKDocTag() }
       .toList()
-      .letIf(nextTagOrNull != null) {
+      .dropLastWhile { it.isKDocLeadingAsterisk() || it.isBlank() }
 
-        var count = 0
-
-        @Suppress("MagicNumber")
-        val keep = if (nextTagIsInSameSection) 2 else 4
-
-        dropLastWhile { node ->
-
-          if (++count < keep) return@dropLastWhile false
-
-          node.isKDocWhitespaceAfterLeadingAsterisk() || node.isKDocLeadingAsterisk()
-        }
-      }
+    val wrappedSection = getWrappedSectionPsi(
+      wrappedAsKdoc = wrappedAsKDoc,
+    )
 
     if (toDelete.isEmpty()) {
       node.parent!!.replaceChild(node, wrappedSection.node)
@@ -202,10 +176,10 @@ class KDocContentWrappingRule : RuleCompat(
         }
       }
 
-      wrappedSection.node.children()
-        .toList()
+      wrappedSection.node
+        .children()
         .forEach { new ->
-          node.addChild(new, anchor)
+          node.addChild(new.clone() as ASTNode, anchor)
         }
 
       if (makingMultiLine) {
@@ -216,14 +190,13 @@ class KDocContentWrappingRule : RuleCompat(
     }
   }
 
-  private fun getWrappedAsKDoc(
+  private fun getWrappedAsKDocString(
     singleLineKDoc: Boolean,
     wrapped: String,
     wrappedLines: List<String>,
     inKDocDefaultSection: Boolean,
     starIndent: String,
-    isLastTag: Boolean,
-  ) = if (singleLineKDoc) {
+  ): String = if (singleLineKDoc) {
     "/**${wrapped.prefixIfNot(" ")} */"
   } else {
     buildString {
@@ -231,16 +204,14 @@ class KDocContentWrappingRule : RuleCompat(
 
       wrappedLines.forEachIndexed { i, line ->
 
-        when {
-          i == 0 && inKDocDefaultSection -> appendLine("$starIndent*$line")
-          line.isBlank() -> appendLine("$starIndent*")
-          !line.startsWith(" ") -> appendLine("$starIndent* $line")
-          else -> appendLine("$starIndent*$line")
-        }
-      }
+        val trimmedLine = line.trimEnd()
 
-      if (inKDocDefaultSection && !isLastTag) {
-        appendLine("$starIndent*")
+        when {
+          i == 0 && inKDocDefaultSection -> appendLine("$starIndent*$trimmedLine")
+          line.isEmpty() -> appendLine("$starIndent*")
+          !line.startsWith(" ") -> appendLine("$starIndent* $trimmedLine")
+          else -> appendLine("$starIndent*$trimmedLine")
+        }
       }
 
       appendLine("$starIndent*/")
@@ -249,48 +220,18 @@ class KDocContentWrappingRule : RuleCompat(
 
   private fun KDocTag.getWrappedSectionPsi(
     wrappedAsKdoc: String,
-    nextTagIsInSameSection: Boolean,
-    tagIndex: Int,
-    nextTagOrNull: KDocTag?
-  ): KDocTag = createFileFromText(wrappedAsKdoc)
-    .childrenBreadthFirst()
-    .last { psi ->
-      psi.node.isKDocTagOrSection() && psi.children
-        .none { child -> child.node.isKDocTag() }
-    }
-    .let { it as KDocTag }
-    .also { newTag ->
+  ): KDocTag {
 
-      val newTagNode = newTag.node
-
-      when {
-        nextTagIsInSameSection -> {
-
-          repeat(2) {
-            val toDelete = newTagNode.children()
-              .lastOrNull()
-              .takeIf { newNode ->
-                newNode.isKDocWhitespaceAfterLeadingAsterisk() ||
-                  newNode.isKDocLeadingAsterisk() ||
-                  newNode.isWhiteSpaceWithNewline()
-              }
-              ?: return@repeat
-
-            newTagNode.removeChild(toDelete)
-          }
-
-          if (tagIndex == 0) {
-            newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
-          }
-        }
-
-        nextTagOrNull != null &&
-          newTagNode.lastChildLeafOrSelf().isKDocLeadingAsterisk() -> {
-
-          newTagNode.addChild(PsiWhiteSpaceImpl(" "), null)
-        }
+    return createFileFromText(wrappedAsKdoc)
+      .childrenBreadthFirst()
+      .filterIsInstance<KDocTag>()
+      .toList()
+      .last()
+      .removeAllChildren { it.isKDocTag() }
+      .also { tag ->
+        tag.node.removeLastChildrenWhile { it.isKDocLeadingAsterisk() || it.isBlank() }
       }
-    }
+  }
 
   private fun List<KDocTag>.getFixedTagPairs(starIndent: String): List<Pair<KDocTag, String>> {
     return mapIndexedNotNull { tagIndex, tag ->
@@ -312,7 +253,7 @@ class KDocContentWrappingRule : RuleCompat(
           addKDocLeadingSpace = true
         )
 
-      if (wrapped != sectionText) {
+      if (wrapped.trim() != sectionText.trim()) {
         tag to wrapped
       } else {
         null

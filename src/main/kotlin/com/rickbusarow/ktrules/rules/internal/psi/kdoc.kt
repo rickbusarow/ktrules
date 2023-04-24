@@ -171,6 +171,10 @@ internal fun ASTNode?.isFirstAfterKDocStart(): Boolean =
 internal fun ASTNode?.isKDocCodeBlockText(): Boolean =
   this != null && elementType == ElementType.KDOC_CODE_BLOCK_TEXT
 
+/** */
+internal fun ASTNode?.prevKDocLeadingAsterisk(): ASTNode? =
+  this?.prevLeaf { it.isKDocLeadingAsterisk() }
+
 /**
  * @return true if this node is the opening backticks of a code block, with or without a language.
  * @since 1.0.1

@@ -4,5 +4,10 @@
     <useExperimental>true</useExperimental>
     <treatAsErrors>false</treatAsErrors>
     <formatOnSave>true</formatOnSave>
+    <disabledRules>
+      <list>
+        <option value="indent" />
+      </list>
+    </disabledRules>
   </component>
 </project>

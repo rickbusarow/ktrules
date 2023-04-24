@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
-import com.rickbusarow.ktrules.rules.Tests.KtLintResults
+import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult
 import org.junit.jupiter.api.Test
 
 class NoSinceInKDocRuleTest : Tests {
@@ -367,7 +367,7 @@ class NoSinceInKDocRuleTest : Tests {
     }
   }
 
-  private fun KtLintResults.expectError(
+  private fun KtLintTestResult.expectError(
     line: Int,
     col: Int,
     detail: String = "add `@since $currentVersionDefault` to kdoc"

@@ -74,6 +74,12 @@ private fun MarkdownNode.getChildText(
         .dropWhile { it.isWhiteSpace() && it.text.isBlank() }
         .filter { it.isLeaf }
         .joinToString("") { it.text }
+      // .let { block ->
+      //   val lastLineIndex = block.count { it == '\n' }
+      //   block.mapLinesIndexed { i, line ->
+      //     line.letIf(i != lastLineIndex) { trimEnd() }
+      //   }
+      // }
 
       val continuationIndent = continuationIndent(
         beforeAnyTags = beforeAnyTags,

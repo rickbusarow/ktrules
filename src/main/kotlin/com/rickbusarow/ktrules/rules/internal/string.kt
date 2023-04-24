@@ -58,10 +58,17 @@ internal fun CharSequence.mapLines(
 internal fun CharSequence.mapLinesIndexed(
   transform: (Int, String) -> CharSequence
 ): String = buildString {
+
+  val lineCount = this@mapLinesIndexed.count { it == '\n' }
+
   this@mapLinesIndexed
     .lineSequence()
     .forEachIndexed { i, line ->
-      appendLine(transform(i, line))
+      if (i == lineCount) {
+        append(transform(i, line))
+      } else {
+        appendLine(transform(i, line))
+      }
     }
 }
 

@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
-import com.rickbusarow.ktrules.rules.Tests.KtLintResults
+import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult
 import org.junit.jupiter.api.Test
 
 class KDocIndentAfterLeadingAsteriskRuleTest : Tests {
@@ -196,7 +196,7 @@ class KDocIndentAfterLeadingAsteriskRuleTest : Tests {
     }
   }
 
-  private fun KtLintResults.expectError(line: Int, col: Int) {
+  private fun KtLintTestResult.expectError(line: Int, col: Int) {
     expectError(
       line = line,
       col = col,

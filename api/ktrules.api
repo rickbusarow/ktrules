@@ -533,9 +533,11 @@ public final class com/rickbusarow/ktrules/rules/internal/psi/AstKt {
 	public static synthetic fun prevLeaves$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
 	public static final fun prevSibling (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
 	public static final fun prevSiblings (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Lkotlin/sequences/Sequence;
-	public static final fun removeAllChildren (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun removeAllChildren$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun removeAllChildrenRecursive (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)V
+	public static final fun removeAllChildren (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static synthetic fun removeAllChildren$default (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun removeAllChildrenRecursive (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun removeFirstChildrenWhile (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
+	public static final fun removeLastChildrenWhile (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/psi/CompatKt {
@@ -601,6 +603,8 @@ public final class com/rickbusarow/ktrules/rules/internal/psi/PsiKt {
 	public static final fun isKDocTag (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
 	public static final fun isKDocTagWithTagChildren (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Z
 	public static final fun ktPsiFactory (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Lorg/jetbrains/kotlin/psi/KtPsiFactory;
+	public static final fun removeAllChildren (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;
+	public static synthetic fun removeAllChildren$default (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;
 	public static final fun tagTextWithoutLeadingAsterisks (Lorg/jetbrains/kotlin/kdoc/psi/impl/KDocTag;)Ljava/lang/String;
 }
 

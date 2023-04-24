@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
-import com.rickbusarow.ktrules.rules.Tests.KtLintResults
+import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult
 import org.junit.jupiter.api.Test
 
 class KDocCollapseRuleTest : Tests {
@@ -475,7 +475,7 @@ class KDocCollapseRuleTest : Tests {
     }
   }
 
-  private fun KtLintResults.expectError(line: Int = 1, col: Int = 1) {
+  private fun KtLintTestResult.expectError(line: Int = 1, col: Int = 1) {
     expectError(
       line = line,
       col = col,
