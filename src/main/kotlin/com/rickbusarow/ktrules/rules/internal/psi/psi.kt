@@ -321,3 +321,12 @@ fun KtNamedDeclaration.getValueParameterList(): KtParameterList? {
 inline fun <reified T : PsiElement> PsiElement.getChildOfType(): T? {
   return PsiTreeUtil.getChildOfType(this, T::class.java)
 }
+
+/**   */
+inline fun <T : PsiElement> T.removeAllChildren(shouldRemove: (PsiElement) -> Boolean = { true }): T {
+  return also { _ ->
+    children
+      .filter(shouldRemove)
+      .forEach { it.delete() }
+  }
+}

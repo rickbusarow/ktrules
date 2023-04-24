@@ -16,7 +16,7 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
-import com.rickbusarow.ktrules.rules.Tests.KtLintResults
+import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
@@ -1093,6 +1093,39 @@ class KDocContentWrappingRuleTest : Tests {
   }
 
   @Test
+  fun `a tag without a blank line after the default section paragraph is not wrapped`() {
+
+    format(
+      """
+      /**
+       * Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+       * @param age some age property
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent(),
+      lineLength = 60,
+      wrappingStyle = GREEDY
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
+      /**
+       * Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+       * sed do eiusmod tempor.
+       * @param age some age property
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    }
+  }
+
+  @Test
   fun `@see tags have their extra white spaces removed but are not wrapped together`() {
 
     format(
@@ -1290,7 +1323,7 @@ class KDocContentWrappingRuleTest : Tests {
     }
   }
 
-  private fun KtLintResults.expectError(
+  private fun KtLintTestResult.expectError(
     line: Int,
     col: Int,
   ) {

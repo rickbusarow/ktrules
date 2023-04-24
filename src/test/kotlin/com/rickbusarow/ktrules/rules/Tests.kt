@@ -27,6 +27,7 @@ import com.rickbusarow.ktrules.compat.toKtLintRuleProviders49
 import com.rickbusarow.ktrules.rules.internal.dots
 import com.rickbusarow.ktrules.rules.internal.wrapIn
 import io.kotest.assertions.asClue
+import io.kotest.assertions.withClue
 import io.kotest.matchers.collections.shouldBeEmpty
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.DynamicContainer
@@ -84,9 +85,9 @@ interface Tests {
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
         PROJECT_VERSION_PROPERTY to currentVersion
       ),
-    assertions: KtLintResults.() -> Unit
+    assertions: KtLintTestResult.() -> Unit
   ) {
-    val errors = mutableListOf<KtLintResults.Error>()
+    val errors = mutableListOf<KtLintTestResult.Error>()
     val outputString = KtLintRuleEngine(
       ruleProviders = rules.toKtLintRuleProviders49(),
       editorConfigOverride = editorConfigOverride
@@ -94,7 +95,7 @@ interface Tests {
       Code.fromSnippet(text.trimIndent(), script = script)
     ) { lintError, corrected ->
       errors.add(
-        KtLintResults.Error(
+        KtLintTestResult.Error(
           line = lintError.line,
           col = lintError.col,
           ruleId = lintError.ruleId.value,
@@ -104,7 +105,7 @@ interface Tests {
       )
     }
 
-    val results = KtLintResults(output = outputString, allLintErrors = errors)
+    val results = KtLintTestResult(output = outputString, allLintErrors = errors)
 
     results.assertions()
 
@@ -123,7 +124,7 @@ interface Tests {
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
         PROJECT_VERSION_PROPERTY to currentVersion
       )
-  ): List<KtLintResults.Error> = buildList {
+  ): List<KtLintTestResult.Error> = buildList {
     KtLintRuleEngine(
       ruleProviders = rules.toKtLintRuleProviders49(),
       editorConfigOverride = editorConfigOverride
@@ -131,7 +132,7 @@ interface Tests {
       Code.fromSnippet(text.trimIndent(), script = script)
     ) { lintError ->
       add(
-        KtLintResults.Error(
+        KtLintTestResult.Error(
           line = lintError.line,
           col = lintError.col,
           ruleId = lintError.ruleId.value,
@@ -154,7 +155,7 @@ interface Tests {
         WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
         PROJECT_VERSION_PROPERTY to currentVersion
       )
-  ): List<KtLintResults.Error> = buildList {
+  ): List<KtLintTestResult.Error> = buildList {
     KtLintRuleEngine(
       ruleProviders = rules.toKtLintRuleProviders49(),
       editorConfigOverride = editorConfigOverride
@@ -162,7 +163,7 @@ interface Tests {
       Code.fromSnippet(text.trimIndent(), script = script)
     ) { lintError ->
       add(
-        KtLintResults.Error(
+        KtLintTestResult.Error(
           line = lintError.line,
           col = lintError.col,
           ruleId = lintError.ruleId.value,
@@ -189,7 +190,7 @@ interface Tests {
     DynamicTest.dynamicTest(name(t)) { action(t) }
   }
 
-  data class KtLintResults(
+  data class KtLintTestResult(
     val output: String,
     val allLintErrors: List<Error>
   ) {
@@ -227,7 +228,7 @@ interface Tests {
         corrected = corrected
       )
 
-      "All errors:\n${allLintErrors.joinToString("\n")}\n\n".asClue {
+      withClue {
 
         "The next error should be: $expected".asClue {
           remaining.firstOrNull() kotestShouldBe expected
@@ -238,15 +239,36 @@ interface Tests {
     }
 
     fun expectNoErrors() {
-      "All errors:\n${allLintErrors.joinToString("\n")}\n\n".asClue {
+      withClue {
         allLintErrors.shouldBeEmpty()
       }
     }
 
     internal fun checkNoMoreErrors() {
-      "All errors:\n${allLintErrors.joinToString("\n")}\n\n".asClue {
+      withClue {
         remaining.shouldBeEmpty()
       }
+    }
+
+    private inline fun withClue(action: () -> Unit) {
+      withClue(clue = { this@KtLintTestResult.toString() }, thunk = action)
+    }
+
+    override fun toString(): String {
+      return """==== KtLintTestResult
+        |
+        | -- output with interpuncts
+        |${output.dots}
+        |
+        | -- output without interpuncts
+        |$output
+        |
+        | -- all errors:
+        |${allLintErrors.joinToString("\n")}
+        |
+        | -- remaining errors:
+        |${remaining.joinToString("\n")}
+        |""".replaceIndentByMargin()
     }
 
     data class Error(
