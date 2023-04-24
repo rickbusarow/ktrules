@@ -136,6 +136,38 @@ class KDocLeadingAsteriskRuleTest : Tests {
   }
 
   @Test
+  fun `a single blank line between tags is fixed`() {
+
+    format(
+      """
+      /**
+       * @property name the name property
+
+       * @property age a number, probably
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) {
+      expectError(4, 2)
+
+      output shouldBe """
+      /**
+       * @property name the name property
+       *
+       * @property age a number, probably
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    }
+  }
+
+  @Test
   fun `a single-line kdoc does not have an asterisk added`() {
 
     lint(
