@@ -16,6 +16,7 @@
 package com.rickbusarow.ktrules.rules.internal.trees
 
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.colorized
+import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.noColors
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.SIMPLE
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.TYPE
 
@@ -91,9 +92,11 @@ abstract class AbstractTreePrinter<T : Any>(
 
     val thisName = rootNode.uniqueSimpleName()
 
+    val color = getCurrentColor()
+
     fun String.colorized(): String {
       // return this
-      return colorized(getCurrentColor())
+      return colorized(color)
     }
 
     val parentName = (rootNode.parent()?.uniqueSimpleName() ?: "null")
@@ -182,11 +185,7 @@ abstract class AbstractTreePrinter<T : Any>(
     return getCurrentColor()
   }
 
-  private fun String.countVisibleChars(): Int {
-    val regex = "\u001B\\[[;\\d]*m".toRegex()
-    val plainStr = regex.replace(this, "")
-    return plainStr.length
-  }
+  private fun String.countVisibleChars(): Int = noColors().length
 
   private enum class NameType {
     SIMPLE,
@@ -194,30 +193,45 @@ abstract class AbstractTreePrinter<T : Any>(
   }
 
   @Suppress("MagicNumber")
-  private enum class Color(val code: Int) {
-    BLUE(34),
-    CYAN(36),
-    DARK_GRAY(90),
-    GREEN(32),
-    LIGHT_BLUE(94),
-    LIGHT_CYAN(96),
-    LIGHT_GRAY(37),
-    LIGHT_GREEN(92),
-    LIGHT_MAGENTA(95),
+  internal enum class Color(val code: Int) {
     LIGHT_RED(91),
     LIGHT_YELLOW(93),
-    MAGENTA(35),
+    LIGHT_BLUE(94),
+    LIGHT_GREEN(92),
+    LIGHT_MAGENTA(95),
     RED(31),
-    YELLOW(33);
+    YELLOW(33),
+    BLUE(34),
+    GREEN(32),
+    MAGENTA(35),
+    CYAN(36),
+    LIGHT_CYAN(96),
+    ORANGE_DARK(38),
+    ORANGE_BRIGHT(48),
+    PURPLE_DARK(53),
+    PURPLE_BRIGHT(93),
+    PINK_BRIGHT(198),
+    BROWN_DARK(94),
+    BROWN_BRIGHT(178),
+    LIGHT_GRAY(37),
+    DARK_GRAY(90),
+    BLACK(30),
+    WHITE(97);
 
     companion object {
 
       private val supported = "win" !in System.getProperty("os.name").lowercase()
 
-      fun String.colorized(color: Color) = if (supported) {
-        "\u001B[${color.code}m$this\u001B[0m"
-      } else {
-        this
+      fun String.noColors(): String = "\u001B\\[[;\\d]*m".toRegex().replace(this, "")
+
+      /** returns a string in the given color */
+      fun String.colorized(color: Color): String {
+
+        return if (supported) {
+          "\u001B[${color.code}m$this\u001B[0m"
+        } else {
+          this
+        }
       }
     }
   }
