@@ -15,9 +15,8 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.AT_PARAM
 import com.rickbusarow.ktrules.rules.internal.psi.AT_PROPERTY
@@ -36,7 +35,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  *
  * @since 1.0.5
  */
-class KDocTagParamOrPropertyRule : Rule(ID, ABOUT) {
+class KDocTagParamOrPropertyRule : RuleCompat(ID) {
 
   private val tagNames by lazy(NONE) {
     setOf(KDocKnownTag.AT_PARAM, KDocKnownTag.AT_PROPERTY)
@@ -132,6 +131,6 @@ class KDocTagParamOrPropertyRule : Rule(ID, ABOUT) {
   }
 
   internal companion object {
-    val ID = RuleId("kt-rules:kdoc-tag-param-or-property")
+    val ID = RuleId("kdoc-tag-param-or-property")
   }
 }

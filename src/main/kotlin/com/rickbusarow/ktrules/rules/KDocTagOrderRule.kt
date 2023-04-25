@@ -15,9 +15,8 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.getValueParameters
@@ -34,7 +33,7 @@ import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
  *
  * @since 1.0.4
  */
-class KDocTagOrderRule : Rule(ID, ABOUT) {
+class KDocTagOrderRule : RuleCompat(ID) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -103,6 +102,6 @@ class KDocTagOrderRule : Rule(ID, ABOUT) {
   }
 
   internal companion object {
-    val ID = RuleId("kt-rules:kdoc-tag-order")
+    val ID = RuleId("kdoc-tag-order")
   }
 }

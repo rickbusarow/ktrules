@@ -15,10 +15,10 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
-import com.rickbusarow.ktrules.compat.EditorConfig
+import com.rickbusarow.ktrules.compat.EditorConfigCompat
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
@@ -62,9 +62,8 @@ import kotlin.LazyThreadSafetyMode.NONE
  *
  * @since 1.0.0
  */
-class KDocContentWrappingRule : Rule(
+class KDocContentWrappingRule : RuleCompat(
   ID,
-  ABOUT,
   visitorModifiers = setOf(
     mustRunAfter(KDocLeadingAsteriskRule.ID),
     mustRunAfter(KDocIndentAfterLeadingAsteriskRule.ID)
@@ -91,7 +90,7 @@ class KDocContentWrappingRule : Rule(
 
   private val skipAll by lazy { maxLineLength < 0 }
 
-  override fun beforeFirstNode(editorConfig: EditorConfig) {
+  override fun beforeFirstNode(editorConfig: EditorConfigCompat) {
 
     maxLineLength = editorConfig[MAX_LINE_LENGTH_PROPERTY]
     wrappingStyle = editorConfig[WRAPPING_STYLE_PROPERTY]
@@ -323,7 +322,7 @@ class KDocContentWrappingRule : Rule(
 
   internal companion object {
 
-    val ID = RuleId("kt-rules:kdoc-content-wrapping")
+    val ID = RuleId("kdoc-content-wrapping")
     const val ERROR_MESSAGE = "kdoc content wrapping"
   }
 }

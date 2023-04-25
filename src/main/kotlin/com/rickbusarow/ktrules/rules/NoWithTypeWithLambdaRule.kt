@@ -15,9 +15,8 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.getCallNameExpression
 import com.rickbusarow.ktrules.rules.internal.psi.ktPsiFactory
@@ -31,7 +30,7 @@ import org.jetbrains.kotlin.psi.KtLambdaArgument
  *
  * @since 1.0.9
  */
-class NoWithTypeWithLambdaRule : Rule(ID, ABOUT) {
+class NoWithTypeWithLambdaRule : RuleCompat(ID) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -77,7 +76,7 @@ class NoWithTypeWithLambdaRule : Rule(ID, ABOUT) {
   }
 
   internal companion object {
-    val ID = RuleId("kt-rules:no-gradle-with-type-with-lambda")
+    val ID = RuleId("no-gradle-with-type-with-lambda")
     const val ERROR_MESSAGE = "Use 'configureEach' instead of passing a lambda to 'withType'"
   }
 }

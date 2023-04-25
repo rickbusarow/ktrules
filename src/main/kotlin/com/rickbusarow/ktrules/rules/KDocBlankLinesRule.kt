@@ -15,8 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.internal.psi.isInKDocTag
@@ -39,9 +38,8 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  *
  * @since 1.0.7
  */
-class KDocBlankLinesRule : Rule(
+class KDocBlankLinesRule : RuleCompat(
   ID,
-  ABOUT,
   visitorModifiers = setOf(
     mustRunAfter(KDocLeadingAsteriskRule.ID)
   )
@@ -98,6 +96,6 @@ class KDocBlankLinesRule : Rule(
 
   internal companion object {
 
-    val ID = RuleId("kt-rules:kdoc-blank-lines")
+    val ID = RuleId("kdoc-blank-lines")
   }
 }

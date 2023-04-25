@@ -18,12 +18,6 @@ pluginManagement {
     gradlePluginPortal()
     mavenCentral()
     google()
-    maven {
-      url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-      content {
-        includeGroup("com.rickbusarow.docusync")
-      }
-    }
   }
 }
 
@@ -58,8 +52,8 @@ gradleEnterprise {
   }
 }
 
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
-  @Suppress("UnstableApiUsage")
   repositories {
     google()
     mavenCentral()

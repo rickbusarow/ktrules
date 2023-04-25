@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test
 class KDocContentWrappingRuleTest : Tests {
 
   override val rules = setOf(
-    RuleProvider { KDocContentWrappingRule() }
+    RuleProviderCompat { KDocContentWrappingRule() }
   )
 
   @Test

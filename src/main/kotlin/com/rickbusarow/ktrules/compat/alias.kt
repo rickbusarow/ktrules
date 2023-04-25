@@ -17,27 +17,6 @@
 
 package com.rickbusarow.ktrules.compat
 
-typealias EditorConfigProperty<T> = com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfigProperty<T>
-typealias EditorConfig = com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
-typealias ElementType = com.pinterest.ktlint.rule.engine.core.api.ElementType
-typealias Rule = com.pinterest.ktlint.rule.engine.core.api.Rule
-typealias RuleAbout = com.pinterest.ktlint.rule.engine.core.api.Rule.About
-typealias RuleId = com.pinterest.ktlint.rule.engine.core.api.RuleId
-typealias RuleProvider = com.pinterest.ktlint.rule.engine.core.api.RuleProvider
-typealias RuleSetId = com.pinterest.ktlint.rule.engine.core.api.RuleSetId
-typealias RuleSetProvider = com.pinterest.ktlint.cli.ruleset.core.api.RuleSetProviderV3
-typealias RunAfterRule = com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule
-typealias RunAfterRuleMode = com.pinterest.ktlint.rule.engine.core.api.Rule.VisitorModifier.RunAfterRule.Mode
-
-/**
- * just delegates to [com.pinterest.ktlint.rule.engine.core.api.RuleProvider.invoke] so that the IDE
- * doesn't try to import the original
- *
- * @since 1.1.0
- */
-inline fun RuleProvider(crossinline provider: () -> Rule): RuleProvider =
-  RuleProvider.invoke { provider() }
-
 /**
  * Creates a [RunAfterRule] that enforces this rule to run after the specified rule regardless of
  * whether the specified rule is loaded or disabled.
@@ -48,10 +27,11 @@ inline fun RuleProvider(crossinline provider: () -> Rule): RuleProvider =
  *   mode.
  * @since 1.1.0
  */
-fun mustRunAfter(ruleId: RuleId): RunAfterRule = RunAfterRule(
-  ruleId,
-  RunAfterRuleMode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
-)
+fun mustRunAfter(ruleId: RuleId): RuleCompat.VisitorModifierCompat.RunAfterRuleCompat =
+  RuleCompat.VisitorModifierCompat.RunAfterRuleCompat(
+    ruleId,
+    RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+  )
 
 /**
  * Creates a [RunAfterRule] that enforces this rule to run after the specified rule only when the
@@ -63,7 +43,8 @@ fun mustRunAfter(ruleId: RuleId): RunAfterRule = RunAfterRule(
  *   mode.
  * @since 1.1.0
  */
-fun dependsOn(ruleId: RuleId): RunAfterRule = RunAfterRule(
-  ruleId,
-  RunAfterRuleMode.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
-)
+fun dependsOn(ruleId: RuleId): RuleCompat.VisitorModifierCompat.RunAfterRuleCompat =
+  RuleCompat.VisitorModifierCompat.RunAfterRuleCompat(
+    ruleId,
+    RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
+  )

@@ -1,18 +1,32 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
-  "rebaseWhen": "conflicted",
-  "rebaseLabel": "rebase",
-  "packageRules": [{
-    "groupName": "Kotlin and compiler plugins",
-    "matchPackagePatterns": [
-      "^org\\.jetbrains\\.kotlin:(?:[\\w-]+)$",
-      "^com\\.google\\.devtools\\.ksp:(?:[\\w-]+)$",
-      "^com\\.square\\.anvil:(?:[\\w-]+)$"
-    ]
-  }],
-  "labels": [
+  "$schema" : "https://docs.renovatebot.com/renovate-schema.json",
+  "extends" : [
+    "config:base"
+  ],
+  "rebaseWhen" : "conflicted",
+  "rebaseLabel" : "rebase",
+  "packageRules" : [
+    {
+      "groupName" : "Kotlin and compiler plugins",
+      "matchPackagePatterns" : [
+        "^org\\.jetbrains\\.kotlin:(?:[\\w-]+)$",
+        "^com\\.google\\.devtools\\.ksp:(?:[\\w-]+)$",
+        "^com\\.square\\.anvil:(?:[\\w-]+)$"
+      ]
+    }
+  ],
+  "labels" : [
     "dependencies",
     "automerge"
+  ],
+  "ignoreDeps" : [
+    "com.pinterest.ktlint:ktlint-core:0.47.1",
+    "com.pinterest.ktlint:ktlint-ruleset-experimental:0.47.1",
+    "com.pinterest.ktlint:ktlint-ruleset-standard:0.47.1",
+    "com.pinterest.ktlint:ktlint-test:0.47.1",
+    "com.pinterest.ktlint:ktlint-core:0.48.2",
+    "com.pinterest.ktlint:ktlint-ruleset-experimental:0.48.2",
+    "com.pinterest.ktlint:ktlint-ruleset-standard:0.48.2",
+    "com.pinterest.ktlint:ktlint-test:0.48.2"
   ]
 }

@@ -13,15 +13,9 @@
  * limitations under the License.
  */
 
-@file:Suppress("stuff")
-
 package com.rickbusarow.ktrules
 
-import com.google.auto.service.AutoService
-import com.rickbusarow.ktrules.compat.RuleAbout
-import com.rickbusarow.ktrules.compat.RuleProvider
-import com.rickbusarow.ktrules.compat.RuleSetId
-import com.rickbusarow.ktrules.compat.RuleSetProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.KDocBlankLinesRule
 import com.rickbusarow.ktrules.rules.KDocCollapseRule
 import com.rickbusarow.ktrules.rules.KDocContentWrappingRule
@@ -37,36 +31,49 @@ import com.rickbusarow.ktrules.rules.NoTrailingSpacesInRawStringLiteralRule
 import com.rickbusarow.ktrules.rules.NoUselessConstructorKeywordRule
 import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
 
-@AutoService(RuleSetProvider::class)
-class KtRulesRuleSetProvider : RuleSetProvider(
-  id = RuleSetId("kt-rules")
-) {
+/** */
+object KtRulesRuleSetProvider {
 
-  override fun getRuleProviders(): Set<RuleProvider> {
-    return setOf(
-      RuleProvider { KDocBlankLinesRule() },
-      RuleProvider { KDocCollapseRule() },
-      RuleProvider { KDocContentWrappingRule() },
-      RuleProvider { KDocIndentAfterLeadingAsteriskRule() },
-      RuleProvider { KDocLeadingAsteriskRule() },
-      RuleProvider { KDocTagOrderRule() },
-      RuleProvider { KDocTagParamOrPropertyRule() },
-      RuleProvider { NoDuplicateCopyrightHeaderRule() },
-      RuleProvider { NoLeadingBlankLinesRule() },
-      RuleProvider { NoSinceInKDocRule() },
-      RuleProvider { NoSpaceInTargetedAnnotationRule() },
-      RuleProvider { NoTrailingSpacesInRawStringLiteralRule() },
-      RuleProvider { NoUselessConstructorKeywordRule() },
-      RuleProvider { NoWithTypeWithLambdaRule() }
-    )
+  /**
+   * Used in RuleSetProvider's `about` param in 0.47-0.48, and used in a Rule's `about` property in
+   * 0.49+.
+   */
+  object About {
+
+    /** */
+    const val maintainer: String = "Rick Busarow"
+
+    /** */
+    const val description: String = "miscellaneous Ktlint rules"
+
+    /** */
+    const val license: String = "Apache 2.0"
+
+    /** */
+    const val repositoryUrl: String = "https://www.github.com/rbusarow/ktrules"
+
+    /** */
+    const val issueTrackerUrl: String = "https://www.github.com/rbusarow/ktrules/issues"
   }
 
-  companion object {
-    /** @since 1.1.0 */
-    val ABOUT: RuleAbout = RuleAbout(
-      maintainer = "Rick Busarow",
-      repositoryUrl = "https://www.github.com/rbusarow/ktrules",
-      issueTrackerUrl = "https://www.github.com/rbusarow/ktrules/issues",
-    )
-  }
+  /** */
+  const val ID: String = "kt-rules"
+
+  /** */
+  fun getRuleProviders(): Set<RuleProviderCompat> = setOf(
+    RuleProviderCompat { KDocBlankLinesRule() },
+    RuleProviderCompat { KDocCollapseRule() },
+    RuleProviderCompat { KDocContentWrappingRule() },
+    RuleProviderCompat { KDocIndentAfterLeadingAsteriskRule() },
+    RuleProviderCompat { KDocLeadingAsteriskRule() },
+    RuleProviderCompat { KDocTagOrderRule() },
+    RuleProviderCompat { KDocTagParamOrPropertyRule() },
+    RuleProviderCompat { NoDuplicateCopyrightHeaderRule() },
+    RuleProviderCompat { NoLeadingBlankLinesRule() },
+    RuleProviderCompat { NoSinceInKDocRule() },
+    RuleProviderCompat { NoSpaceInTargetedAnnotationRule() },
+    RuleProviderCompat { NoTrailingSpacesInRawStringLiteralRule() },
+    RuleProviderCompat { NoUselessConstructorKeywordRule() },
+    RuleProviderCompat { NoWithTypeWithLambdaRule() }
+  )
 }

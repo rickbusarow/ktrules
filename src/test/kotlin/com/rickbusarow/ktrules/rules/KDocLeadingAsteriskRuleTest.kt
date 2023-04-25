@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 class KDocLeadingAsteriskRuleTest : Tests {
 
   override val rules = setOf(
-    RuleProvider { KDocLeadingAsteriskRule() }
+    RuleProviderCompat { KDocLeadingAsteriskRule() }
   )
 
   @Test

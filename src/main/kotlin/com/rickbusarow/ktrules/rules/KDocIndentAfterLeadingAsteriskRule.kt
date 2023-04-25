@@ -15,8 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
@@ -35,9 +34,8 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
  *
  * @since 1.0.4
  */
-class KDocIndentAfterLeadingAsteriskRule : Rule(
+class KDocIndentAfterLeadingAsteriskRule : RuleCompat(
   ID,
-  ABOUT,
   visitorModifiers = setOf(
     mustRunAfter(KDocLeadingAsteriskRule.ID)
   )
@@ -76,7 +74,7 @@ class KDocIndentAfterLeadingAsteriskRule : Rule(
 
   internal companion object {
 
-    val ID = RuleId("kt-rules:kdoc-indent-after-leading-asterisk")
+    val ID = RuleId("kdoc-indent-after-leading-asterisk")
     const val ERROR_MESSAGE = "kdoc indent after leading asterisk"
   }
 }
