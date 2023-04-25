@@ -15,10 +15,10 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
-import com.rickbusarow.ktrules.compat.EditorConfig
+import com.rickbusarow.ktrules.compat.EditorConfigCompat
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.internal.psi.children
@@ -42,9 +42,8 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
  *
  * @since 1.0.7
  */
-class KDocCollapseRule : Rule(
+class KDocCollapseRule : RuleCompat(
   ID,
-  ABOUT,
   visitorModifiers = setOf(
     mustRunAfter(KDocContentWrappingRule.ID),
     mustRunAfter(KDocLeadingAsteriskRule.ID),
@@ -57,7 +56,7 @@ class KDocCollapseRule : Rule(
 
   private val skipAll by lazy { maxLineLength < 0 }
 
-  override fun beforeFirstNode(editorConfig: EditorConfig) {
+  override fun beforeFirstNode(editorConfig: EditorConfigCompat) {
 
     maxLineLength = editorConfig[MAX_LINE_LENGTH_PROPERTY]
 
@@ -160,7 +159,7 @@ class KDocCollapseRule : Rule(
 
   internal companion object {
 
-    val ID = RuleId("kt-rules:kdoc-collapse")
+    val ID = RuleId("kdoc-collapse")
     const val ERROR_MESSAGE = "kdoc should be collapsed into a single line"
   }
 }

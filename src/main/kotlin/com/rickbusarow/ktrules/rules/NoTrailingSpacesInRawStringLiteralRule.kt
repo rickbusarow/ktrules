@@ -15,9 +15,8 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
@@ -44,7 +43,7 @@ import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
  *
  * @since 1.0.1
  */
-class NoTrailingSpacesInRawStringLiteralRule : Rule(ID, ABOUT) {
+class NoTrailingSpacesInRawStringLiteralRule : RuleCompat(ID) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -77,7 +76,7 @@ class NoTrailingSpacesInRawStringLiteralRule : Rule(ID, ABOUT) {
   private fun String.hasTrailingSpace() = takeLast(1) == " "
 
   internal companion object {
-    val ID = RuleId("kt-rules:no-trailing-space-in-raw-string-literal")
+    val ID = RuleId("no-trailing-space-in-raw-string-literal")
     const val ERROR_MESSAGE = "Trailing space(s) in literal string template"
   }
 }

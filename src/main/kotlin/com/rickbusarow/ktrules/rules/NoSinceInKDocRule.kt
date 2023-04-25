@@ -15,10 +15,9 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
-import com.rickbusarow.ktrules.compat.EditorConfig
+import com.rickbusarow.ktrules.compat.EditorConfigCompat
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.children
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
@@ -41,9 +40,8 @@ import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
  *
  * @since 1.0.1
  */
-class NoSinceInKDocRule : Rule(
+class NoSinceInKDocRule : RuleCompat(
   ruleId = ID,
-  about = ABOUT,
   usesEditorConfigProperties = setOf(PROJECT_VERSION_PROPERTY)
 ) {
 
@@ -53,7 +51,7 @@ class NoSinceInKDocRule : Rule(
     currentVersion?.matches(".*?-.*$".toRegex()) == true
   }
 
-  override fun beforeFirstNode(editorConfig: EditorConfig) {
+  override fun beforeFirstNode(editorConfig: EditorConfigCompat) {
 
     val version = editorConfig[PROJECT_VERSION_PROPERTY]
       ?: System.getProperty("ktrules.project_version")
@@ -235,6 +233,6 @@ class NoSinceInKDocRule : Rule(
 
   internal companion object {
 
-    val ID = RuleId("kt-rules:no-since-in-kdoc")
+    val ID = RuleId("no-since-in-kdoc")
   }
 }

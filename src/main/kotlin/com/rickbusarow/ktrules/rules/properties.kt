@@ -16,19 +16,12 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.EditorConfigProperty
+import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.ec4j.core.model.PropertyType.LowerCasingPropertyType
 import org.ec4j.core.model.PropertyType.PropertyValueParser
 import org.ec4j.core.model.PropertyType.PropertyValueParser.EnumValueParser
 
 internal const val RULES_PREFIX = "ktlint_kt-rules"
-
-/**
- * This property moves
- *
- * @since 1.1.0
- */
-internal val MAX_LINE_LENGTH_PROPERTY: EditorConfigProperty<Int>
-  get() = com.pinterest.ktlint.rule.engine.core.api.editorconfig.MAX_LINE_LENGTH_PROPERTY
 
 internal val ALL_PROPERTIES by lazy {
   setOf(
@@ -87,7 +80,7 @@ internal val WRAPPING_STYLE_PROPERTY: EditorConfigProperty<WrappingStyle> by laz
     "${RULES_PREFIX}_wrapping_style",
     WrappingStyle.values().map { it.displayValue }.toString(),
     EnumValueParser(WrappingStyle::class.java),
-    WrappingStyle.values().mapTo(mutableSetOf()) { it.displayValue }
+    WrappingStyle.values().mapToSet { it.displayValue }
   )
 
   EditorConfigProperty(
@@ -100,5 +93,6 @@ internal val WRAPPING_STYLE_PROPERTY: EditorConfigProperty<WrappingStyle> by laz
 
       WrappingStyle.values().firstOrNull { it.displayValue == name }
     },
+    propertyWriter = { it.displayValue }
   )
 }

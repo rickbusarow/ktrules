@@ -15,14 +15,14 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import org.junit.jupiter.api.Test
 
 class KDocCollapseRuleTest : Tests {
 
-  override val rules: Set<RuleProvider> = setOf(
-    RuleProvider { KDocCollapseRule() }
+  override val rules: Set<RuleProviderCompat> = setOf(
+    RuleProviderCompat { KDocCollapseRule() }
   )
 
   @Test

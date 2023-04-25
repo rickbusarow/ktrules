@@ -28,11 +28,14 @@ class EditorConfigPropertiesTest : Tests {
 
     val ruleProviders by lazy {
       systemProp
-      KtRulesRuleSetProvider().getRuleProviders()
+      KtRulesRuleSetProvider.getRuleProviders()
     }
 
     val ruleIds by lazy {
-      ruleProviders.map { it.createNewRuleInstance().ruleId.value }.sorted()
+      ruleProviders.map {
+        // ex: "kt-rules:no_more_monkeys_jumping_on_the_bed"
+        "${KtRulesRuleSetProvider.ID}:${it.createNewRuleInstance().ruleId.value}"
+      }.sorted()
     }
 
     val propertyIds by lazy { ALL_PROPERTIES.map { it.name } }

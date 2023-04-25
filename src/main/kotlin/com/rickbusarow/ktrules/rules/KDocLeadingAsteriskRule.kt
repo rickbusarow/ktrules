@@ -15,9 +15,8 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider.Companion.ABOUT
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
@@ -39,7 +38,7 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
  *
  * @since 1.0.1
  */
-class KDocLeadingAsteriskRule : Rule(ID, ABOUT) {
+class KDocLeadingAsteriskRule : RuleCompat(ID,) {
   override fun beforeVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
@@ -110,7 +109,7 @@ class KDocLeadingAsteriskRule : Rule(ID, ABOUT) {
   }
 
   internal companion object {
-    val ID = RuleId("kt-rules:kdoc-leading-asterisk")
+    val ID = RuleId("kdoc-leading-asterisk")
     const val ERROR_MESSAGE = "kdoc leading asterisk"
   }
 }

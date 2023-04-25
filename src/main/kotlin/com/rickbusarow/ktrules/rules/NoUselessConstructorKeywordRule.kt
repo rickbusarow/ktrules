@@ -15,9 +15,8 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.KtRulesRuleSetProvider
 import com.rickbusarow.ktrules.compat.ElementType
-import com.rickbusarow.ktrules.compat.Rule
+import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.rules.internal.psi.parent
 import com.rickbusarow.ktrules.rules.internal.psi.prevLeaf
@@ -37,10 +36,7 @@ import org.jetbrains.kotlin.psi.KtPrimaryConstructor
  *
  * @since 1.0.1
  */
-class NoUselessConstructorKeywordRule : Rule(
-  ID,
-  KtRulesRuleSetProvider.ABOUT
-) {
+class NoUselessConstructorKeywordRule : RuleCompat(ID) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
@@ -64,6 +60,6 @@ class NoUselessConstructorKeywordRule : Rule(
   }
 
   internal companion object {
-    val ID = RuleId("kt-rules:no-useless-constructor-keyword")
+    val ID = RuleId("no-useless-constructor-keyword")
   }
 }

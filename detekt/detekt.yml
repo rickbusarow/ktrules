@@ -682,7 +682,7 @@ style:
       - 'com.pinterest.ktlint.rule.engine.core.api.Rule.*'
       - 'org.jetbrains.kotlin.psi.psiUtil.*'
     forbiddenPatterns: ""
-    excludes: [ "**/build-logic/**" ]
+    excludes: [ "**/compat*/**" ]
   ForbiddenMethodCall:
     active: false
     methods:

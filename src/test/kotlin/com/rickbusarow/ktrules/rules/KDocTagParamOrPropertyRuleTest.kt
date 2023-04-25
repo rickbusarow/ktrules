@@ -15,18 +15,18 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 val rules = setOf(
-  RuleProvider { KDocTagParamOrPropertyRule() }
+  RuleProviderCompat { KDocTagParamOrPropertyRule() }
 )
 
 class KDocTagParamOrPropertyRuleTest : Tests {
 
   override val rules = setOf(
-    RuleProvider { KDocTagParamOrPropertyRule() }
+    RuleProviderCompat { KDocTagParamOrPropertyRule() }
   )
 
   @Test

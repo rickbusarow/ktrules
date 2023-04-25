@@ -15,13 +15,13 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import org.junit.jupiter.api.Test
 
 class NoSpaceInTargetedAnnotationRuleTest : Tests {
 
   override val rules = setOf(
-    RuleProvider { NoSpaceInTargetedAnnotationRule() }
+    RuleProviderCompat { NoSpaceInTargetedAnnotationRule() }
   )
 
   @Test

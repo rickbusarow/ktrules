@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules.rules
 
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.Tests.KtLintResults
 import org.junit.jupiter.api.Test
 
@@ -24,7 +24,7 @@ class NoSinceInKDocRuleTest : Tests {
   override val currentVersionDefault = "0.2.3"
 
   override val rules = setOf(
-    RuleProvider { NoSinceInKDocRule() }
+    RuleProviderCompat { NoSinceInKDocRule() }
   )
 
   @Test

@@ -15,11 +15,15 @@
 
 package com.rickbusarow.ktrules.rules
 
+import com.rickbusarow.ktrules.KtRulesRuleSetProvider
 import com.rickbusarow.ktrules.compat.Code
 import com.rickbusarow.ktrules.compat.EditorConfigOverride
 import com.rickbusarow.ktrules.compat.KtLintRuleEngine
+import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleId
-import com.rickbusarow.ktrules.compat.RuleProvider
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
+import com.rickbusarow.ktrules.compat.from
+import com.rickbusarow.ktrules.compat.toKtLintRuleProviders49
 import com.rickbusarow.ktrules.rules.internal.dots
 import com.rickbusarow.ktrules.rules.internal.wrapIn
 import io.kotest.assertions.asClue
@@ -33,7 +37,7 @@ import io.kotest.matchers.shouldBe as kotestShouldBe
 
 interface Tests {
 
-  val rules: Set<RuleProvider>
+  val rules: Set<RuleProviderCompat>
     get() = error(
       "If you need to run lint/format tests, " +
         "you must override the `rules` property in your test class."
@@ -47,7 +51,7 @@ interface Tests {
     dots.wrapIn("\n") kotestShouldBe expected.dots.wrapIn("\n")
   }
 
-  fun Set<RuleProvider>.format(
+  fun Set<RuleProviderCompat>.format(
     @Language("kotlin")
     text: String,
     script: Boolean = false,
@@ -61,7 +65,7 @@ interface Tests {
         PROJECT_VERSION_PROPERTY to currentVersion
       ),
   ): String = KtLintRuleEngine(
-    ruleProviders = rules,
+    ruleProviders = rules.toKtLintRuleProviders49(),
     editorConfigOverride = editorConfigOverride
   ).format(
     Code.fromSnippet(text.trimIndent(), script = script)
@@ -84,7 +88,7 @@ interface Tests {
   ) {
     val errors = mutableListOf<KtLintResults.Error>()
     val outputString = KtLintRuleEngine(
-      ruleProviders = rules,
+      ruleProviders = rules.toKtLintRuleProviders49(),
       editorConfigOverride = editorConfigOverride
     ).format(
       Code.fromSnippet(text.trimIndent(), script = script)
@@ -107,7 +111,7 @@ interface Tests {
     results.checkNoMoreErrors()
   }
 
-  fun Set<RuleProvider>.lint(
+  fun Set<RuleProviderCompat>.lint(
     text: String,
     script: Boolean = false,
     wrappingStyle: WrappingStyle = wrappingStyleDefault,
@@ -121,7 +125,7 @@ interface Tests {
       )
   ): List<KtLintResults.Error> = buildList {
     KtLintRuleEngine(
-      ruleProviders = rules,
+      ruleProviders = rules.toKtLintRuleProviders49(),
       editorConfigOverride = editorConfigOverride
     ).lint(
       Code.fromSnippet(text.trimIndent(), script = script)
@@ -143,14 +147,16 @@ interface Tests {
     script: Boolean = false,
     wrappingStyle: WrappingStyle = wrappingStyleDefault,
     lineLength: Int = lineLengthDefault,
+    currentVersion: String = currentVersionDefault,
     editorConfigOverride: EditorConfigOverride =
       EditorConfigOverride.from(
         MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue
+        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
+        PROJECT_VERSION_PROPERTY to currentVersion
       )
   ): List<KtLintResults.Error> = buildList {
     KtLintRuleEngine(
-      ruleProviders = rules,
+      ruleProviders = rules.toKtLintRuleProviders49(),
       editorConfigOverride = editorConfigOverride
     ).lint(
       Code.fromSnippet(text.trimIndent(), script = script)
@@ -216,7 +222,7 @@ interface Tests {
       val expected = Error(
         line = line,
         col = col,
-        ruleId = ruleId,
+        ruleId = "${KtRulesRuleSetProvider.ID}:$ruleId",
         detail = detail,
         corrected = corrected
       )
