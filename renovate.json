@@ -18,7 +18,8 @@
       "matchPackagePatterns" : [
         "^com\\.pinterest\\.ktlint:(?:[\\w-]+)$"
       ],
-      "matchCurrentVersion" : "<0.49.0"
+      "matchCurrentVersion" : "<0.49.0",
+      "enabled" : false
     }
   ],
   "labels" : [
