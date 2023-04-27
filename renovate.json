@@ -15,11 +15,9 @@
       ]
     },
     {
-      "matchPackagePatterns" : [
-        "^com\\.pinterest\\.ktlint:(?:[\\w-]+)$"
-      ],
-      "matchCurrentVersion" : "<0.49.0",
-      "enabled" : false
+      "matchPackagePatterns": ["^com\\.pinterest\\.ktlint:ktlint-"],
+      "matchVersions": "/0\\.(?:47|48)\\..*/",
+      "enabled": false
     }
   ],
   "labels" : [
