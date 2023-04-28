@@ -15,7 +15,6 @@
 
 package com.rickbusarow.ktrules.rules.internal.trees
 
-import com.rickbusarow.ktrules.rules.internal.mapLines
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.colorized
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.SIMPLE
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.TYPE
@@ -127,21 +126,18 @@ abstract class AbstractTreePrinter<T : Any>(
 
       append('\n')
       append(indent)
-      append("┣${"━".repeat(len)}┫".colorized())
+      append("┣${"━".repeat(len)}┛".colorized())
       append('\n')
 
-      val paddedText = text.mapLines { line ->
+      val pipe = "┃".colorized()
 
-        val pipe = "┃".colorized()
+      val prependedText = text.prependIndent("$indent$pipe")
 
-        "$indent$pipe${line.padEnd(len)}$pipe"
-      }
-
-      append(paddedText)
+      append(prependedText)
 
       append('\n')
       append(indent)
-      append("┗${"━".repeat(len)}┛".colorized())
+      append("┗${"━".repeat(len)}━".colorized())
 
       if (childrenText.isNotEmpty()) {
         append("\n")
