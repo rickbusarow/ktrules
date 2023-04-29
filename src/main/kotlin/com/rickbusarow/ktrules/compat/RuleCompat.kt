@@ -19,20 +19,6 @@ import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterR
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /**
- * A stationary version of KtLint's `RuleProvider`, except it returns [RuleCompat]
- *
- * @since 1.1.1
- */
-fun interface RuleProviderCompat {
-  /**
-   * Creates a new [RuleCompat]
-   *
-   * @since 1.1.1
-   */
-  fun createNewRuleInstance(): RuleCompat
-}
-
-/**
  * A stable compatibility shim for KtLint's `Rule` classes. It's implemented by `Rule47`, `Rule48`,
  * and `Rule49` in the different split source sets.
  *

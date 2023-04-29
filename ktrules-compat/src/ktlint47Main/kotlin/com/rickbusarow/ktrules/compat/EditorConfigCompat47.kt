@@ -1,0 +1,91 @@
+/*
+ * Copyright (C) 2023 Rick Busarow
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.rickbusarow.ktrules.compat
+
+import com.pinterest.ktlint.core.api.DefaultEditorConfigProperties
+import com.pinterest.ktlint.core.api.DefaultEditorConfigProperties.CodeStyleValue
+import com.pinterest.ktlint.core.api.EditorConfigProperties
+import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
+import org.ec4j.core.model.Property
+import org.ec4j.core.model.PropertyType
+
+/** */
+class EditorConfigCompat47(
+  private val properties: EditorConfigProperties
+) : EditorConfigCompat {
+
+  private val codeStyle by lazy {
+
+    with(DefaultEditorConfigProperties.codeStyleSetProperty) {
+      type.getPropertyValue(type.name).parsed
+        ?: defaultValue
+    }
+      .toCompatCodeStyleValueCompat()
+  }
+
+  override fun <T> get(editorConfigProperty: EditorConfigProperty<T>): T {
+
+    val property = properties[editorConfigProperty.type.name]
+
+    return if (property?.isUnset != false) {
+      editorConfigProperty.defaultValue
+    } else {
+      editorConfigProperty.propertyMapper
+        ?.invoke(property, codeStyle)
+        ?: property.getValueAs()
+    }
+  }
+
+  override fun <T> getEditorConfigValueOrNull(
+    propertyType: PropertyType<T>,
+    propertyName: String
+  ): T? = properties[propertyName]?.takeIf { !it.isUnset }?.getValueAs()
+
+  override fun contains(propertyName: String): Boolean {
+    return properties.contains(propertyName)
+  }
+
+  override fun <T> map(mapper: (Property) -> T): Collection<T> {
+    return properties.map { (_, property) -> mapper(property) }
+  }
+
+  private fun <T> PropertyType<T>.getPropertyValue(propertyName: String): PropertyType.PropertyValue<T> {
+    return parse(properties[propertyName]?.sourceValue)
+  }
+}
+
+/** */
+fun <T> EditorConfigProperty<T>.toKtLintProperty(): UsesEditorConfigProperties.EditorConfigProperty<T> {
+  val editorConfigProperty = this@toKtLintProperty
+  return UsesEditorConfigProperties.EditorConfigProperty(
+    type = editorConfigProperty.type,
+    defaultValue = editorConfigProperty.defaultValue,
+    propertyMapper = editorConfigProperty.propertyMapper?.let {
+      { property, codeStyleValue ->
+        it.invoke(property, codeStyleValue.toCompatCodeStyleValueCompat())
+      }
+    },
+    propertyWriter = editorConfigProperty.propertyWriter,
+    deprecationWarning = editorConfigProperty.deprecationWarning,
+  )
+}
+
+@Suppress("DEPRECATION")
+private fun CodeStyleValue.toCompatCodeStyleValueCompat(): CodeStyleValueCompat =
+  when (this) {
+    CodeStyleValue.android -> CodeStyleValueCompat.android
+    CodeStyleValue.official -> CodeStyleValueCompat.official
+  }

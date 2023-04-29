@@ -63,6 +63,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "ktrules"
 
+include(
+  ":ktrules-compat"
+)
+
 // If this project is the real root of the build, copy the root project's properties file to included
 // builds, to ensure that Gradle settings are identical and there's only 1 daemon.
 // Note that with this copy, any changes to the included build's properties file will be overwritten.
