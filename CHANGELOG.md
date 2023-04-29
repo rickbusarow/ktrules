@@ -2,6 +2,11 @@
 
 ## 1.1.1-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kt-rules:kdoc-leading-asterisk` will now add a leading asterisk to a blank line in between two
+  tags
+
 ## [1.1.0] - 2023-04-22
 
 The default artifact is now updated
