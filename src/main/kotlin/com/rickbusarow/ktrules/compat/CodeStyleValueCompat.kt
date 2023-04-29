@@ -18,6 +18,8 @@ package com.rickbusarow.ktrules.compat
 /**
  * Code style to be used while linting and formatting. Note that the [EnumValueParser] requires
  * values to be lowercase.
+ *
+ * @since 1.1.1
  */
 @Suppress("EnumEntryName", "EnumNaming")
 enum class CodeStyleValueCompat {
@@ -31,6 +33,8 @@ enum class CodeStyleValueCompat {
    * Code formatting based on Android's Kotlin styleguide
    * (https://developer.android.com/kotlin/style-guide). This code style aims to be compatible with
    * code formatting in Android Studio.
+   *
+   * @since 1.1.1
    */
   android_studio,
 
@@ -38,6 +42,8 @@ enum class CodeStyleValueCompat {
    * Code formatting based on Kotlin Coding conventions
    * (https://kotlinlang.org/docs/coding-conventions.html). This code style aims to be compatible
    * with code formatting in IntelliJ IDEA.
+   *
+   * @since 1.1.1
    */
   intellij_idea,
 
@@ -52,6 +58,8 @@ enum class CodeStyleValueCompat {
    * the code formatting provided by the editor is that those contain bugs which after some years
    * are still not fixed. In the long run, this code style becomes the default code style provided
    * by KtLint.
+   *
+   * @since 1.1.1
    */
   ktlint_official,
 

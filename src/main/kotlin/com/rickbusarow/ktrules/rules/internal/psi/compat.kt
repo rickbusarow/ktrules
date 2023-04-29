@@ -83,14 +83,7 @@ fun ASTNode.prevLeafAny(): ASTNode? {
  * @since 1.1.0
  */
 fun ASTNode.lastChildLeafOrSelf(): ASTNode {
-  var n = this
-  if (n.lastChildNode != null) {
-    do {
-      n = n.lastChildNode
-    } while (n.lastChildNode != null)
-    return n
-  }
-  return n
+  return childrenDepthFirst().lastOrNull { it.isLeaf() } ?: this
 }
 
 /**

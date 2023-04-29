@@ -16,10 +16,15 @@
 package com.rickbusarow.ktrules.rules.internal.psi
 
 import com.rickbusarow.ktrules.compat.ElementType
+import com.rickbusarow.ktrules.compat.ElementType.KDOC_TEXT
+import com.rickbusarow.ktrules.rules.internal.removeRegex
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
+import org.jetbrains.kotlin.psi.KtPsiFactory
 
 /** @since 1.0.5 */
 internal val KDocKnownTag.Companion.AT_PARAM get() = "@param"
@@ -171,7 +176,7 @@ internal fun ASTNode?.isFirstAfterKDocStart(): Boolean =
 internal fun ASTNode?.isKDocCodeBlockText(): Boolean =
   this != null && elementType == ElementType.KDOC_CODE_BLOCK_TEXT
 
-/** */
+/** @since 1.1.1 */
 internal fun ASTNode?.prevKDocLeadingAsterisk(): ASTNode? =
   this?.prevLeaf { it.isKDocLeadingAsterisk() }
 
@@ -219,4 +224,126 @@ internal fun ASTNode.getKDocTextWithoutLeadingAsterisks(): String {
     .dropLastWhile { it.isKDocWhitespaceAfterLeadingAsterisk() }
     .joinToString("") { it.text }
     .replaceIndentByMargin(newIndent = "", marginPrefix = "*")
+}
+
+/**
+ * The spaces to indent lines after the first line. This is the indentation of the KDOC_START plus
+ * one more space.
+ *
+ * @since 1.1.1
+ */
+val KDoc.leadingAteriskIndent: String get() = fileIndent(additionalOffset = 1)
+
+/**
+ * The spaces to indent lines after the first line. This is the indentation of the KDOC_START plus
+ * one more space.
+ *
+ * @since 1.1.1
+ */
+val KDoc.starIndent: String get() = fileIndent(additionalOffset = 1)
+
+/** @since 1.1.1 */
+fun KDoc.makeMultiline(): KDoc = apply {
+
+  require(text.count { it == '\n' } == 0) { "KDoc is already multi-line:\n---\n$text\n---" }
+
+  val starIndent = fileIndent(additionalOffset = 1)
+
+  val kdocStart = node.firstChildNode
+  val afterStart = kdocStart.nextSibling()
+
+  node.addChild(PsiWhiteSpaceImpl("\n$starIndent"), afterStart)
+
+  node.addChild(LeafPsiElement(ElementType.KDOC_LEADING_ASTERISK, "*"), afterStart)
+
+  val ds = getDefaultSection()
+
+  ds.node
+    .childrenDepthFirst()
+    .singleOrNull { it.isKDocText() }
+    ?.let { old ->
+      old.parent!!.replaceChild(old, LeafPsiElement(KDOC_TEXT, old.text.trimEnd()))
+    }
+
+  // The newline after the KDoc content is always the last child of the last tag
+  getAllTags().last().node.addChild(PsiWhiteSpaceImpl("\n$starIndent"), null)
+}
+
+/** @since 1.1.1 */
+fun KDocTag.replaceContentWithNewPsiFromText(newText: String): KDocTag = apply {
+  val tagNode = this@replaceContentWithNewPsiFromText.node
+
+  val toDelete = tagNode.children()
+    .takeWhile { !it.isKDocTag() }
+    .toList()
+    .dropLastWhile { it.isKDocLeadingAsterisk() || it.isBlank() }
+
+  val anchor = toDelete.firstOrNull()
+
+  val newTag = ktPsiFactory().createKDocTagFromText(
+    newText = newText,
+    removeLeadingAsterisk = !toDelete.firstOrNull().isKDocLeadingAsterisk()
+  )
+
+  newTag.node
+    .children()
+    .forEach { newTagChild ->
+      tagNode.addChild(newTagChild.clone() as ASTNode, anchor)
+    }
+
+  toDelete.forEach { tagNode.removeChild(it) }
+}
+
+/** @since 1.1.1 */
+fun KtPsiFactory.createKDocTagFromText(
+  newText: String,
+  removeLeadingAsterisk: Boolean
+): KDocTag {
+  return createFileFromText(newText.removeRegex("\\*/\\S*").plus("\n*\n*/"))
+    .childrenBreadthFirst()
+    .filterIsInstance<KDocTag>()
+    .toList()
+    .last()
+    .also { tag ->
+      tag.node.removeLastChildrenWhile { it.isKDocLeadingAsterisk() || it.isBlank() }
+
+      if (removeLeadingAsterisk) {
+        tag.node.removeFirstChildrenWhile { it.isKDocLeadingAsterisk() }
+      }
+    }
+}
+
+/** @since 1.1.1 */
+fun KtPsiFactory.createKDoc(
+  sections: List<String>,
+  startIndent: String,
+): KDoc {
+
+  val newText = buildString {
+
+    val makeCollapsed = sections.singleOrNull()?.count { it == '\n' } == 0
+
+    if (makeCollapsed) {
+      append("$startIndent/**")
+    } else {
+      appendLine("$startIndent/**")
+    }
+
+    if (makeCollapsed) {
+      append("${sections.first()} */")
+    } else {
+
+      val leadingAsteriskIndent = "$startIndent "
+
+      sections.forEach { section ->
+        section.lineSequence().forEach { line ->
+          appendLine("$leadingAsteriskIndent*$line")
+        }
+      }
+
+      appendLine("$leadingAsteriskIndent*/")
+    }
+  }
+
+  return createFileFromText(newText).getChildOfType<KDoc>()!!
 }

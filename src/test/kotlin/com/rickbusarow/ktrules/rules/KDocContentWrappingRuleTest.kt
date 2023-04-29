@@ -1323,6 +1323,28 @@ class KDocContentWrappingRuleTest : Tests {
     }
   }
 
+  @Test
+  fun `an empty kdoc is left alone`() {
+
+    format(
+      """
+      /** */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) {
+      output shouldBe """
+      /** */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    }
+  }
+
   private fun KtLintTestResult.expectError(
     line: Int,
     col: Int,

@@ -32,7 +32,7 @@ class KtRulesRuleSetProviderV3_49 : RuleSetProviderV3(RuleSetId(KtRulesRuleSetPr
   }
 }
 
-/** */
+/** @since 1.1.1 */
 fun RuleProviderCompat.toKtLintRuleProvider49(): RuleProvider {
   return RuleProvider { RuleCompat49(createNewRuleInstance()) }
 }

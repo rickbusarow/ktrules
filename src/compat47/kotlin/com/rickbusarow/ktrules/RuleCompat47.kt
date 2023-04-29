@@ -27,8 +27,7 @@ import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import com.pinterest.ktlint.core.api.UsesEditorConfigProperties.EditorConfigProperty as KtLintEditorConfigProperty
 
-/**
- */
+/** @since 1.1.1 */
 class RuleCompat47(private val ruleCompat: RuleCompat) : Rule(
   id = ruleCompat.ruleId.value,
   visitorModifiers = ruleCompat.visitorModifiers.mapToSet { visitorModifier ->

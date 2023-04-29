@@ -24,7 +24,7 @@ import org.ec4j.core.model.PropertyType
 import com.pinterest.ktlint.rule.engine.core.api.editorconfig.CodeStyleValue as KtLintCodeStyleValue
 import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfigProperty as KtLintEditorConfigProperty
 
-/** */
+/** @since 1.1.1 */
 class EditorConfigCompat49(private val delegate: EditorConfig) : EditorConfigCompat {
   override fun <T> get(editorConfigProperty: EditorConfigProperty<T>): T {
     return delegate[editorConfigProperty.toKtLintProperty49()]
@@ -44,7 +44,7 @@ class EditorConfigCompat49(private val delegate: EditorConfig) : EditorConfigCom
   }
 }
 
-/** */
+/** @since 1.1.1 */
 fun <T> EditorConfigProperty<T>.toKtLintProperty49(): KtLintEditorConfigProperty<T> {
   val editorConfigProperty = this@toKtLintProperty49
 

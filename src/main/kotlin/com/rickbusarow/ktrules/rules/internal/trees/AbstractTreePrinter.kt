@@ -15,6 +15,7 @@
 
 package com.rickbusarow.ktrules.rules.internal.trees
 
+import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.colorized
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.noColors
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType.SIMPLE
@@ -29,7 +30,7 @@ import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType
  * @since 1.1.0
  */
 abstract class AbstractTreePrinter<T : Any>(
-  private val whitespaceChar: Char = ' '
+  private val whitespaceChar: Char? = null
 ) {
   private val elementSimpleNameMap = mutableMapOf<T, String>()
   private val elementTypeNameMap = mutableMapOf<T, String>()
@@ -94,10 +95,7 @@ abstract class AbstractTreePrinter<T : Any>(
 
     val color = getCurrentColor()
 
-    fun String.colorized(): String {
-      // return this
-      return colorized(color)
-    }
+    fun String.colorized(): String = colorized(color)
 
     val parentName = (rootNode.parent()?.uniqueSimpleName() ?: "null")
     val parentType = rootNode.parent()?.typeName() ?: "null"
@@ -112,27 +110,35 @@ abstract class AbstractTreePrinter<T : Any>(
     @Suppress("MagicNumber")
     return buildString {
 
+      val chars = BoxChars.light
+
       val header =
         "$thisName [type: $typeName] [parent: $parentName] [parent type: $parentType]"
 
-      val text = rootNode.text().replace(" ", "$whitespaceChar")
+      val text = rootNode.text()
+        .letIf(whitespaceChar != null) {
+          replace(" ", "$whitespaceChar")
+        }
 
       val headerLength = header.countVisibleChars()
 
-      val len = maxOf(headerLength + 4, text.lines().maxOf { it.countVisibleChars() })
+      val longestTextLine = text.lines().maxOf { it.countVisibleChars() }
 
-      val headerBoxStart = "┏━".colorized()
+      val len = maxOf(headerLength + 4, longestTextLine)
 
-      val headerBoxEnd = ("━".repeat((len - 3) - headerLength) + "┓").colorized()
+      val headerBoxStart = "${chars.topLeft}${chars.dash}".colorized()
+
+      val headerBoxEnd =
+        ("${chars.dash}".repeat((len - 3) - headerLength) + chars.topRight).colorized()
 
       append("$indent$headerBoxStart $header $headerBoxEnd")
 
       append('\n')
       append(indent)
-      append("┣${"━".repeat(len)}┛".colorized())
+      append("${chars.midLeft}${"${chars.dash}".repeat(len)}${chars.bottomRight}".colorized())
       append('\n')
 
-      val pipe = "┃".colorized()
+      val pipe = "${chars.pipe}".colorized()
 
       val prependedText = text.prependIndent("$indent$pipe")
 
@@ -140,12 +146,53 @@ abstract class AbstractTreePrinter<T : Any>(
 
       append('\n')
       append(indent)
-      append("┗${"━".repeat(len)}━".colorized())
+      append("${chars.bottomLeft}${"${chars.dash}".repeat(len)}${chars.dash}".colorized())
+      // append("${chars.bottomLeft}${"${chars.dash}".repeat(longestTextLine)}".colorized())
 
       if (childrenText.isNotEmpty()) {
         append("\n")
         append(childrenText)
       }
+    }
+  }
+
+  private data class BoxChars(
+    val dash: Char,
+    val pipe: Char,
+    val topLeft: Char,
+    val midLeft: Char,
+    val bottomLeft: Char,
+    val midBottom: Char,
+    val midTop: Char,
+    val topRight: Char,
+    val midRight: Char,
+    val bottomRight: Char,
+  ) {
+    companion object {
+      val heavy = BoxChars(
+        dash = '━',
+        pipe = '┃',
+        topLeft = '┏',
+        midLeft = '┣',
+        bottomLeft = '┗',
+        midBottom = '┻',
+        midTop = '┳',
+        topRight = '┓',
+        midRight = '┫',
+        bottomRight = '┛'
+      )
+      val light = BoxChars(
+        dash = '─',
+        pipe = '│',
+        topLeft = '┌',
+        midLeft = '├',
+        bottomLeft = '└',
+        midBottom = '┴',
+        midTop = '┬',
+        topRight = '┐',
+        midRight = '┤',
+        bottomRight = '┘',
+      )
     }
   }
 
@@ -224,7 +271,11 @@ abstract class AbstractTreePrinter<T : Any>(
 
       fun String.noColors(): String = "\u001B\\[[;\\d]*m".toRegex().replace(this, "")
 
-      /** returns a string in the given color */
+      /**
+       * returns a string in the given color
+       *
+       * @since 1.1.1
+       */
       fun String.colorized(color: Color): String {
 
         return if (supported) {

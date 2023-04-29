@@ -28,7 +28,7 @@ import org.ec4j.core.model.PropertyType.PropertyValue
 import com.pinterest.ktlint.core.api.editorconfig.CodeStyleValue as KtLintCodeStyleValue
 import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty as KtLintEditorConfigProperty
 
-/** */
+/** @since 1.1.1 */
 class EditorConfigCompat48(
   private val properties: EditorConfigProperties
 ) : EditorConfigCompat {
@@ -73,7 +73,7 @@ class EditorConfigCompat48(
   }
 }
 
-/** */
+/** @since 1.1.1 */
 fun <T> EditorConfigProperty<T>.toKtLintProperty48(): KtLintEditorConfigProperty<T> {
   val editorConfigProperty = this@toKtLintProperty48
   return KtLintEditorConfigProperty(

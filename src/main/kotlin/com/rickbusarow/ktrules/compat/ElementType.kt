@@ -26,6 +26,8 @@ import org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes
 /**
  * This is copy/pasted from KtLint. KtLint's version was moved for 0.48.0 and again for 0.49.0. This
  * version won't move.
+ *
+ * @since 1.1.1
  */
 @Suppress("unused", "UndocumentedPublicProperty")
 object ElementType {

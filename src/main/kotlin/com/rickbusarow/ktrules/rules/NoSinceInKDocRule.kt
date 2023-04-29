@@ -19,18 +19,22 @@ import com.rickbusarow.ktrules.compat.EditorConfigCompat
 import com.rickbusarow.ktrules.compat.ElementType
 import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.rules.internal.letIf
+import com.rickbusarow.ktrules.rules.internal.mapLines
+import com.rickbusarow.ktrules.rules.internal.prefixIfNot
 import com.rickbusarow.ktrules.rules.internal.psi.children
+import com.rickbusarow.ktrules.rules.internal.psi.createKDoc
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
+import com.rickbusarow.ktrules.rules.internal.psi.getChildOfType
+import com.rickbusarow.ktrules.rules.internal.psi.isInKDocDefaultSection
+import com.rickbusarow.ktrules.rules.internal.psi.isInKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagName
-import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
-import com.rickbusarow.ktrules.rules.internal.psi.prevLeaf
+import com.rickbusarow.ktrules.rules.internal.psi.ktPsiFactory
+import com.rickbusarow.ktrules.rules.internal.removeRegex
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
-import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.CompositeElement
-import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
-import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag.SINCE
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
@@ -83,6 +87,7 @@ class NoSinceInKDocRule : RuleCompat(
     val tag = kdoc.findSinceTag()
 
     if (tag == null) {
+
       emit(kdocNode.startOffset, "add `@since $currentVersion` to kdoc", true)
 
       if (autoCorrect) {
@@ -131,95 +136,35 @@ class NoSinceInKDocRule : RuleCompat(
 
     val kdoc = psi.parent as KDoc
 
-    val indent = kdoc.fileIndent(additionalOffset = 1)
-    val newlineIndent = "\n$indent"
-
-    val isSingleLine = kdoc.text.lines().size == 1
-    val contentWasBlank = kdoc.getAllSections().none { it.text.isNotBlank() }
-
-    val hasTags = kdoc.getAllTags().any { it.text.trim().startsWith("@") }
-
-    val leadingNewlineCount = when {
-      contentWasBlank -> 0
-      !hasTags && isSingleLine -> 2
-      hasTags && isSingleLine -> 1
-      !hasTags -> 2
-      else -> 1
-    }
-
-    val closingTag = this as LeafElement
-
-    val kdocNode = kdoc.node as CompositeElement
-
-    var firstNewNode: ASTNode? = null
-
-    repeat(leadingNewlineCount) {
-
-      val newline = PsiWhiteSpaceImpl(newlineIndent)
-      if (firstNewNode == null) {
-        firstNewNode = newline
+    val sections = kdoc.getAllSections()
+      .map { section ->
+        section.text
+          .mapLines { it.removeRegex("^\\s*\\*") }
+          .letIf(section.isInKDocDefaultSection() && !section.node.isInKDocTag()) {
+            removeSuffix(" ")
+              .removeSuffix("\n")
+          }
+          .prefixIfNot(" ")
       }
+      .filterNot { it.isBlank() }
 
-      kdocNode.addChild(newline, closingTag)
-      kdocNode.addChild(LeafPsiElement(ElementType.KDOC_LEADING_ASTERISK, "*"), closingTag)
-    }
+    val defaultSection = kdoc.getDefaultSection()
+    val defaultSectionText = defaultSection.text
 
-    if (!contentWasBlank) {
-      // space after `*` and before `@since`
-      kdocNode.addChild(PsiWhiteSpaceImpl(" "), closingTag)
-    }
-
-    CompositeElement(ElementType.KDOC_TAG).also { tagComposite ->
-      kdocNode.addChild(tagComposite, closingTag)
-
-      if (firstNewNode == null) {
-        firstNewNode = tagComposite
-      }
-
-      tagComposite.addChild(LeafPsiElement(ElementType.KDOC_TAG_NAME, "@since"))
-
-      // tagComposite.addChild(PsiWhiteSpaceImpl(" "))
-      tagComposite.addChild(LeafPsiElement(ElementType.KDOC_TEXT, " $version"))
-    }
-
-    // The AST will automatically add a whitespace between the previous node and the first one we
-    // add, even if we're adding a whitespace.  So after we've added our new nodes, go back and
-    // remove the new whitespace **before** the ones we've added.
-    val previousLeaf = firstNewNode?.prevLeaf(true) as? LeafElement
-    when (previousLeaf?.elementType) {
-      ElementType.WHITE_SPACE -> kdocNode.removeChild(previousLeaf)
-      ElementType.KDOC_TEXT -> previousLeaf.treeParent.replaceChild(
-        previousLeaf,
-        LeafPsiElement(ElementType.KDOC_TEXT, previousLeaf.text.trimEnd())
-      )
-    }
-
-    val openingTag = kdocNode.findChildByType(ElementType.KDOC_START) as LeafElement
-    val secondChild = openingTag.nextSibling { true } as ASTNode
-
-    if (contentWasBlank) {
-      if (isSingleLine) {
-        // turn `/**@since 0.0.1 */` into `/** @since 0.0.1 */`
-        kdocNode.addChild(PsiWhiteSpaceImpl(" "), secondChild)
-      } else {
-        // turn `/**\n @since 0.0.1 */` into `/** @since 0.0.1 */`
-        kdocNode.removeChild(secondChild)
-        kdocNode.addChild(PsiWhiteSpaceImpl(" "), firstNewNode)
-      }
-
-      kdocNode.addChild(PsiWhiteSpaceImpl(" "), closingTag)
+    val leadingNewlineOrBlank = if (
+      defaultSectionText.isNotBlank() &&
+      defaultSection.getChildOfType<KDocTag>() == null &&
+      sections.singleOrNull()?.endsWith("\n\n") == false
+    ) {
+      "\n"
     } else {
-      if (isSingleLine) {
-        // example: `/** comment */`
-        // If the kdoc was a single line before, but it wasn't blank, then it's now going to be
-        // multi-line.  We have to add a newline, indent, and asterisk after the opening tag.
-
-        kdocNode.addChild(PsiWhiteSpaceImpl(newlineIndent), secondChild)
-        kdocNode.addChild(LeafPsiElement(ElementType.KDOC_LEADING_ASTERISK, "*"), secondChild)
-      }
-
-      kdocNode.addChild(PsiWhiteSpaceImpl(newlineIndent), closingTag)
+      ""
     }
+
+    val newKdoc = kdoc.ktPsiFactory()
+      .createKDoc(sections + "$leadingNewlineOrBlank @since $version", kdoc.fileIndent(0))
+
+    kdoc.replace(newKdoc)
   }
 
   private fun KDocTag.addVersionToSinceTag(version: String) {

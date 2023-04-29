@@ -34,7 +34,11 @@ private fun CodeStyleValueCompat.defaultValue() =
 
 private var isInvalidValueLoggedBefore = false
 
-/** Integer value that denotes that the property is to be considered as disabled. */
+/**
+ * Integer value that denotes that the property is to be considered as disabled.
+ *
+ * @since 1.1.1
+ */
 const val MAX_LINE_LENGTH_PROPERTY_OFF: Int = Int.MAX_VALUE
 
 /**
@@ -60,6 +64,8 @@ internal val MAX_LINE_LENGTH_PROPERTY: EditorConfigProperty<Int>
          * Internally, Ktlint uses integer 'Int.MAX_VALUE' to indicate that the max line length has
          * to be ignored as this is easier in comparisons to check whether the maximum length of a
          * line is exceeded.
+         *
+         * @since 1.1.1
          */
         property.sourceValue == MAX_LINE_LENGTH_PROPERTY_OFF_EDITOR_CONFIG -> MAX_LINE_LENGTH_PROPERTY_OFF
 

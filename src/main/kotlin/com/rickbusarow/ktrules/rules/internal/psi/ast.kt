@@ -144,48 +144,48 @@ fun ASTNode.fileIndent(additionalOffset: Int): String {
   return psi.fileIndent(additionalOffset = additionalOffset)
 }
 
-/**   */
-inline fun <T : ASTNode> T.removeFirstChildrenWhile(shouldRemove: (ASTNode) -> Boolean): T {
-  return also { receiver ->
-    children()
-      .toList()
-      .takeWhile(shouldRemove)
-      .forEach { receiver.removeChild(it) }
-  }
-}
-
-/**   */
-inline fun <T : ASTNode> T.removeLastChildrenWhile(shouldRemove: (ASTNode) -> Boolean): T {
-  return also { receiver ->
-    children()
-      .toList()
-      .takeLastWhile(shouldRemove)
-      .forEach { receiver.removeChild(it) }
-  }
-}
-
-/** @since 1.0.7 */
-inline fun <T : ASTNode> T.removeAllChildren(shouldRemove: (ASTNode) -> Boolean = { true }): T {
-  return also { receiver ->
-    children()
-      .toList()
-      .filter(shouldRemove)
-      .forEach { receiver.removeChild(it) }
-  }
-}
-
-/** @since 1.0.7 */
-fun <T : ASTNode> T.removeAllChildrenRecursive(shouldRemove: (ASTNode) -> Boolean): T {
-  return also { receiver ->
-    receiver.removeAllChildren(shouldRemove)
-    receiver.children()
-      .toList()
-      .forEach { it.removeAllChildrenRecursive(shouldRemove) }
-  }
-}
-
 /**
  * @return all ancestors of the receiver node, starting with the immediate parent
  * @since 1.1.0
  */
 fun ASTNode.parents(): Sequence<ASTNode> = generateSequence(treeParent) { node -> node.treeParent }
+
+/** @since 1.1.1 */
+inline fun <T : ASTNode> T.removeFirstChildrenWhile(shouldRemove: (ASTNode) -> Boolean): T {
+  return apply {
+    children()
+      .toList()
+      .takeWhile(shouldRemove)
+      .forEach { removeChild(it) }
+  }
+}
+
+/** @since 1.1.1 */
+inline fun <T : ASTNode> T.removeLastChildrenWhile(shouldRemove: (ASTNode) -> Boolean): T {
+  return apply {
+    children()
+      .toList()
+      .takeLastWhile(shouldRemove)
+      .forEach { removeChild(it) }
+  }
+}
+
+/** @since 1.0.7 */
+inline fun <T : ASTNode> T.removeAllChildren(shouldRemove: (ASTNode) -> Boolean = { true }): T {
+  return apply {
+    children()
+      .toList()
+      .filter(shouldRemove)
+      .forEach { removeChild(it) }
+  }
+}
+
+/** @since 1.0.7 */
+fun <T : ASTNode> T.removeAllChildrenRecursive(shouldRemove: (ASTNode) -> Boolean): T {
+  return apply {
+    removeAllChildren(shouldRemove)
+    children()
+      .toList()
+      .forEach { it.removeAllChildrenRecursive(shouldRemove) }
+  }
+}

@@ -39,5 +39,9 @@ internal class PsiTreePrinter(
     internal fun <T : PsiElement> T.printEverything(
       whitespaceChar: Char = ' '
     ): T = apply { PsiTreePrinter(whitespaceChar).printTreeString(this) }
+
+    internal fun <T : PsiElement> T.printEverythingFromASTNode(
+      whitespaceChar: Char = ' '
+    ): T = apply { ASTTreePrinter(whitespaceChar).printTreeString(this.node) }
   }
 }

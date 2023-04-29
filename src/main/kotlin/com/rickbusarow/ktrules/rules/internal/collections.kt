@@ -15,39 +15,67 @@
 
 package com.rickbusarow.ktrules.rules.internal
 
-/** shorthand for `mapNotNull { ... }.single()` */
+/**
+ * shorthand for `mapNotNull { ... }.single()`
+ *
+ * @since 1.1.1
+ */
 inline fun <T, R : Any> Iterable<T>.singleNotNullOf(transform: (T) -> R?): R {
   return mapNotNull(transform).single()
 }
 
-/** shorthand for `mapTo(mutableSetOf()) { ... }` */
+/**
+ * shorthand for `mapTo(mutableSetOf()) { ... }`
+ *
+ * @since 1.1.1
+ */
 inline fun <C : Iterable<T>, T, R> C.mapToSet(
   destination: MutableSet<R> = mutableSetOf(),
   transform: (T) -> R
 ): MutableSet<R> = mapTo(destination, transform)
 
-/** shorthand for `mapTo(mutableSetOf()) { ... }` */
+/**
+ * shorthand for `mapTo(mutableSetOf()) { ... }`
+ *
+ * @since 1.1.1
+ */
 inline fun <T, R> Array<T>.mapToSet(
   destination: MutableSet<R> = mutableSetOf(),
   transform: (T) -> R
 ): MutableSet<R> = mapTo(destination, transform)
 
-/** shorthand for `flatMapTo(mutableSetOf()) { ... }` */
+/**
+ * shorthand for `flatMapTo(mutableSetOf()) { ... }`
+ *
+ * @since 1.1.1
+ */
 inline fun <T, R> Iterable<T>.flatMapToSet(
   destination: MutableSet<R> = mutableSetOf(),
   transform: (T) -> Iterable<R>
 ): MutableSet<R> = flatMapTo(destination, transform)
 
-/** shorthand for `mapNotNull { ... }.single()` */
+/**
+ * shorthand for `mapNotNull { ... }.single()`
+ *
+ * @since 1.1.1
+ */
 fun <T, R : Any> Sequence<T>.singleNotNullOf(transform: (T) -> R?): R {
   return mapNotNull(transform).single()
 }
 
-/** shorthand for `sequenceOf(*elements).filterNotNull()` */
+/**
+ * shorthand for `sequenceOf(*elements).filterNotNull()`
+ *
+ * @since 1.1.1
+ */
 fun <T : Any> sequenceOfNotNull(vararg elements: T?): Sequence<T> =
   sequenceOf(*elements).filterNotNull()
 
-/** returns [defaultValue] if the receiver is null or is empty */
+/**
+ * returns [defaultValue] if the receiver is null or is empty
+ *
+ * @since 1.1.1
+ */
 inline fun <C, R> C?.ifNullOrEmpty(
   defaultValue: () -> R
 ): R where R : Collection<*>,
@@ -87,6 +115,8 @@ inline fun <C, R> C?.ifNullOrEmpty(
  *      yield 4
  * null
  * ```
+ *
+ * @since 1.1.1
  */
 fun <T> Sequence<T>.stateful(): Sequence<T> {
   val iterator = iterator()

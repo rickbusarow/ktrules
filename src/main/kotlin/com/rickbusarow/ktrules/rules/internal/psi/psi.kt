@@ -50,9 +50,14 @@ fun PsiElement.ktPsiFactory(): KtPsiFactory {
  * @return a new [KtFile] instance created from the given text.
  * @since 1.1.0
  */
-fun PsiElement.createFileFromText(text: String): KtFile {
-  return ktPsiFactory().createFile("tmp.kt", text)
-}
+fun PsiElement.createFileFromText(text: String): KtFile = ktPsiFactory().createFileFromText(text)
+
+/**
+ * @param text the text of the new [KtFile].
+ * @return a new [KtFile] instance created from the given text.
+ * @since 1.1.1
+ */
+fun KtPsiFactory.createFileFromText(text: String): KtFile = createFile("tmp.kt", text)
 
 /**
  * @return a list of all [KDocTag]s in this [KDoc].
@@ -322,9 +327,9 @@ inline fun <reified T : PsiElement> PsiElement.getChildOfType(): T? {
   return PsiTreeUtil.getChildOfType(this, T::class.java)
 }
 
-/**   */
+/** @since 1.1.1 */
 inline fun <T : PsiElement> T.removeAllChildren(shouldRemove: (PsiElement) -> Boolean = { true }): T {
-  return also { _ ->
+  return apply {
     children
       .filter(shouldRemove)
       .forEach { it.delete() }

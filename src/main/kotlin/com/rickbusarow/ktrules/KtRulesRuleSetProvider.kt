@@ -31,35 +31,37 @@ import com.rickbusarow.ktrules.rules.NoTrailingSpacesInRawStringLiteralRule
 import com.rickbusarow.ktrules.rules.NoUselessConstructorKeywordRule
 import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
 
-/** */
+/** @since 1.1.1 */
 object KtRulesRuleSetProvider {
 
   /**
    * Used in RuleSetProvider's `about` param in 0.47-0.48, and used in a Rule's `about` property in
    * 0.49+.
+   *
+   * @since 1.1.1
    */
   object About {
 
-    /** */
+    /** @since 1.1.1 */
     const val maintainer: String = "Rick Busarow"
 
-    /** */
+    /** @since 1.1.1 */
     const val description: String = "miscellaneous Ktlint rules"
 
-    /** */
+    /** @since 1.1.1 */
     const val license: String = "Apache 2.0"
 
-    /** */
+    /** @since 1.1.1 */
     const val repositoryUrl: String = "https://www.github.com/rbusarow/ktrules"
 
-    /** */
+    /** @since 1.1.1 */
     const val issueTrackerUrl: String = "https://www.github.com/rbusarow/ktrules/issues"
   }
 
-  /** */
+  /** @since 1.1.1 */
   const val ID: String = "kt-rules"
 
-  /** */
+  /** @since 1.1.1 */
   fun getRuleProviders(): Set<RuleProviderCompat> = setOf(
     RuleProviderCompat { KDocBlankLinesRule() },
     RuleProviderCompat { KDocCollapseRule() },

@@ -28,6 +28,34 @@ class NoSinceInKDocRuleTest : Tests {
   )
 
   @Test
+  fun `a collapsed default section paragraph has the since tag added`() {
+
+    format(
+      """
+      /** a comment `fun foo()` */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """
+    ) {
+      expectError(1, 27)
+
+      output shouldBe """
+        /**
+         * a comment `fun foo()`
+         *
+         * @since 0.2.3
+         */
+        data class Subject(
+          val name: String,
+          val age: Int
+        )
+      """.trimIndent()
+    }
+  }
+
+  @Test
   fun `a missing since does not emit if the version is a -SNAPSHOT`() {
 
     format(

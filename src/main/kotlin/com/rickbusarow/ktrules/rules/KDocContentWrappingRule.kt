@@ -26,20 +26,17 @@ import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
 import com.rickbusarow.ktrules.rules.internal.markdown.MarkdownNode
 import com.rickbusarow.ktrules.rules.internal.markdown.wrap
 import com.rickbusarow.ktrules.rules.internal.prefixIfNot
-import com.rickbusarow.ktrules.rules.internal.psi.children
-import com.rickbusarow.ktrules.rules.internal.psi.childrenBreadthFirst
-import com.rickbusarow.ktrules.rules.internal.psi.createFileFromText
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getAllTags
-import com.rickbusarow.ktrules.rules.internal.psi.isBlank
 import com.rickbusarow.ktrules.rules.internal.psi.isInKDocDefaultSection
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocLeadingAsterisk
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocSection
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
-import com.rickbusarow.ktrules.rules.internal.psi.nextLeaf
-import com.rickbusarow.ktrules.rules.internal.psi.nextSibling
+import com.rickbusarow.ktrules.rules.internal.psi.isKDocText
+import com.rickbusarow.ktrules.rules.internal.psi.makeMultiline
 import com.rickbusarow.ktrules.rules.internal.psi.parent
-import com.rickbusarow.ktrules.rules.internal.psi.removeAllChildren
-import com.rickbusarow.ktrules.rules.internal.psi.removeLastChildrenWhile
+import com.rickbusarow.ktrules.rules.internal.psi.prevLeaf
+import com.rickbusarow.ktrules.rules.internal.psi.replaceContentWithNewPsiFromText
 import com.rickbusarow.ktrules.rules.internal.psi.startOffset
 import com.rickbusarow.ktrules.rules.internal.psi.tagTextWithoutLeadingAsterisks
 import com.rickbusarow.ktrules.rules.internal.psi.upsertWhitespaceAfterMe
@@ -48,7 +45,6 @@ import com.rickbusarow.ktrules.rules.wrapping.MinimumRaggednessWrapper
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
-import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.kdoc.psi.impl.KDocTag
@@ -101,32 +97,22 @@ class KDocContentWrappingRule : RuleCompat(
   ) {
 
     if (!skipAll && node.elementType == ElementType.KDOC) {
-      visitKDoc(node, autoCorrect = autoCorrect, emit = emit)
-    }
-  }
 
-  private fun visitKDoc(
-    kdocNode: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+      val kdoc = node.psi as KDoc
 
-    val kdoc = kdocNode.psi as KDoc
+      val starIndent = kdoc.fileIndent(additionalOffset = 1)
 
-    val starIndent = kdoc.fileIndent(additionalOffset = 1)
+      kdoc.getAllTags()
+        .getFixedTagPairs(starIndent)
+        .forEach { (tag, wrapped) ->
 
-    val tags = kdoc.getAllTags()
+          emit(tag.startOffset, ERROR_MESSAGE, true)
 
-    val notWrapped = tags.getFixedTagPairs(starIndent)
+          if (autoCorrect) {
 
-    notWrapped.forEach { (tag, wrapped) ->
-
-      emit(tag.startOffset, ERROR_MESSAGE, true)
-
-      if (autoCorrect) {
-
-        tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent)
-      }
+            tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent)
+          }
+        }
     }
   }
 
@@ -136,7 +122,11 @@ class KDocContentWrappingRule : RuleCompat(
     starIndent: String
   ) {
 
-    val inKDocDefaultSection = node.isInKDocDefaultSection()
+    val tagNode = this@fix.node
+
+    require(tagNode.isKDocTag() || tagNode.isKDocSection())
+
+    val inKDocDefaultSection = tagNode.isInKDocDefaultSection()
     val wrappedLines = wrapped.lines()
 
     val singleLineKDoc = wrappedLines.size == 1 && kdoc.text.lines().size == 1
@@ -149,45 +139,27 @@ class KDocContentWrappingRule : RuleCompat(
       starIndent = starIndent
     )
 
-    val toDelete = node.children()
-      .takeWhile { !it.isKDocTag() }
-      .toList()
-      .dropLastWhile { it.isKDocLeadingAsterisk() || it.isBlank() }
+    val makingMultiLine = wrappedLines.size > 1 && kdoc.text.lines().size == 1
 
-    val wrappedSection = getWrappedSectionPsi(
-      wrappedAsKdoc = wrappedAsKDoc,
-    )
-
-    if (toDelete.isEmpty()) {
-      node.parent!!.replaceChild(node, wrappedSection.node)
-    } else {
-      val anchor = toDelete.first()
-
-      val makingMultiLine = wrappedLines.size > 1 && kdoc.text.lines().size == 1
-
-      if (makingMultiLine) {
-
-        val open = kdoc.node.firstChildNode
-        val afterOpen = open.nextSibling()
-        kdoc.node.addChild(PsiWhiteSpaceImpl("\n$starIndent"), afterOpen)
-
-        if (!wrappedSection.node.nextLeaf().isKDocLeadingAsterisk()) {
-          kdoc.node.addChild(LeafPsiElement(ElementType.KDOC_LEADING_ASTERISK, "*"), afterOpen)
-        }
-      }
-
-      wrappedSection.node
-        .children()
-        .forEach { new ->
-          node.addChild(new.clone() as ASTNode, anchor)
-        }
-
-      if (makingMultiLine) {
-        node.upsertWhitespaceAfterMe("\n$starIndent")
-      }
-
-      toDelete.forEach { node.removeChild(it) }
+    if (makingMultiLine) {
+      kdoc.makeMultiline()
     }
+
+    val prev = node.prevLeaf(true)
+
+    // If the wrapped node is a tag and the default section is empty, the tag might need an extra
+    // leading whitespace. If the default section is empty, then the last leaf might be KDOC_TEXT
+    // with just an empty string.
+    if (prev.isInKDocDefaultSection() && !node.isInKDocDefaultSection()) {
+      if (prev.isKDocLeadingAsterisk()) {
+        prev?.upsertWhitespaceAfterMe(" ")
+      } else if (prev.isKDocText() && prev?.text.isNullOrEmpty()) {
+
+        prev!!.parent!!.replaceChild(prev, PsiWhiteSpaceImpl(" "))
+      }
+    }
+
+    replaceContentWithNewPsiFromText(wrappedAsKDoc)
   }
 
   private fun getWrappedAsKDocString(
@@ -216,21 +188,6 @@ class KDocContentWrappingRule : RuleCompat(
 
       appendLine("$starIndent*/")
     }
-  }
-
-  private fun KDocTag.getWrappedSectionPsi(
-    wrappedAsKdoc: String,
-  ): KDocTag {
-
-    return createFileFromText(wrappedAsKdoc)
-      .childrenBreadthFirst()
-      .filterIsInstance<KDocTag>()
-      .toList()
-      .last()
-      .removeAllChildren { it.isKDocTag() }
-      .also { tag ->
-        tag.node.removeLastChildrenWhile { it.isKDocLeadingAsterisk() || it.isBlank() }
-      }
   }
 
   private fun List<KDocTag>.getFixedTagPairs(starIndent: String): List<Pair<KDocTag, String>> {

@@ -26,7 +26,7 @@ import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAsLate
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
-/** */
+/** @since 1.1.1 */
 class RuleCompat49(private val ruleCompat: RuleCompat) : Rule(
   RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
   About(
