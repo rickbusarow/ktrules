@@ -70,6 +70,7 @@ plugins {
   alias(libs.plugins.spotless)
   // alias(libs.plugins.vanniktech.publish)
   id("maven-publish")
+  id("signing")
 }
 
 moduleCheck {
@@ -444,6 +445,7 @@ val checkFix by tasks.registering {
 
 tasks.withType(PublishToMavenRepository::class.java).configureEach {
   notCompatibleWithConfigurationCache("See https://github.com/gradle/gradle/issues/13468")
+  mustRunAfter(tasks.withType(Sign::class.java))
 }
 tasks.withType(Jar::class.java).configureEach {
   notCompatibleWithConfigurationCache("")
@@ -452,6 +454,13 @@ tasks.withType(Sign::class.java).configureEach {
   notCompatibleWithConfigurationCache("")
   // skip signing for -SNAPSHOT publishing
   onlyIf { !VERSION_CURRENT.endsWith("SNAPSHOT") }
+}
+
+val dokkaJavadocJar by tasks.registering(Jar::class) {
+  val task = tasks.named("dokkaHtml")
+  archiveClassifier.set("javadoc")
+  dependsOn(task)
+  from(task)
 }
 
 publishing {
@@ -496,12 +505,18 @@ publishing {
 
           artifact(jarTask)
           artifact(sourcesJar)
+          artifact(dokkaJavadocJar)
 
           artifactId = if (index == compatSourceSetNames.lastIndex) {
             // don't include the `-4x` suffix for the latest version
             "ktrules"
           } else {
             "ktrules-${sourceSetName.substringAfter("compat")}"
+          }
+
+          // configure the signing
+          signing {
+            sign(this@register)
           }
 
           pom.name.set(artifactId)
@@ -540,18 +555,18 @@ publishing {
         .configureEach {
           dependsOn(jarTask)
           dependsOn(sourcesJar)
+          dependsOn(dokkaJavadocJar)
         }
       tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-        mustRunAfter(sourcesJar)
         mustRunAfter(tasks.withType(Jar::class.java))
       }
       tasks.withType(GenerateModuleMetadata::class.java).configureEach {
-        mustRunAfter(sourcesJar)
         mustRunAfter(tasks.withType(Jar::class.java))
       }
       tasks.withType(Sign::class.java).configureEach {
         dependsOn(jarTask)
         dependsOn(sourcesJar)
+        dependsOn(dokkaJavadocJar)
       }
     }
 
