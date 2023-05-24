@@ -12,7 +12,7 @@ ktrules-released = "1.1.1"
 
 benManes-versions = "0.46.0"
 dependencyAnalysis = "1.20.0"
-detekt = "1.22.0"
+detekt = "1.23.0"
 diffplug-spotless = "6.18.0"
 dokka = "1.8.10"
 dropbox-dependencyGuard = "0.4.3"
