@@ -37,9 +37,7 @@ internal class MarkdownTreePrinter(
   companion object {
 
     /** @since 1.0.4 */
-    internal fun MarkdownNode.printEverything(
-      whitespaceChar: Char = ' '
-    ) = apply {
+    internal fun MarkdownNode.printEverything(whitespaceChar: Char = ' ') = apply {
       MarkdownTreePrinter(whitespaceChar).printTreeString(this)
     }
   }

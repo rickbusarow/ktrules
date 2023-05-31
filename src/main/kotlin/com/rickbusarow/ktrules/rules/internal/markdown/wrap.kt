@@ -57,7 +57,7 @@ private fun MarkdownNode.getChildText(
   wrapper: StringWrapper,
   maxLength: Int,
   beforeAnyTags: Boolean,
-  addKDocLeadingSpace: Boolean,
+  addKDocLeadingSpace: Boolean
 ): String {
   val indent = indent(addKDocLeadingSpace, beforeAnyTags)
 
@@ -142,10 +142,7 @@ private fun MarkdownNode.getChildText(
 }
 
 /** @since 1.0.4 */
-internal fun MarkdownNode.indent(
-  addKDocLeadingSpace: Boolean,
-  beforeAnyTags: Boolean
-): String {
+internal fun MarkdownNode.indent(addKDocLeadingSpace: Boolean, beforeAnyTags: Boolean): String {
 
   val listLevel by lazy(NONE) { countParentLists() }
   val quoteLevel by lazy(NONE) { countParentBlockQuotes() }

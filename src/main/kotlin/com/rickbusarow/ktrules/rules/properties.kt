@@ -44,7 +44,7 @@ internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> by lazy {
     defaultValue = null,
     propertyMapper = { property, _ ->
       property?.sourceValue?.trim('"', '\'')
-    },
+    }
   )
 }
 

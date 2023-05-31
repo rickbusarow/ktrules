@@ -110,13 +110,13 @@ internal class SplitWordsTest : Tests {
     "open_square_bracket" to '[',
     "close_square_bracket" to ']',
     "open_parenthesis" to '(',
-    "close_parenthesis" to ')',
+    "close_parenthesis" to ')'
   )
     .container({ it.first }) { (_, character) ->
       listOf(
         "start" to "${character}word",
         "middle" to "wo${character}rd",
-        "end" to "word$character",
+        "end" to "word$character"
       ).test({ it.first }) { (_, text) ->
 
         "before $text after".splitWords() shouldBe listOf(
@@ -163,7 +163,7 @@ internal class SplitWordsTest : Tests {
       "double underscores" to "__",
       "single underscores" to "_",
       "double tildes" to "~~",
-      "single tildes" to "~",
+      "single tildes" to "~"
     ).container(
       { it.first }
     ) { (_, delim) ->
@@ -186,7 +186,7 @@ internal class SplitWordsTest : Tests {
             delim,
             "after"
           )
-        },
+        }
       )
     }
 
@@ -210,7 +210,7 @@ internal class SplitWordsTest : Tests {
     fun `links followed by a period should not be split up`() = listOf(
       "reference style" to "[markdown link].",
       "shortcut style" to "[markdown link][actual link].",
-      "inline style" to "[markdown link](actual link).",
+      "inline style" to "[markdown link](actual link)."
     ).test({ it.first }) { (_, text) ->
 
       "before $text after".splitWords() shouldBe listOf(
@@ -224,7 +224,7 @@ internal class SplitWordsTest : Tests {
     fun `links followed by a comma should not be split up`() = listOf(
       "reference style" to "[markdown link],",
       "shortcut style" to "[markdown link][actual link],",
-      "inline style" to "[markdown link](actual link),",
+      "inline style" to "[markdown link](actual link),"
     ).test({ it.first }) { (_, text) ->
 
       "before $text after".splitWords() shouldBe listOf(
@@ -238,7 +238,7 @@ internal class SplitWordsTest : Tests {
     fun `links followed by more text without a space should not be split up`() = listOf(
       "reference style" to "[markdown link]word",
       "shortcut style" to "[markdown link][actual link]word",
-      "inline style" to "[markdown link](actual link)word",
+      "inline style" to "[markdown link](actual link)word"
     ).test({ it.first }) { (_, text) ->
 
       "before $text after".splitWords() shouldBe listOf(

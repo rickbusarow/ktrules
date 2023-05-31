@@ -30,9 +30,9 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 class RuleCompat49(private val ruleCompat: RuleCompat) : Rule(
   RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
   About(
-    maintainer = KtRulesRuleSetProvider.About.maintainer,
-    repositoryUrl = KtRulesRuleSetProvider.About.repositoryUrl,
-    issueTrackerUrl = KtRulesRuleSetProvider.About.issueTrackerUrl,
+    maintainer = KtRulesRuleSetProvider.About.MAINTAINER,
+    repositoryUrl = KtRulesRuleSetProvider.About.REPOSITORY_URL,
+    issueTrackerUrl = KtRulesRuleSetProvider.About.ISSUE_TRACKER_URL
   ),
   visitorModifiers = ruleCompat.visitorModifiers.mapToSet { visitorModifier ->
 

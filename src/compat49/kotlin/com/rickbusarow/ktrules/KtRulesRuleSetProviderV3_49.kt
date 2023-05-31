@@ -22,6 +22,7 @@ import com.pinterest.ktlint.rule.engine.core.api.RuleSetId
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 
+@Suppress("ktlint:standard:class-naming", "ClassNaming")
 @AutoService(RuleSetProviderV3::class)
 class KtRulesRuleSetProviderV3_49 : RuleSetProviderV3(RuleSetId(KtRulesRuleSetProvider.ID)) {
 

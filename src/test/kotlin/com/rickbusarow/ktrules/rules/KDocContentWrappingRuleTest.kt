@@ -179,7 +179,7 @@ class KDocContentWrappingRuleTest : Tests {
         val age: Int
       )
       """.trimIndent()
-    ) shouldBe listOf()
+    ) shouldBe emptyList()
   }
 
   @Test
@@ -806,9 +806,9 @@ class KDocContentWrappingRuleTest : Tests {
          *     ```
          */
         class TestClass
-      """.trimIndent(),
+      """.trimIndent()
     )
-    results shouldBe listOf()
+    results shouldBe emptyList()
   }
 
   @Test
@@ -823,9 +823,9 @@ class KDocContentWrappingRuleTest : Tests {
        * - item 2
        */
       class TestClass
-      """.trimIndent(),
+      """.trimIndent()
     )
-    results shouldBe listOf()
+    results shouldBe emptyList()
   }
 
   @Test
@@ -840,9 +840,9 @@ class KDocContentWrappingRuleTest : Tests {
        *   - item 2
        */
       class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     )
-    results shouldBe listOf()
+    results shouldBe emptyList()
   }
 
   @Test
@@ -859,9 +859,9 @@ class KDocContentWrappingRuleTest : Tests {
        * |  c  |  d  |
        */
       class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     )
-    results shouldBe listOf()
+    results shouldBe emptyList()
   }
 
   @Test
@@ -878,9 +878,9 @@ class KDocContentWrappingRuleTest : Tests {
        *   |  c  |  d  |
        */
       class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     )
-    results shouldBe listOf()
+    results shouldBe emptyList()
   }
 
   @Test
@@ -894,7 +894,7 @@ class KDocContentWrappingRuleTest : Tests {
          * - This is a long sentence which should be wrapped when the line length is shorter.
          */
         class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     ) {
       expectError(2, 2)
 
@@ -921,7 +921,7 @@ class KDocContentWrappingRuleTest : Tests {
          * > This is a long sentence which should be wrapped when the line length is shorter.
          */
         class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     ) {
       expectError(2, 2)
 
@@ -962,7 +962,7 @@ class KDocContentWrappingRuleTest : Tests {
       text = """
         /** Comment */
         class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     ) shouldBe emptyList()
   }
 
@@ -973,7 +973,7 @@ class KDocContentWrappingRuleTest : Tests {
       text = """
         /** @since 0.0.1 */
         class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     ) shouldBe emptyList()
   }
 
@@ -989,7 +989,7 @@ class KDocContentWrappingRuleTest : Tests {
          * > is a sentence.
          */
         class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     ) {
       expectError(2, 2)
 
@@ -1015,7 +1015,7 @@ class KDocContentWrappingRuleTest : Tests {
        *   > This is a long sentence which should be wrapped when the line length is shorter.
        */
       class TestClass(val name: String)
-      """.trimIndent(),
+      """.trimIndent()
     ) {
       expectError(2, 4)
 
@@ -1345,10 +1345,7 @@ class KDocContentWrappingRuleTest : Tests {
     }
   }
 
-  private fun KtLintTestResult.expectError(
-    line: Int,
-    col: Int,
-  ) {
+  private fun KtLintTestResult.expectError(line: Int, col: Int) {
     expectError(
       line = line,
       col = col,

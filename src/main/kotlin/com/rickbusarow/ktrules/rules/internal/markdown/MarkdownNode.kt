@@ -34,7 +34,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 internal data class MarkdownNode(
   val node: ASTNode,
   private val fullText: String,
-  val parent: MarkdownNode?,
+  val parent: MarkdownNode?
 ) : UserDataHolder {
   val text: String by lazy { node.getTextInNode(fullText).toString() }
 
@@ -75,25 +75,26 @@ internal data class MarkdownNode(
       MarkdownTokenTypes.LIST_BULLET -> this
       // MarkdownElementTypes.PARAGRAPH -> parent
 
-      else -> parent
-        .checkNotNull { "The parent node is null." }
-        // .check({ it.isListItemDelimiter() }) {
-        //   "Expected a list item delimiter but the type is ${it.elementType}"
-        // }
-        .listItemDelimiterUnsafe
+      else ->
+        parent
+          .checkNotNull { "The parent node is null." }
+          // .check({ it.isListItemDelimiter() }) {
+          //   "Expected a list item delimiter but the type is ${it.elementType}"
+          // }
+          .listItemDelimiterUnsafe
     }
   }
 
   val elementType: IElementType get() = node.type
 
-  private val _userData = mutableMapOf<Key<*>, Any?>()
+  private val userData = mutableMapOf<Key<*>, Any?>()
   override fun <T : Any?> getUserData(key: Key<T>): T? {
     @Suppress("UNCHECKED_CAST")
-    return _userData[key] as? T
+    return userData[key] as? T
   }
 
   override fun <T : Any?> putUserData(key: Key<T>, value: T?) {
-    _userData[key] = value
+    userData[key] = value
   }
 
   companion object {

@@ -43,9 +43,7 @@ internal fun String.trimLineEnds(): String = mapLines { it.trimEnd() }
  *
  * @since 1.0.1
  */
-internal fun CharSequence.mapLines(
-  transform: (String) -> CharSequence
-): String = lineSequence()
+internal fun CharSequence.mapLines(transform: (String) -> CharSequence): String = lineSequence()
   .joinToString("\n", transform = transform)
 
 /**
@@ -55,22 +53,21 @@ internal fun CharSequence.mapLines(
  *
  * @since 1.0.4
  */
-internal fun CharSequence.mapLinesIndexed(
-  transform: (Int, String) -> CharSequence
-): String = buildString {
+internal fun CharSequence.mapLinesIndexed(transform: (Int, String) -> CharSequence): String =
+  buildString {
 
-  val lineCount = this@mapLinesIndexed.count { it == '\n' }
+    val lineCount = this@mapLinesIndexed.count { it == '\n' }
 
-  this@mapLinesIndexed
-    .lineSequence()
-    .forEachIndexed { i, line ->
-      if (i == lineCount) {
-        append(transform(i, line))
-      } else {
-        appendLine(transform(i, line))
+    this@mapLinesIndexed
+      .lineSequence()
+      .forEachIndexed { i, line ->
+        if (i == lineCount) {
+          append(transform(i, line))
+        } else {
+          appendLine(transform(i, line))
+        }
       }
-    }
-}
+  }
 
 /**
  * Prepends [continuationIndent] to every line of the original string.
@@ -79,25 +76,22 @@ internal fun CharSequence.mapLinesIndexed(
  *
  * @since 1.0.4
  */
-internal fun CharSequence.prependContinuationIndent(
-  continuationIndent: String
-): String = mapLinesIndexed { i, line ->
-  when {
-    i == 0 -> line
-    line.isBlank() -> line
-    else -> "$continuationIndent$line"
+internal fun CharSequence.prependContinuationIndent(continuationIndent: String): String =
+  mapLinesIndexed { i, line ->
+    when {
+      i == 0 -> line
+      line.isBlank() -> line
+      else -> "$continuationIndent$line"
+    }
   }
-}
 
 /**
  * `"$prefix$this$suffix"`
  *
  * @since 1.0.4
  */
-internal fun CharSequence.wrapIn(
-  prefix: String,
-  suffix: String = prefix
-): String = "$prefix$this$suffix"
+internal fun CharSequence.wrapIn(prefix: String, suffix: String = prefix): String =
+  "$prefix$this$suffix"
 
 internal fun CharSequence.prefix(prefix: String): String = "$prefix$this"
 
@@ -129,11 +123,10 @@ internal fun String.remove(vararg regex: Regex): String = regex.fold(this) { acc
  *
  * @since 1.0.7
  */
-internal fun String.removeRegex(
-  @Language("regexp") vararg regex: String
-): String = regex.fold(this) { acc, reg ->
-  acc.replace(reg.toRegex(), "")
-}
+internal fun String.removeRegex(@Language("regexp") vararg regex: String): String =
+  regex.fold(this) { acc, reg ->
+    acc.replace(reg.toRegex(), "")
+  }
 
 /**
  * replace ` ` with `·`

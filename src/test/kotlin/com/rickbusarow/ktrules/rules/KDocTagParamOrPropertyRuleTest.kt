@@ -19,10 +19,6 @@ import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-val rules = setOf(
-  RuleProviderCompat { KDocTagParamOrPropertyRule() }
-)
-
 class KDocTagParamOrPropertyRuleTest : Tests {
 
   override val rules = setOf(

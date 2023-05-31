@@ -110,7 +110,7 @@ abstract class AbstractTreePrinter<T : Any>(
     @Suppress("MagicNumber")
     return buildString {
 
-      val chars = BoxChars.light
+      val chars = BoxChars.LIGHT
 
       val header =
         "$thisName [type: $typeName] [parent: $parentName] [parent type: $parentType]"
@@ -166,10 +166,10 @@ abstract class AbstractTreePrinter<T : Any>(
     val midTop: Char,
     val topRight: Char,
     val midRight: Char,
-    val bottomRight: Char,
+    val bottomRight: Char
   ) {
     companion object {
-      val heavy = BoxChars(
+      val HEAVY = BoxChars(
         dash = '━',
         pipe = '┃',
         topLeft = '┏',
@@ -181,7 +181,7 @@ abstract class AbstractTreePrinter<T : Any>(
         midRight = '┫',
         bottomRight = '┛'
       )
-      val light = BoxChars(
+      val LIGHT = BoxChars(
         dash = '─',
         pipe = '│',
         topLeft = '┌',
@@ -191,7 +191,7 @@ abstract class AbstractTreePrinter<T : Any>(
         midTop = '┬',
         topRight = '┐',
         midRight = '┤',
-        bottomRight = '┘',
+        bottomRight = '┘'
       )
     }
   }
@@ -267,7 +267,7 @@ abstract class AbstractTreePrinter<T : Any>(
 
     companion object {
 
-      private val supported = "win" !in System.getProperty("os.name").lowercase()
+      private val SUPPORTED = "win" !in System.getProperty("os.name").lowercase()
 
       fun String.noColors(): String = "\u001B\\[[;\\d]*m".toRegex().replace(this, "")
 
@@ -278,7 +278,7 @@ abstract class AbstractTreePrinter<T : Any>(
        */
       fun String.colorized(color: Color): String {
 
-        return if (supported) {
+        return if (SUPPORTED) {
           "\u001B[${color.code}m$this\u001B[0m"
         } else {
           this

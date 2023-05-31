@@ -43,19 +43,19 @@ object KtRulesRuleSetProvider {
   object About {
 
     /** @since 1.1.1 */
-    const val maintainer: String = "Rick Busarow"
+    const val MAINTAINER: String = "Rick Busarow"
 
     /** @since 1.1.1 */
-    const val description: String = "miscellaneous Ktlint rules"
+    const val DESCRIPTION: String = "miscellaneous Ktlint rules"
 
     /** @since 1.1.1 */
-    const val license: String = "Apache 2.0"
+    const val LICENSE: String = "Apache 2.0"
 
     /** @since 1.1.1 */
-    const val repositoryUrl: String = "https://www.github.com/rbusarow/ktrules"
+    const val REPOSITORY_URL: String = "https://www.github.com/rbusarow/ktrules"
 
     /** @since 1.1.1 */
-    const val issueTrackerUrl: String = "https://www.github.com/rbusarow/ktrules/issues"
+    const val ISSUE_TRACKER_URL: String = "https://www.github.com/rbusarow/ktrules/issues"
   }
 
   /** @since 1.1.1 */

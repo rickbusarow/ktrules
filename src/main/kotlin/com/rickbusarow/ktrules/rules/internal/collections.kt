@@ -76,9 +76,7 @@ fun <T : Any> sequenceOfNotNull(vararg elements: T?): Sequence<T> =
  *
  * @since 1.1.1
  */
-inline fun <C, R> C?.ifNullOrEmpty(
-  defaultValue: () -> R
-): R where R : Collection<*>,
+inline fun <C, R> C?.ifNullOrEmpty(defaultValue: () -> R): R where R : Collection<*>,
       C : R {
   return if (isNullOrEmpty()) defaultValue() else this
 }

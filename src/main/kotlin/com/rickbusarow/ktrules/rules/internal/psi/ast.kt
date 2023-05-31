@@ -25,7 +25,7 @@ import kotlin.contracts.contract
 fun ASTNode?.isBlank(): Boolean = this != null && text.isBlank()
 
 /** @since 1.0.4 */
-private val copyRightCommentStart = Regex(
+private val COPYRIGHT_COMMENT_START = Regex(
   """(?:\/\*{1,2}\s+(?:\*\s)?|\/\/ *)Copyright [\s\S]*"""
 )
 
@@ -33,7 +33,7 @@ private val copyRightCommentStart = Regex(
 fun ASTNode.isCopyrightHeader(): Boolean {
   if (elementType != ElementType.BLOCK_COMMENT) return false
 
-  return text.matches(copyRightCommentStart)
+  return text.matches(COPYRIGHT_COMMENT_START)
 }
 
 /** @since 1.0.6 */
@@ -66,23 +66,25 @@ fun ASTNode.isFirstChild(): Boolean = prevSibling() == null
 fun ASTNode.prevSibling(): ASTNode? = prevSibling { true }
 
 /** @since 1.0.7 */
-fun ASTNode.prevSiblings(): Sequence<ASTNode> =
-  generateSequence(prevSibling()) { it.prevSibling() }
+fun ASTNode.prevSiblings(): Sequence<ASTNode> = generateSequence(prevSibling()) { it.prevSibling() }
 
 /** @since 1.0.7 */
 fun ASTNode.prevLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
-  generateSequence(prevLeaf(includeEmpty = includeEmpty)) { it.prevLeaf(includeEmpty = includeEmpty) }
+  generateSequence(prevLeaf(includeEmpty = includeEmpty)) {
+    it.prevLeaf(includeEmpty = includeEmpty)
+  }
 
 /** @since 1.0.4 */
 fun ASTNode.nextSibling(): ASTNode? = nextSibling { true }
 
 /** @since 1.0.7 */
-fun ASTNode.nextSiblings(): Sequence<ASTNode> =
-  generateSequence(nextSibling()) { it.nextSibling() }
+fun ASTNode.nextSiblings(): Sequence<ASTNode> = generateSequence(nextSibling()) { it.nextSibling() }
 
 /** @since 1.0.7 */
 fun ASTNode.nextLeaves(includeEmpty: Boolean = true): Sequence<ASTNode> =
-  generateSequence(nextLeaf(includeEmpty = includeEmpty)) { it.nextLeaf(includeEmpty = includeEmpty) }
+  generateSequence(nextLeaf(includeEmpty = includeEmpty)) {
+    it.nextLeaf(includeEmpty = includeEmpty)
+  }
 
 /** @since 1.0.4 */
 fun ASTNode.childrenDepthFirst(): Sequence<ASTNode> {
@@ -106,13 +108,12 @@ fun ASTNode.parentsWithSelf(): Sequence<ASTNode> {
  * @return a depth-first [Sequence] of this [ASTNode]'s descendants that satisfy the [predicate].
  * @since 1.0.4
  */
-fun ASTNode.childrenDepthFirst(
-  predicate: (ASTNode) -> Boolean
-): Sequence<ASTNode> = depthFirstTraversal(this) {
-  children()
-    .filter(predicate)
-    .toList()
-}
+fun ASTNode.childrenDepthFirst(predicate: (ASTNode) -> Boolean): Sequence<ASTNode> =
+  depthFirstTraversal(this) {
+    children()
+      .filter(predicate)
+      .toList()
+  }
 
 /**
  * @return a breadth-first [Sequence] of this [ASTNode]'s descendants.
@@ -131,13 +132,12 @@ fun ASTNode.childrenBreadthFirst(): Sequence<ASTNode> {
  * @return a breadth-first [Sequence] of this [ASTNode]'s descendants that satisfy the [predicate].
  * @since 1.0.4
  */
-fun ASTNode.childrenBreadthFirst(
-  predicate: (ASTNode) -> Boolean
-): Sequence<ASTNode> = breadthFirstTraversal(this) {
-  children()
-    .filter(predicate)
-    .toList()
-}
+fun ASTNode.childrenBreadthFirst(predicate: (ASTNode) -> Boolean): Sequence<ASTNode> =
+  breadthFirstTraversal(this) {
+    children()
+      .filter(predicate)
+      .toList()
+  }
 
 /** @since 1.0.7 */
 fun ASTNode.fileIndent(additionalOffset: Int): String {

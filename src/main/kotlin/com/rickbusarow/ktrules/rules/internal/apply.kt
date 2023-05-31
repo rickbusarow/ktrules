@@ -22,22 +22,18 @@ import kotlin.contracts.contract
  *
  * @since 1.0.1
  */
-internal inline fun <T : Any, E> T.applyEach(
-  elements: Iterable<E>,
-  block: T.(E) -> Unit
-): T = apply {
-  elements.forEach { element -> this.block(element) }
-}
+internal inline fun <T : Any, E> T.applyEach(elements: Iterable<E>, block: T.(E) -> Unit): T =
+  apply {
+    elements.forEach { element -> this.block(element) }
+  }
 
 /**
  * from Kotlin's addToStdlib.kt
  *
  * @since 1.0.1
  */
-internal inline fun <T> T.letIf(
-  predicate: Boolean,
-  body: T.() -> T
-): T = if (predicate) body() else this
+internal inline fun <T> T.letIf(predicate: Boolean, body: T.() -> T): T =
+  if (predicate) body() else this
 
 /**
  * shorthand for `requireNotNull(this, lazyMessage)`
@@ -71,7 +67,5 @@ internal inline fun <T : Any> T?.checkNotNull(lazyMessage: () -> Any): T {
  * @since 1.0.4
  * @throws IllegalStateException if receiver is null
  */
-internal inline fun <T : Any?> T.check(
-  condition: (T) -> Boolean,
-  lazyMessage: (T) -> Any
-) = apply { check(condition(this)) { lazyMessage(this) } }
+internal inline fun <T : Any?> T.check(condition: (T) -> Boolean, lazyMessage: (T) -> Any) =
+  apply { check(condition(this)) { lazyMessage(this) } }

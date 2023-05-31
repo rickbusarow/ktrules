@@ -83,7 +83,7 @@ fun <T> EditorConfigProperty<T>.toKtLintProperty(): KtLintEditorConfigProperty<T
       }
     },
     propertyWriter = editorConfigProperty.propertyWriter,
-    deprecationWarning = editorConfigProperty.deprecationWarning,
+    deprecationWarning = editorConfigProperty.deprecationWarning
   )
 }
 
