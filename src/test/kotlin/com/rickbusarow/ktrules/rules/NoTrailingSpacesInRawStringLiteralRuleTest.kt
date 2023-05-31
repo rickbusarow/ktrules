@@ -24,7 +24,7 @@ class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
     RuleProviderCompat { NoTrailingSpacesInRawStringLiteralRule() }
   )
 
-  val TRIPLE = "\"\"\""
+  val triple = "\"\"\""
 
   @Test
   fun `trailing spaces in a string literal are removed`() {
@@ -35,21 +35,21 @@ class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
 
     rules.format(
       """
-      |const val name: String = $TRIPLE
+      |const val name: String = $triple
       |
       |  fun foo() = Unit
       |
-      |$TRIPLE.trimIndent()
+      |$triple.trimIndent()
       |
       """.trimMargin()
         .replace(" ", " ")
     ) shouldBe
       """
-      |const val name: String = $TRIPLE
+      |const val name: String = $triple
       |
       |  fun foo() = Unit
       |
-      |$TRIPLE.trimIndent()
+      |$triple.trimIndent()
       """.trimMargin()
         .replace(" ", " ")
   }

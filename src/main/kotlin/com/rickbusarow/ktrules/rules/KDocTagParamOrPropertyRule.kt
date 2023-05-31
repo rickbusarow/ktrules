@@ -120,10 +120,7 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
     }
   }
 
-  private fun ASTNode.fix(
-    oldTagTypeNameNode: ASTNode,
-    newTypeNameText: String
-  ) {
+  private fun ASTNode.fix(oldTagTypeNameNode: ASTNode, newTypeNameText: String) {
     replaceChild(
       oldTagTypeNameNode,
       LeafPsiElement(ElementType.KDOC_TAG_NAME, newTypeNameText).node

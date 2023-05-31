@@ -195,9 +195,11 @@ doks {
   dokSet {
     docs("README.md", "CHANGELOG.md")
 
-    sampleCodeSource.from(fileTree(projectDir.resolve("src/test/kotlin")) {
-      include("**/*.kt")
-    })
+    sampleCodeSource.from(
+      fileTree(projectDir.resolve("src/test/kotlin")) {
+        include("**/*.kt")
+      }
+    )
 
     rule("current-ktlint-version") {
       regex = "(current KtLint \\().*?(\\))"
@@ -392,10 +394,7 @@ tasks.withType<Detekt>().configureEach {
   mustRunAfter("ktlintFormat")
 }
 
-fun otherDetektTasks(
-  targetTask: Task,
-  withAutoCorrect: Boolean
-): TaskCollection<Detekt> {
+fun otherDetektTasks(targetTask: Task, withAutoCorrect: Boolean): TaskCollection<Detekt> {
   return tasks.withType<Detekt>()
     .matching { it.autoCorrect == withAutoCorrect && it != targetTask }
 }
@@ -733,10 +732,7 @@ inline fun <reified T> ExtraPropertiesExtension.getOrNullAs(name: String): T? {
   return existing as T
 }
 
-fun editorConfigKotlinProperties(
-  editorConfigFile: File,
-  rootDir: File
-): Map<String, String> {
+fun editorConfigKotlinProperties(editorConfigFile: File, rootDir: File): Map<String, String> {
 
   val myCache = Caches.none()
   val propService = ResourcePropertiesService.builder()

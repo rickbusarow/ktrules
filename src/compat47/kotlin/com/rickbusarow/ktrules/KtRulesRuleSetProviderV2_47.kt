@@ -20,15 +20,16 @@ import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.RuleSetProviderV2
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 
+@Suppress("ktlint:standard:class-naming", "ClassNaming")
 @AutoService(RuleSetProviderV2::class)
 class KtRulesRuleSetProviderV2_47 : RuleSetProviderV2(
   KtRulesRuleSetProvider.ID,
   About(
-    maintainer = KtRulesRuleSetProvider.About.maintainer,
-    description = KtRulesRuleSetProvider.About.description,
-    license = KtRulesRuleSetProvider.About.license,
-    repositoryUrl = KtRulesRuleSetProvider.About.repositoryUrl,
-    issueTrackerUrl = KtRulesRuleSetProvider.About.issueTrackerUrl,
+    maintainer = KtRulesRuleSetProvider.About.MAINTAINER,
+    description = KtRulesRuleSetProvider.About.DESCRIPTION,
+    license = KtRulesRuleSetProvider.About.LICENSE,
+    repositoryUrl = KtRulesRuleSetProvider.About.REPOSITORY_URL,
+    issueTrackerUrl = KtRulesRuleSetProvider.About.ISSUE_TRACKER_URL
   )
 ) {
 

@@ -25,18 +25,18 @@ import org.jetbrains.kotlin.psi.KtPsiFactory
 
 internal object TestPsiFileFactory {
 
-  private val psiProject = KotlinCoreEnvironment
+  private val PSI_PROJECT = KotlinCoreEnvironment
     .createForProduction(
       parentDisposable = Disposer.newDisposable(),
       configuration = CompilerConfiguration(),
       configFiles = JVM_CONFIG_FILES
     ).project
 
-  private val ktFileFactory = KtPsiFactory(psiProject, markGenerated = false)
+  private val KT_FILE_FACTORY = KtPsiFactory(PSI_PROJECT, markGenerated = false)
 
   internal fun createKotlin(
     name: String,
     @Language("kotlin")
     content: String
-  ): KtFile = ktFileFactory.createFile(name, content)
+  ): KtFile = KT_FILE_FACTORY.createFile(name, content)
 }

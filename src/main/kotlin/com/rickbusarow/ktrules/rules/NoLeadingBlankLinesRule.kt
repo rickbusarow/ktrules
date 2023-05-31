@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  *
  * @since 1.0.1
  */
-class NoLeadingBlankLinesRule : RuleCompat(ID,) {
+class NoLeadingBlankLinesRule : RuleCompat(ID) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,

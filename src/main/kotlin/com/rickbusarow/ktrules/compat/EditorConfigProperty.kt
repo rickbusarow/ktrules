@@ -113,5 +113,5 @@ data class EditorConfigProperty<T>(
    *
    * @since 1.1.1
    */
-  val name: String = type.name,
+  val name: String = type.name
 )

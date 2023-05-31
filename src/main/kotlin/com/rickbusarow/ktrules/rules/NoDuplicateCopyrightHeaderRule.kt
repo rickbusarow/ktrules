@@ -36,7 +36,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  *
  * @since 1.0.1
  */
-class NoDuplicateCopyrightHeaderRule : RuleCompat(ID,) {
+class NoDuplicateCopyrightHeaderRule : RuleCompat(ID) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,

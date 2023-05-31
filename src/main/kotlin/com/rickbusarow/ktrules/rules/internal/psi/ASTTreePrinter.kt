@@ -37,9 +37,7 @@ internal class ASTTreePrinter(
 
   companion object {
 
-    internal fun ASTNode.printEverything(
-      whitespaceChar: Char = ' '
-    ) = apply {
+    internal fun ASTNode.printEverything(whitespaceChar: Char = ' ') = apply {
       ASTTreePrinter(whitespaceChar).printTreeString(this)
     }
   }

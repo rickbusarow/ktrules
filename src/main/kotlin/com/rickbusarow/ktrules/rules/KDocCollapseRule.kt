@@ -47,7 +47,7 @@ class KDocCollapseRule : RuleCompat(
   visitorModifiers = setOf(
     mustRunAfter(KDocContentWrappingRule.ID),
     mustRunAfter(KDocLeadingAsteriskRule.ID),
-    mustRunAfter(KDocBlankLinesRule.ID),
+    mustRunAfter(KDocBlankLinesRule.ID)
   ),
   usesEditorConfigProperties = setOf(MAX_LINE_LENGTH_PROPERTY, WRAPPING_STYLE_PROPERTY)
 ) {

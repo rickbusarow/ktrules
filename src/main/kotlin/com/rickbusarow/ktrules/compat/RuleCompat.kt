@@ -57,7 +57,7 @@ abstract class RuleCompat(
    *
    * @since 1.1.1
    */
-  val visitorModifiers: Set<RuleCompat.VisitorModifierCompat> = setOf(),
+  val visitorModifiers: Set<RuleCompat.VisitorModifierCompat> = emptySet(),
 
   /**
    * Set of [EditorConfigProperty]'s that are to provided to the rule. Only specify the properties
@@ -65,7 +65,7 @@ abstract class RuleCompat(
    *
    * @since 1.1.1
    */
-  val usesEditorConfigProperties: Set<EditorConfigProperty<*>> = setOf()
+  val usesEditorConfigProperties: Set<EditorConfigProperty<*>> = emptySet()
 ) {
   /**
    * This method is called once before the first node is visited. It can be used to initialize the
@@ -87,7 +87,7 @@ abstract class RuleCompat(
   open fun beforeVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit,
+    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
   }
 
@@ -99,7 +99,7 @@ abstract class RuleCompat(
   open fun afterVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit,
+    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
   }
 
@@ -134,7 +134,7 @@ abstract class RuleCompat(
        *
        * @since 1.1.1
        */
-      val mode: ModeCompat,
+      val mode: ModeCompat
     ) : VisitorModifierCompat() {
       /** @since 1.1.1 */
       enum class ModeCompat {
@@ -156,7 +156,7 @@ abstract class RuleCompat(
          *
          * @since 1.1.1
          */
-        ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED,
+        ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
       }
     }
 

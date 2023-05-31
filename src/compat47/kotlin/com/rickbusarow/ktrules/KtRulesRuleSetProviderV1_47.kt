@@ -21,6 +21,7 @@ import com.google.auto.service.AutoService
 import com.pinterest.ktlint.core.RuleSet
 import com.pinterest.ktlint.core.RuleSetProvider
 
+@Suppress("ktlint:standard:class-naming", "ClassNaming")
 @AutoService(RuleSetProvider::class)
 class KtRulesRuleSetProviderV1_47 : RuleSetProvider {
 

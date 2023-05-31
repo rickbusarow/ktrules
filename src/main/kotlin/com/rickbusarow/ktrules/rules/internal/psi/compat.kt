@@ -130,10 +130,7 @@ inline fun ASTNode.prevSibling(predicate: (ASTNode) -> Boolean = { true }): ASTN
  * @return the next code leaf [ASTNode] by filtering out white spaces and comments.
  * @since 1.1.0
  */
-fun ASTNode.nextCodeLeaf(
-  includeEmpty: Boolean = false,
-  skipSubtree: Boolean = false,
-): ASTNode? {
+fun ASTNode.nextCodeLeaf(includeEmpty: Boolean = false, skipSubtree: Boolean = false): ASTNode? {
   var n = nextLeaf(includeEmpty, skipSubtree)
   while (n != null && (n.elementType == ElementType.WHITE_SPACE || n.isPartOfComment())) {
     n = n.nextLeaf(includeEmpty, skipSubtree)
@@ -170,10 +167,7 @@ inline fun ASTNode.nextSibling(predicate: (ASTNode) -> Boolean = { true }): ASTN
  * @return the parent [ASTNode] that satisfies the given [predicate].
  * @since 1.1.0
  */
-fun ASTNode.parent(
-  strict: Boolean = true,
-  predicate: (ASTNode) -> Boolean,
-): ASTNode? {
+fun ASTNode.parent(strict: Boolean = true, predicate: (ASTNode) -> Boolean): ASTNode? {
   var n: ASTNode? = if (strict) this.treeParent else this
   while (n != null) {
     if (predicate(n)) {
@@ -191,10 +185,7 @@ fun ASTNode.parent(
  * @return the parent [ASTNode] with the given [elementType].
  * @since 1.1.0
  */
-fun ASTNode.parent(
-  elementType: IElementType,
-  strict: Boolean = true,
-): ASTNode? {
+fun ASTNode.parent(elementType: IElementType, strict: Boolean = true): ASTNode? {
   var n: ASTNode? = if (strict) this.treeParent else this
   while (n != null) {
     if (n.elementType == elementType) {
@@ -211,10 +202,7 @@ fun ASTNode.parent(
  * @return the next leaf [ASTNode] based on the given parameters.
  * @since 1.1.0
  */
-fun ASTNode.nextLeaf(
-  includeEmpty: Boolean = false,
-  skipSubtree: Boolean = false,
-): ASTNode? {
+fun ASTNode.nextLeaf(includeEmpty: Boolean = false, skipSubtree: Boolean = false): ASTNode? {
   var n = if (skipSubtree) this.lastChildLeafOrSelf().nextLeafAny() else this.nextLeafAny()
   if (!includeEmpty) {
     while (n != null && n.textLength == 0) {

@@ -295,10 +295,7 @@ fun KDocTag.replaceContentWithNewPsiFromText(newText: String): KDocTag = apply {
 }
 
 /** @since 1.1.1 */
-fun KtPsiFactory.createKDocTagFromText(
-  newText: String,
-  removeLeadingAsterisk: Boolean
-): KDocTag {
+fun KtPsiFactory.createKDocTagFromText(newText: String, removeLeadingAsterisk: Boolean): KDocTag {
   return createFileFromText(newText.removeRegex("\\*/\\S*").plus("\n*\n*/"))
     .childrenBreadthFirst()
     .filterIsInstance<KDocTag>()
@@ -314,10 +311,7 @@ fun KtPsiFactory.createKDocTagFromText(
 }
 
 /** @since 1.1.1 */
-fun KtPsiFactory.createKDoc(
-  sections: List<String>,
-  startIndent: String,
-): KDoc {
+fun KtPsiFactory.createKDoc(sections: List<String>, startIndent: String): KDoc {
 
   val newText = buildString {
 

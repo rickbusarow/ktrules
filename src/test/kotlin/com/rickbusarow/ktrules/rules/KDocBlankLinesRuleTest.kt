@@ -336,11 +336,7 @@ class KDocBlankLinesRuleTest : Tests {
     ) shouldBe emptyList()
   }
 
-  private fun KtLintTestResult.expectError(
-    line: Int,
-    col: Int,
-    detail: String
-  ) {
+  private fun KtLintTestResult.expectError(line: Int, col: Int, detail: String) {
     expectError(
       line = line,
       col = col,

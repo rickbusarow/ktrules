@@ -235,7 +235,9 @@ fun PsiElement.childrenDepthFirst(): Sequence<PsiElement> {
  * @return a depth-first [Sequence] of this [PsiElement]'s descendants that satisfy the [predicate].
  * @since 1.1.0
  */
-inline fun PsiElement.childrenDepthFirst(crossinline predicate: (PsiElement) -> Boolean): Sequence<PsiElement> {
+inline fun PsiElement.childrenDepthFirst(
+  crossinline predicate: (PsiElement) -> Boolean
+): Sequence<PsiElement> {
   return depthFirstTraversal(this) { children.filter(predicate) }
 }
 
@@ -257,7 +259,9 @@ fun PsiElement.childrenBreadthFirst(): Sequence<PsiElement> {
  *   [predicate].
  * @since 1.1.0
  */
-inline fun PsiElement.childrenBreadthFirst(crossinline predicate: (PsiElement) -> Boolean): Sequence<PsiElement> {
+inline fun PsiElement.childrenBreadthFirst(
+  crossinline predicate: (PsiElement) -> Boolean
+): Sequence<PsiElement> {
   return breadthFirstTraversal(this) { children.filter(predicate) }
 }
 
@@ -328,7 +332,9 @@ inline fun <reified T : PsiElement> PsiElement.getChildOfType(): T? {
 }
 
 /** @since 1.1.1 */
-inline fun <T : PsiElement> T.removeAllChildren(shouldRemove: (PsiElement) -> Boolean = { true }): T {
+inline fun <T : PsiElement> T.removeAllChildren(
+  shouldRemove: (PsiElement) -> Boolean = { true }
+): T {
   return apply {
     children
       .filter(shouldRemove)

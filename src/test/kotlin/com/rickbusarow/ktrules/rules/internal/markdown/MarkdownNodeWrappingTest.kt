@@ -411,7 +411,7 @@ class MarkdownNodeWrappingTest : Tests {
         |    ```
         |    // some code
         |    ```
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe
       """
         |A comment
@@ -431,7 +431,7 @@ class MarkdownNodeWrappingTest : Tests {
         |
         |1. item 1 is a long paragraph which is too long for a single line.
         |2. item 2
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe
       """
         |My list:
@@ -502,7 +502,7 @@ class MarkdownNodeWrappingTest : Tests {
         |
         |- item 1
         |- item 2
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe
       """
         |My list:
@@ -521,7 +521,7 @@ class MarkdownNodeWrappingTest : Tests {
         |
         |  - item 1
         |  - item 2
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
         |@property name My list:
         |
@@ -539,7 +539,7 @@ class MarkdownNodeWrappingTest : Tests {
         |
         |- item 1
         |- item 2
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
         |@property name My list:
         |
@@ -559,7 +559,7 @@ class MarkdownNodeWrappingTest : Tests {
         |- item 2
         |  - item 3
         |- item 4
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
         |@property name My list:
         |
@@ -581,7 +581,7 @@ class MarkdownNodeWrappingTest : Tests {
         |2. item 2
         |   1. item a
         |3. item 3
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
         |@property name My list:
         |
@@ -603,7 +603,7 @@ class MarkdownNodeWrappingTest : Tests {
         ||:---:|:---:|
         ||  a  |  b  |
         ||  c  |  d  |
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
         |My table:
         |
@@ -625,7 +625,7 @@ class MarkdownNodeWrappingTest : Tests {
         |  |:---:|:---:|
         |  |  a  |  b  |
         |  |  c  |  d  |
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe
       """
         |@property name My table:
@@ -645,7 +645,7 @@ class MarkdownNodeWrappingTest : Tests {
       |My quote:
       |
       |> This is a long sentence which should be wrapped when the line length is shorter.
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
       |My quote:
       |
@@ -662,7 +662,7 @@ class MarkdownNodeWrappingTest : Tests {
       |My quote:
       |
       | > This is a quote
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
       |My quote:
       |
@@ -679,7 +679,7 @@ class MarkdownNodeWrappingTest : Tests {
         |
         |> This
         |> is a sentence.
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
         |My quote:
         |
@@ -712,7 +712,7 @@ class MarkdownNodeWrappingTest : Tests {
       |@property name My quote:
       |
       |  > This is a long sentence which should be wrapped when the line length is shorter.
-      """.trimMargin(),
+      """.trimMargin()
     ) shouldBe """
       |@property name My quote:
       |
@@ -748,7 +748,7 @@ class MarkdownNodeWrappingTest : Tests {
     @Language("markdown") markdown: String,
     defaultSection: Boolean = markdown.trimStart().matches("^\\s*[^@][\\s\\S]*".toRegex()),
     maxLengh: Int = 50,
-    wrapper: StringWrapper = MinimumRaggednessWrapper(),
+    wrapper: StringWrapper = MinimumRaggednessWrapper()
   ): String = MarkdownNode.from(markdown.noDots, GFMFlavourDescriptor())
     .wrap(
       wrapper = wrapper,

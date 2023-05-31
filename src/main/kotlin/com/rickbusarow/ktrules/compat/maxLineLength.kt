@@ -17,20 +17,18 @@ package com.rickbusarow.ktrules.compat
 
 import org.ec4j.core.model.PropertyType
 
-private const val MAX_LINE_LENGTH_PROPERTY_ANDROID_STUDIO_CODE_STYLE =
-  100 // https://developer.android.com/kotlin/style-guide#line_wrapping
+private const val MAX_LINE_LENGTH_PROPERTY_ANDROID_STUDIO_CODE_STYLE = 100
 private const val MAX_LINE_LENGTH_PROPERTY_KTLINT_OFFICIAL_CODE_STYLE = 140
 private const val MAX_LINE_LENGTH_PROPERTY_OFF_EDITOR_CONFIG = "off"
 
-private fun CodeStyleValueCompat.defaultValue() =
-  @Suppress("DEPRECATION")
-  when (this) {
-    CodeStyleValueCompat.android -> MAX_LINE_LENGTH_PROPERTY_ANDROID_STUDIO_CODE_STYLE
-    CodeStyleValueCompat.android_studio -> MAX_LINE_LENGTH_PROPERTY_ANDROID_STUDIO_CODE_STYLE
-    CodeStyleValueCompat.official -> MAX_LINE_LENGTH_PROPERTY_OFF
-    CodeStyleValueCompat.intellij_idea -> MAX_LINE_LENGTH_PROPERTY_OFF
-    CodeStyleValueCompat.ktlint_official -> MAX_LINE_LENGTH_PROPERTY_KTLINT_OFFICIAL_CODE_STYLE
-  }
+@Suppress("DEPRECATION")
+private fun CodeStyleValueCompat.defaultValue() = when (this) {
+  CodeStyleValueCompat.android -> MAX_LINE_LENGTH_PROPERTY_ANDROID_STUDIO_CODE_STYLE
+  CodeStyleValueCompat.android_studio -> MAX_LINE_LENGTH_PROPERTY_ANDROID_STUDIO_CODE_STYLE
+  CodeStyleValueCompat.official -> MAX_LINE_LENGTH_PROPERTY_OFF
+  CodeStyleValueCompat.intellij_idea -> MAX_LINE_LENGTH_PROPERTY_OFF
+  CodeStyleValueCompat.ktlint_official -> MAX_LINE_LENGTH_PROPERTY_KTLINT_OFFICIAL_CODE_STYLE
+}
 
 private var isInvalidValueLoggedBefore = false
 
@@ -95,5 +93,5 @@ internal val MAX_LINE_LENGTH_PROPERTY: EditorConfigProperty<Int>
       } else {
         property.toString()
       }
-    },
+    }
   )

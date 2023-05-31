@@ -116,11 +116,7 @@ class KDocContentWrappingRule : RuleCompat(
     }
   }
 
-  private fun KDocTag.fix(
-    wrapped: String,
-    kdoc: KDoc,
-    starIndent: String
-  ) {
+  private fun KDocTag.fix(wrapped: String, kdoc: KDoc, starIndent: String) {
 
     val tagNode = this@fix.node
 
@@ -167,7 +163,7 @@ class KDocContentWrappingRule : RuleCompat(
     wrapped: String,
     wrappedLines: List<String>,
     inKDocDefaultSection: Boolean,
-    starIndent: String,
+    starIndent: String
   ): String = if (singleLineKDoc) {
     "/**${wrapped.prefixIfNot(" ")} */"
   } else {

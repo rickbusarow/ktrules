@@ -5,12 +5,12 @@ public final class com/rickbusarow/ktrules/KtRulesRuleSetProvider {
 }
 
 public final class com/rickbusarow/ktrules/KtRulesRuleSetProvider$About {
+	public static final field DESCRIPTION Ljava/lang/String;
 	public static final field INSTANCE Lcom/rickbusarow/ktrules/KtRulesRuleSetProvider$About;
-	public static final field description Ljava/lang/String;
-	public static final field issueTrackerUrl Ljava/lang/String;
-	public static final field license Ljava/lang/String;
-	public static final field maintainer Ljava/lang/String;
-	public static final field repositoryUrl Ljava/lang/String;
+	public static final field ISSUE_TRACKER_URL Ljava/lang/String;
+	public static final field LICENSE Ljava/lang/String;
+	public static final field MAINTAINER Ljava/lang/String;
+	public static final field REPOSITORY_URL Ljava/lang/String;
 }
 
 public final class com/rickbusarow/ktrules/compat/AliasKt {

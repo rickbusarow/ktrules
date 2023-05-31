@@ -28,22 +28,25 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import com.pinterest.ktlint.core.api.editorconfig.EditorConfigProperty as KtLintEditorConfigProperty
 
 /** @since 1.1.1 */
-class RuleCompat48(private val ruleCompat: RuleCompat) : Rule(
-  id = ruleCompat.ruleId.value,
-  visitorModifiers = ruleCompat.visitorModifiers.mapToSet { visitorModifier ->
+class RuleCompat48(private val ruleCompat: RuleCompat) :
+  Rule(
+    id = ruleCompat.ruleId.value,
+    visitorModifiers = ruleCompat.visitorModifiers.mapToSet { visitorModifier ->
 
-    when (visitorModifier) {
-      is RunAfterRuleCompat -> VisitorModifier.RunAfterRule(
-        ruleId = visitorModifier.ruleId.value,
-        loadOnlyWhenOtherRuleIsLoaded = visitorModifier.mode == ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED,
-        runOnlyWhenOtherRuleIsEnabled = visitorModifier.mode != REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+      when (visitorModifier) {
+        is RunAfterRuleCompat -> VisitorModifier.RunAfterRule(
+          ruleId = visitorModifier.ruleId.value,
+          loadOnlyWhenOtherRuleIsLoaded =
+          visitorModifier.mode == ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED,
+          runOnlyWhenOtherRuleIsEnabled =
+          visitorModifier.mode != REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
 
-      )
+        )
 
-      RunAsLateAsPossibleCompat -> VisitorModifier.RunAsLateAsPossible
+        RunAsLateAsPossibleCompat -> VisitorModifier.RunAsLateAsPossible
+      }
     }
-  },
-),
+  ),
   UsesEditorConfigProperties {
 
   override val editorConfigProperties: List<KtLintEditorConfigProperty<*>>
