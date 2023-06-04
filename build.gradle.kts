@@ -246,7 +246,7 @@ val updateEditorConfigVersion by tasks.registering {
   }
 }
 
-tasks.withType<KtLintTask> {
+tasks.withType<KtLintTask>().configureEach {
   dependsOn(updateEditorConfigVersion)
 
   mustRunAfter(
