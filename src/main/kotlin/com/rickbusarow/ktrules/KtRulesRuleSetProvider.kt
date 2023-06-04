@@ -35,8 +35,8 @@ import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
 object KtRulesRuleSetProvider {
 
   /**
-   * Used in RuleSetProvider's `about` param in 0.47-0.48, and used in a Rule's `about` property in
-   * 0.49+.
+   * Used in RuleSetProvider's `about` param in 0.47-0.48,
+   * and used in a Rule's `about` property in 0.49+.
    *
    * @since 1.1.1
    */

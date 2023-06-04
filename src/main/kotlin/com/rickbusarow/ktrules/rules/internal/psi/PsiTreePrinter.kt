@@ -19,8 +19,8 @@ import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 
 /**
- * prints a tree starting at any arbitrary psi element, showing all its children types and their
- * text
+ * prints a tree starting at any arbitrary psi element,
+ * showing all its children types and their text
  *
  * @since 0.1.0
  */

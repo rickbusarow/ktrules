@@ -1345,7 +1345,10 @@ class KDocContentWrappingRuleTest : Tests {
     }
   }
 
-  private fun KtLintTestResult.expectError(line: Int, col: Int) {
+  private fun KtLintTestResult.expectError(
+    line: Int,
+    col: Int
+  ) {
     expectError(
       line = line,
       col = col,

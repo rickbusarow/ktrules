@@ -18,8 +18,8 @@ package com.rickbusarow.ktrules.rules.internal.markdown
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter
 
 /**
- * prints a tree starting at any markdown tree element, showing all its children types and their
- * text
+ * prints a tree starting at any markdown tree element,
+ * showing all its children types and their text
  *
  * @since 1.0.4
  */

@@ -100,11 +100,11 @@ fun ASTNode.parentsWithSelf(): Sequence<ASTNode> {
 }
 
 /**
- * Returns a depth-first [Sequence] of all of this [ASTNode]'s descendants that satisfy the
- * specified [predicate].
+ * Returns a depth-first [Sequence] of all of this [ASTNode]'s
+ * descendants that satisfy the specified [predicate].
  *
- * @param predicate the predicate that each descendant must satisfy to be included in the
- *   [Sequence].
+ * @param predicate the predicate that each descendant
+ *   must satisfy to be included in the [Sequence].
  * @return a depth-first [Sequence] of this [ASTNode]'s descendants that satisfy the [predicate].
  * @since 1.0.4
  */
@@ -124,11 +124,11 @@ fun ASTNode.childrenBreadthFirst(): Sequence<ASTNode> {
 }
 
 /**
- * Returns a breadth-first [Sequence] of all of this [ASTNode]'s descendants that satisfy the
- * specified [predicate].
+ * Returns a breadth-first [Sequence] of all of this [ASTNode]'s
+ * descendants that satisfy the specified [predicate].
  *
- * @param predicate the predicate that each descendant must satisfy to be included in the
- *   [Sequence].
+ * @param predicate the predicate that each descendant
+ *   must satisfy to be included in the [Sequence].
  * @return a breadth-first [Sequence] of this [ASTNode]'s descendants that satisfy the [predicate].
  * @since 1.0.4
  */

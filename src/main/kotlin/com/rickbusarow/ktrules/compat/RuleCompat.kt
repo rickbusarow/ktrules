@@ -33,43 +33,43 @@ fun interface RuleProviderCompat {
 }
 
 /**
- * A stable compatibility shim for KtLint's `Rule` classes. It's implemented by `Rule47`, `Rule48`,
- * and `Rule49` in the different split source sets.
+ * A stable compatibility shim for KtLint's `Rule` classes. It's implemented
+ * by `Rule47`, `Rule48`, and `Rule49` in the different split source sets.
  *
  * @since 1.1.1
  */
 @Suppress("UnnecessaryAbstractClass")
 abstract class RuleCompat(
   /**
-   * Identification of the rule. A [ruleId] has a value that must adhere the convention
-   * "<rule-set-id>:<rule-id>". The rule set id 'standard' is reserved for rules which are
-   * maintained by the KtLint project. Rules created by custom rule set providers and API Consumers
-   * should use a prefix other than 'standard' to mark the origin of rules which are not maintained
-   * by the KtLint project.
+   * Identification of the rule. A [ruleId] has a value that must adhere the
+   * convention "<rule-set-id>:<rule-id>". The rule set id 'standard' is reserved
+   * for rules which are maintained by the KtLint project. Rules created by custom
+   * rule set providers and API Consumers should use a prefix other than 'standard'
+   * to mark the origin of rules which are not maintained by the KtLint project.
    *
    * @since 1.1.1
    */
   val ruleId: RuleId,
 
   /**
-   * Set of modifiers of the visitor. Preferably a rule has no modifiers at all, meaning that it is
-   * completely independent of all other rules.
+   * Set of modifiers of the visitor. Preferably a rule has no modifiers
+   * at all, meaning that it is completely independent of all other rules.
    *
    * @since 1.1.1
    */
   val visitorModifiers: Set<RuleCompat.VisitorModifierCompat> = emptySet(),
 
   /**
-   * Set of [EditorConfigProperty]'s that are to provided to the rule. Only specify the properties
-   * that are actually used by the rule.
+   * Set of [EditorConfigProperty]'s that are to provided to the rule.
+   * Only specify the properties that are actually used by the rule.
    *
    * @since 1.1.1
    */
   val usesEditorConfigProperties: Set<EditorConfigProperty<*>> = emptySet()
 ) {
   /**
-   * This method is called once before the first node is visited. It can be used to initialize the
-   * state of the rule before processing of nodes starts.
+   * This method is called once before the first node is visited. It can be
+   * used to initialize the state of the rule before processing of nodes starts.
    *
    * @since 1.1.1
    */
@@ -104,8 +104,8 @@ abstract class RuleCompat(
   }
 
   /**
-   * This method is called once after the last node in the AST is visited. It can be used for
-   * teardown of the state of the rule.
+   * This method is called once after the last node in the AST is
+   * visited. It can be used for teardown of the state of the rule.
    *
    * @since 1.1.1
    */
@@ -114,22 +114,22 @@ abstract class RuleCompat(
   /** @since 1.1.1 */
   sealed class VisitorModifierCompat {
     /**
-     * Defines that the [Rule] that declares this [VisitorModifierCompat] will be run after the
-     * [Rule] with rule id [VisitorModifierCompat.RunAfterRuleCompat.ruleId].
+     * Defines that the [Rule] that declares this [VisitorModifierCompat] will be run
+     * after the [Rule] with rule id [VisitorModifierCompat.RunAfterRuleCompat.ruleId].
      *
      * @since 1.1.1
      */
     data class RunAfterRuleCompat(
       /**
-       * The [RuleId] of the [Rule] which should run before the [Rule] that declares the
-       * [VisitorModifierCompat.RunAfterRuleCompat].
+       * The [RuleId] of the [Rule] which should run before the [Rule]
+       * that declares the [VisitorModifierCompat.RunAfterRuleCompat].
        *
        * @since 1.1.1
        */
       val ruleId: RuleId,
       /**
-       * The [ModeCompat] determines whether the [Rule] that declares this [VisitorModifierCompat]
-       * can be run in case the [Rule] with rule id
+       * The [ModeCompat] determines whether the [Rule] that declares this
+       * [VisitorModifierCompat] can be run in case the [Rule] with rule id
        * [VisitorModifierCompat.RunAfterRuleCompat.ruleId] is not loaded or enabled.
        *
        * @since 1.1.1
@@ -140,19 +140,19 @@ abstract class RuleCompat(
       enum class ModeCompat {
         /**
          * Run the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat] regardless
-         * whether the [Rule] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId] is
-         * loaded or disabled. However, if that other rule is loaded and enabled, it runs before the
-         * [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat].
+         * whether the [Rule] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId]
+         * is loaded or disabled. However, if that other rule is loaded and enabled, it runs
+         * before the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat].
          *
          * @since 1.1.1
          */
         REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED,
 
         /**
-         * Run the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat] only in case
-         * the [Rule] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId] is loaded *and*
-         * enabled. That other rule runs before the [Rule] that declares the
-         * [VisitorModifierCompat.RunAfterRuleCompat].
+         * Run the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat] only
+         * in case the [Rule] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId]
+         * is loaded *and* enabled. That other rule runs before the [Rule]
+         * that declares the [VisitorModifierCompat.RunAfterRuleCompat].
          *
          * @since 1.1.1
          */

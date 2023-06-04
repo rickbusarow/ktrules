@@ -29,8 +29,8 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 
 /**
- * Ensures that there's a space after every leading asterisk in a KDoc comment, except for blank
- * lines.
+ * Ensures that there's a space after every leading
+ * asterisk in a KDoc comment, except for blank lines.
  *
  * @since 1.0.4
  */

@@ -82,8 +82,8 @@ inline fun <C, R> C?.ifNullOrEmpty(defaultValue: () -> R): R where R : Collectio
 }
 
 /**
- * A Sequence which only yields each element once, but is **not** constrained to only one consumer
- * via [constrainOnce].
+ * A Sequence which only yields each element once, but is
+ * **not** constrained to only one consumer via [constrainOnce].
  *
  * Given this code:
  *
@@ -124,8 +124,8 @@ fun <T> Sequence<T>.stateful(): Sequence<T> {
 /**
  * Returns a list of all elements sorted according to the specified [selectors].
  *
- * The sort is _stable_. It means that equal elements preserve their order relative to each other
- * after sorting.
+ * The sort is _stable_. It means that equal elements
+ * preserve their order relative to each other after sorting.
  *
  * @since 1.0.4
  */

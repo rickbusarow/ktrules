@@ -71,8 +71,8 @@ fun KDoc.getAllTags(): List<KDocTag> {
 }
 
 /**
- * @return `true` if this [PsiElement] is a [KDocTag] and its [node][PsiElement.getNode] is a KDoc
- *   tag node, `false` otherwise.
+ * @return `true` if this [PsiElement] is a [KDocTag] and its
+ *   [node][PsiElement.getNode] is a KDoc tag node, `false` otherwise.
  * @since 1.1.0
  */
 fun PsiElement?.isKDocTag(): Boolean {
@@ -96,8 +96,8 @@ fun PsiElement?.isKDocTagWithTagChildren(): Boolean {
 }
 
 /**
- * @return `true` if this [PsiElement] is in the default section of a KDoc comment, `false`
- *   otherwise.
+ * @return `true` if this [PsiElement] is in the default
+ *   section of a KDoc comment, `false` otherwise.
  * @since 1.1.0
  */
 fun PsiElement?.isKDocDefaultSection(): Boolean {
@@ -109,8 +109,8 @@ fun PsiElement?.isKDocDefaultSection(): Boolean {
 }
 
 /**
- * @return `true` if this [PsiElement] is the first section after the default section in a KDoc
- *   comment, `false` otherwise.
+ * @return `true` if this [PsiElement] is the first section after
+ *   the default section in a KDoc comment, `false` otherwise.
  * @since 1.1.0
  */
 fun PsiElement?.isKDocFirstSectionAfterDefault(): Boolean {
@@ -118,8 +118,8 @@ fun PsiElement?.isKDocFirstSectionAfterDefault(): Boolean {
 }
 
 /**
- * @return `true` if this [PsiElement] is in the default section of a KDoc comment, `false`
- *   otherwise.
+ * @return `true` if this [PsiElement] is in the default
+ *   section of a KDoc comment, `false` otherwise.
  * @since 1.1.0
  */
 fun PsiElement?.isInKDocDefaultSection(): Boolean {
@@ -133,8 +133,8 @@ fun PsiElement?.isInKDocDefaultSection(): Boolean {
 }
 
 /**
- * Returns the text content of this [KDocTag] without any leading asterisks, optionally trimming the
- * trailing whitespace if this tag is in a KDoc section that has tags after it.
+ * Returns the text content of this [KDocTag] without any leading asterisks, optionally
+ * trimming the trailing whitespace if this tag is in a KDoc section that has tags after it.
  *
  * @return the text content of this [KDocTag] without leading asterisks.
  * @since 1.1.0
@@ -163,8 +163,8 @@ fun <T : KDocTag> T.tagTextWithoutLeadingAsterisks(): String {
 }
 
 /**
- * @return the [KDocSection] of this [KDocTag]. If the receiver tag is a [KDocSection], it will
- *   return itself.
+ * @return the [KDocSection] of this [KDocTag]. If the
+ *   receiver tag is a [KDocSection], it will return itself.
  * @since 1.1.0
  * @throws IllegalArgumentException if this [KDocTag] doesn't have a [KDocSection] parent.
  */
@@ -193,11 +193,11 @@ fun KDocTag.isBlank(): Boolean {
 val PsiElement.startOffset: Int get() = textRange.startOffset
 
 /**
- * Returns the indentation string of this [PsiElement]'s containing file, up to this element's start
- * offset plus the specified additional offset.
+ * Returns the indentation string of this [PsiElement]'s containing file,
+ * up to this element's start offset plus the specified additional offset.
  *
- * @param additionalOffset the additional offset to add to this element's start offset when
- *   computing the indentation.
+ * @param additionalOffset the additional offset to add to this
+ *   element's start offset when computing the indentation.
  * @return the indentation string of this element's containing file.
  * @since 1.1.0
  */
@@ -227,11 +227,11 @@ fun PsiElement.childrenDepthFirst(): Sequence<PsiElement> {
 }
 
 /**
- * Returns a depth-first [Sequence] of all of this [PsiElement]'s descendants that satisfy the
- * specified [predicate].
+ * Returns a depth-first [Sequence] of all of this [PsiElement]'s
+ * descendants that satisfy the specified [predicate].
  *
- * @param predicate the predicate that each descendant must satisfy to be included in the
- *   [Sequence].
+ * @param predicate the predicate that each descendant
+ *   must satisfy to be included in the [Sequence].
  * @return a depth-first [Sequence] of this [PsiElement]'s descendants that satisfy the [predicate].
  * @since 1.1.0
  */
@@ -250,13 +250,13 @@ fun PsiElement.childrenBreadthFirst(): Sequence<PsiElement> {
 }
 
 /**
- * Returns a breadth-first [Sequence] of all of this [PsiElement]'s descendants that satisfy the
- * specified [predicate].
+ * Returns a breadth-first [Sequence] of all of this [PsiElement]'s
+ * descendants that satisfy the specified [predicate].
  *
- * @param predicate the predicate that each descendant must satisfy to be included in the
- *   [Sequence].
- * @return a breadth-first [Sequence] of this [PsiElement]'s descendants that satisfy the
- *   [predicate].
+ * @param predicate the predicate that each descendant
+ *   must satisfy to be included in the [Sequence].
+ * @return a breadth-first [Sequence] of this [PsiElement]'s
+ *   descendants that satisfy the [predicate].
  * @since 1.1.0
  */
 inline fun PsiElement.childrenBreadthFirst(
