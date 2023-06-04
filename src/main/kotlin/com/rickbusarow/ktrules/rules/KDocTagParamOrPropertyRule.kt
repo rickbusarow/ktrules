@@ -30,8 +30,8 @@ import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
- * Ensures that KDoc tags use `@property` for vals or vars, and `@param` for non-property
- * parameters.
+ * Ensures that KDoc tags use `@property` for vals
+ * or vars, and `@param` for non-property parameters.
  *
  * @since 1.0.5
  */

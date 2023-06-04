@@ -19,10 +19,13 @@ import com.diffplug.gradle.spotless.GroovyGradleExtension
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessTask
 import com.rickbusarow.doks.DoksTask
+import com.rickbusarow.ktlint.KtLintTask
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import io.gitlab.arturbosch.detekt.DetektGenerateConfigTask
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import kotlinx.validation.KotlinApiBuildTask
+import kotlinx.validation.KotlinApiCompareTask
 import modulecheck.utils.capitalize
 import org.ec4j.core.Cache.Caches
 import org.ec4j.core.PropertyTypeRegistry
@@ -40,9 +43,6 @@ import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
 import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
 import org.jetbrains.kotlin.gradle.targets.js.npm.SemVer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.ConfigurableKtLintTask
-import org.jmailen.gradle.kotlinter.tasks.FormatTask
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import kotlin.text.RegexOption.MULTILINE
@@ -62,7 +62,7 @@ plugins {
   alias(libs.plugins.github.release)
   alias(libs.plugins.google.ksp)
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.kotlinter)
+  alias(libs.plugins.ktlint)
   alias(libs.plugins.kotlinx.binaryCompatibility)
   alias(libs.plugins.jetbrains.changelog)
   // alias(libs.plugins.shadowJar)
@@ -140,6 +140,7 @@ dependencies {
 
   api(libs.ec4j.core)
   api(libs.jetbrains.markdown)
+  api(libs.kotlin.reflect)
 
   compat47Api(libs.jetbrains.markdown)
   compat47Api(libs.ktlint47.core)
@@ -228,12 +229,6 @@ tasks.withType<DoksTask>().configureEach {
 
 tasks.named("apiCheck") { mustRunAfter("apiDump") }
 
-// dummy ktlint-gradle plugin task names which just delegate to the Kotlinter ones
-val ktlintCheck by tasks.registering { dependsOn("lintKotlin") }
-val ktlintFormat by tasks.registering { dependsOn("formatKotlin") }
-
-tasks.named("lintKotlin") { mustRunAfter("formatKotlin") }
-
 val updateEditorConfigVersion by tasks.registering {
 
   val file = file(".editorconfig")
@@ -251,12 +246,16 @@ val updateEditorConfigVersion by tasks.registering {
   }
 }
 
-tasks.withType<ConfigurableKtLintTask>().configureEach {
-  source(buildFile)
-
-  source(file("settings.gradle.kts"))
-
+tasks.withType<KtLintTask> {
   dependsOn(updateEditorConfigVersion)
+
+  mustRunAfter(
+    tasks.matching {
+      it.name == "dependencyGuard" || it.name == "dependencyGuardBaseline" || it.name == "apiDump"
+    },
+    tasks.withType(KotlinApiBuildTask::class.java),
+    tasks.withType(KotlinApiCompareTask::class.java)
+  )
 }
 
 tasks.test {
@@ -359,10 +358,10 @@ val detektExcludes = listOf(
 extensions.configure<DetektExtension> {
 
   autoCorrect = false
-  config = files("$projectDir/detekt/detekt.yml")
+  config.from("$projectDir/detekt/detekt.yml")
   buildUponDefaultConfig = true
 
-  source = files(
+  source.from(
     "src/main/java",
     "src/test/java",
     "src/main/kotlin",
@@ -615,8 +614,7 @@ tasks.withType(AbstractDokkaLeafTask::class.java).configureEach {
 
   // Dokka uses their outputs but doesn't explicitly depend upon them.
   mustRunAfter(tasks.withType(KotlinCompile::class.java))
-  mustRunAfter(tasks.withType(LintTask::class.java))
-  mustRunAfter(tasks.withType(FormatTask::class.java))
+  mustRunAfter(tasks.withType(KtLintTask::class.java))
 
   moduleName.set("ktrules")
 

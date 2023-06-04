@@ -25,8 +25,8 @@ import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType
  * Base class for printing a tree structure of objects of type [T].
  *
  * @param T any type of node
- * @property whitespaceChar the character to use for replacing whitespaces in the node text when
- *   printing. Default is ' '.
+ * @property whitespaceChar the character to use for replacing
+ *   whitespaces in the node text when printing. Default is ' '.
  * @since 1.1.0
  */
 abstract class AbstractTreePrinter<T : Any>(

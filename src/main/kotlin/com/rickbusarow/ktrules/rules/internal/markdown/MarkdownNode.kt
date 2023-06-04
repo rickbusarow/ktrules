@@ -251,8 +251,8 @@ internal fun MarkdownNode?.isBlockQuoteTokenOrBlockQuoteTokenInWhiteSpace(): Boo
 }
 
 /**
- * When a block quote is nested, any angle brackets other than the last one are incorrectly parsed
- * as WHITE_SPACE, and added as the last node of the parent block quote.
+ * When a block quote is nested, any angle brackets other than the last one are
+ * incorrectly parsed as WHITE_SPACE, and added as the last node of the parent block quote.
  *
  * @since 1.0.4
  */

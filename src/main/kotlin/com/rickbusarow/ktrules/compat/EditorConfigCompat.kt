@@ -26,18 +26,18 @@ import org.ec4j.core.model.PropertyType
 interface EditorConfigCompat {
 
   /**
-   * Gets the value of [editorConfigProperty] from [EditorConfigCompat] provided that the name of
-   * the property is identical to the name of the type of the property. If the value is not found,
-   * the default value for the matching code style is returned.
+   * Gets the value of [editorConfigProperty] from [EditorConfigCompat] provided that
+   * the name of the property is identical to the name of the type of the property. If
+   * the value is not found, the default value for the matching code style is returned.
    *
    * @since 1.1.1
    */
   operator fun <T> get(editorConfigProperty: EditorConfigProperty<T>): T
 
   /**
-   * Gets the value of the property with [propertyType] and name [propertyName] from
-   * [EditorConfigCompat]. Returns null if the type is not found. Also, returns null when no
-   * property with the name is found.
+   * Gets the value of the property with [propertyType] and name
+   * [propertyName] from [EditorConfigCompat]. Returns null if the type is
+   * not found. Also, returns null when no property with the name is found.
    *
    * @since 1.1.1
    */

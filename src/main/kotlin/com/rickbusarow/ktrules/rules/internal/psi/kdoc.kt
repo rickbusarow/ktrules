@@ -62,8 +62,8 @@ internal fun ASTNode?.isKDocTagName(): Boolean {
 }
 
 /**
- * @return true if this is a KDoc tag identifier/link, like `myParameter` from
- *   `@param myParameter [...]`
+ * @return true if this is a KDoc tag identifier/link,
+ *   like `myParameter` from `@param myParameter [...]`
  * @since 1.0.5
  **/
 internal fun ASTNode?.isKDocTagMarkdownLink(): Boolean {
@@ -71,8 +71,8 @@ internal fun ASTNode?.isKDocTagMarkdownLink(): Boolean {
 }
 
 /**
- * @return true if this is a KDoc tag identifier/link name, like `myParameter` from
- *   `@param myParameter [...]`
+ * @return true if this is a KDoc tag identifier/link name,
+ *   like `myParameter` from `@param myParameter [...]`
  * @since 1.0.5
  **/
 internal fun ASTNode?.isKDocTagLinkName(): Boolean {
@@ -80,8 +80,8 @@ internal fun ASTNode?.isKDocTagLinkName(): Boolean {
 }
 
 /**
- * @return true if this is a KDoc tag identifier/link name identifier, like `myParameter` from
- *   `@param myParameter [...]`
+ * @return true if this is a KDoc tag identifier/link name
+ *   identifier, like `myParameter` from `@param myParameter [...]`
  * @since 1.0.5
  **/
 internal fun ASTNode?.isKDocTagLinkNameIdentifier(): Boolean {
@@ -227,16 +227,16 @@ internal fun ASTNode.getKDocTextWithoutLeadingAsterisks(): String {
 }
 
 /**
- * The spaces to indent lines after the first line. This is the indentation of the KDOC_START plus
- * one more space.
+ * The spaces to indent lines after the first line. This is
+ * the indentation of the KDOC_START plus one more space.
  *
  * @since 1.1.1
  */
 val KDoc.leadingAteriskIndent: String get() = fileIndent(additionalOffset = 1)
 
 /**
- * The spaces to indent lines after the first line. This is the indentation of the KDOC_START plus
- * one more space.
+ * The spaces to indent lines after the first line. This is
+ * the indentation of the KDOC_START plus one more space.
  *
  * @since 1.1.1
  */
@@ -311,7 +311,10 @@ fun KtPsiFactory.createKDocTagFromText(newText: String, removeLeadingAsterisk: B
 }
 
 /** @since 1.1.1 */
-fun KtPsiFactory.createKDoc(sections: List<String>, startIndent: String): KDoc {
+fun KtPsiFactory.createKDoc(
+  sections: List<String>,
+  startIndent: String
+): KDoc {
 
   val newText = buildString {
 

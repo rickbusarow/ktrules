@@ -18,8 +18,8 @@
 package com.rickbusarow.ktrules.compat
 
 /**
- * Creates a [RunAfterRule] that enforces this rule to run after the specified rule regardless of
- * whether the specified rule is loaded or disabled.
+ * Creates a [RunAfterRule] that enforces this rule to run after the specified
+ * rule regardless of whether the specified rule is loaded or disabled.
  *
  * @param ruleId The ID of the rule that this rule must run after.
  * @return A [RunAfterRule] with the specified rule ID and
@@ -34,8 +34,8 @@ fun mustRunAfter(ruleId: RuleId): RuleCompat.VisitorModifierCompat.RunAfterRuleC
   )
 
 /**
- * Creates a [RunAfterRule] that enforces this rule to run after the specified rule only when the
- * specified rule is both loaded and enabled.
+ * Creates a [RunAfterRule] that enforces this rule to run after the
+ * specified rule only when the specified rule is both loaded and enabled.
  *
  * @param ruleId The ID of the rule that this rule depends on.
  * @return A [RunAfterRule] with the specified rule ID and

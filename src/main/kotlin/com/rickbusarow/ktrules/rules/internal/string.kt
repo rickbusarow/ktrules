@@ -118,8 +118,8 @@ internal fun String.remove(vararg regex: Regex): String = regex.fold(this) { acc
 }
 
 /**
- * shorthand for `replace(___, "")` against multiple tokens. The input strings are converted to
- * Regex before replacement.
+ * shorthand for `replace(___, "")` against multiple tokens.
+ * The input strings are converted to Regex before replacement.
  *
  * @since 1.0.7
  */

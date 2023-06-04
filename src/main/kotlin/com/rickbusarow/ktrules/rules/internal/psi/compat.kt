@@ -47,8 +47,8 @@ fun ASTNode.prevLeaf(includeEmpty: Boolean = false): ASTNode? {
 }
 
 /**
- * Finds the previous leaf [ASTNode] relative to the receiver that satisfies the given predicate
- * [p].
+ * Finds the previous leaf [ASTNode] relative to the
+ * receiver that satisfies the given predicate [p].
  *
  * @param p The predicate that the resulting [ASTNode] must satisfy.
  * @return The previous leaf [ASTNode] or null if there is none.
@@ -87,8 +87,8 @@ fun ASTNode.lastChildLeafOrSelf(): ASTNode {
 }
 
 /**
- * Finds the previous code leaf [ASTNode] relative to the receiver, optionally including empty
- * nodes.
+ * Finds the previous code leaf [ASTNode] relative
+ * to the receiver, optionally including empty nodes.
  *
  * @param includeEmpty If true, includes empty nodes in the search; otherwise, skips them.
  * @return The previous code leaf [ASTNode] or null if there is none.
@@ -130,7 +130,10 @@ inline fun ASTNode.prevSibling(predicate: (ASTNode) -> Boolean = { true }): ASTN
  * @return the next code leaf [ASTNode] by filtering out white spaces and comments.
  * @since 1.1.0
  */
-fun ASTNode.nextCodeLeaf(includeEmpty: Boolean = false, skipSubtree: Boolean = false): ASTNode? {
+fun ASTNode.nextCodeLeaf(
+  includeEmpty: Boolean = false,
+  skipSubtree: Boolean = false
+): ASTNode? {
   var n = nextLeaf(includeEmpty, skipSubtree)
   while (n != null && (n.elementType == ElementType.WHITE_SPACE || n.isPartOfComment())) {
     n = n.nextLeaf(includeEmpty, skipSubtree)
@@ -161,13 +164,16 @@ inline fun ASTNode.nextSibling(predicate: (ASTNode) -> Boolean = { true }): ASTN
 }
 
 /**
- * @param strict If true, the search starts from the receiver node's parent; otherwise, it starts
- *   from the receiver node.
+ * @param strict If true, the search starts from the receiver
+ *   node's parent; otherwise, it starts from the receiver node.
  * @param predicate returns true for the matching predicate
  * @return the parent [ASTNode] that satisfies the given [predicate].
  * @since 1.1.0
  */
-fun ASTNode.parent(strict: Boolean = true, predicate: (ASTNode) -> Boolean): ASTNode? {
+fun ASTNode.parent(
+  strict: Boolean = true,
+  predicate: (ASTNode) -> Boolean
+): ASTNode? {
   var n: ASTNode? = if (strict) this.treeParent else this
   while (n != null) {
     if (predicate(n)) {
@@ -180,12 +186,15 @@ fun ASTNode.parent(strict: Boolean = true, predicate: (ASTNode) -> Boolean): AST
 
 /**
  * @param elementType the requested type of node
- * @param strict If true, the search starts from the receiver node's parent; otherwise, it starts
- *   from the receiver node.
+ * @param strict If true, the search starts from the receiver
+ *   node's parent; otherwise, it starts from the receiver node.
  * @return the parent [ASTNode] with the given [elementType].
  * @since 1.1.0
  */
-fun ASTNode.parent(elementType: IElementType, strict: Boolean = true): ASTNode? {
+fun ASTNode.parent(
+  elementType: IElementType,
+  strict: Boolean = true
+): ASTNode? {
   var n: ASTNode? = if (strict) this.treeParent else this
   while (n != null) {
     if (n.elementType == elementType) {
@@ -202,7 +211,10 @@ fun ASTNode.parent(elementType: IElementType, strict: Boolean = true): ASTNode? 
  * @return the next leaf [ASTNode] based on the given parameters.
  * @since 1.1.0
  */
-fun ASTNode.nextLeaf(includeEmpty: Boolean = false, skipSubtree: Boolean = false): ASTNode? {
+fun ASTNode.nextLeaf(
+  includeEmpty: Boolean = false,
+  skipSubtree: Boolean = false
+): ASTNode? {
   var n = if (skipSubtree) this.lastChildLeafOrSelf().nextLeafAny() else this.nextLeafAny()
   if (!includeEmpty) {
     while (n != null && n.textLength == 0) {
@@ -267,9 +279,9 @@ fun ASTNode.firstChildLeafOrSelf(): ASTNode {
 }
 
 /**
- * Check if the given [ASTNode] is a code leaf. E.g. it must be a leaf and may not be a whitespace
- * or be part of a comment. @return true if the receiver node is a leaf, not a whitespace, and not
- * part of a comment
+ * Check if the given [ASTNode] is a code leaf. E.g. it must be a leaf and
+ * may not be a whitespace or be part of a comment. @return true if the
+ * receiver node is a leaf, not a whitespace, and not part of a comment
  *
  * @since 1.1.0
  */
@@ -282,9 +294,9 @@ fun ASTNode.isCodeLeaf(): Boolean = isLeaf() && !isWhiteSpace() && !isPartOfComm
 fun ASTNode.isPartOfComment(): Boolean = parent(strict = false) { it.psi is PsiComment } != null
 
 /**
- * Updates or inserts a new whitespace element with [text] before the given node. If the node itself
- * is a whitespace then its contents is replaced with [text]. If the node is a (nested) composite
- * element, the whitespace element is added after the previous leaf node.
+ * Updates or inserts a new whitespace element with [text] before the given node. If the
+ * node itself is a whitespace then its contents is replaced with [text]. If the node is a
+ * (nested) composite element, the whitespace element is added after the previous leaf node.
  *
  * @since 1.1.0
  */
@@ -311,9 +323,9 @@ fun ASTNode.upsertWhitespaceBeforeMe(text: String) {
 }
 
 /**
- * Updates or inserts a new whitespace element with [text] after the given node. If the node itself
- * is a whitespace then its contents is replaced with [text]. If the node is a (nested) composite
- * element, the whitespace element is added after the last child leaf.
+ * Updates or inserts a new whitespace element with [text] after the given node. If the
+ * node itself is a whitespace then its contents is replaced with [text]. If the node is a
+ * (nested) composite element, the whitespace element is added after the last child leaf.
  *
  * @since 1.1.0
  */
@@ -339,8 +351,8 @@ fun ASTNode.upsertWhitespaceAfterMe(text: String) {
  * Replaces the receiver [ASTNode] white space with the given [text].
  *
  * @since 1.1.0
- * @throws IllegalArgumentException if the receiver [ASTNode] does not have a WHITE_SPACE element
- *   type.
+ * @throws IllegalArgumentException if the receiver
+ *   [ASTNode] does not have a WHITE_SPACE element type.
  */
 fun ASTNode.replaceWhitespaceWith(text: String) {
   require(this.elementType == ElementType.WHITE_SPACE)
