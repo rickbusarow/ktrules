@@ -21,6 +21,7 @@ import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.psi.children
 import com.rickbusarow.ktrules.rules.internal.psi.fileIndent
 import com.rickbusarow.ktrules.rules.internal.psi.getKDocSections

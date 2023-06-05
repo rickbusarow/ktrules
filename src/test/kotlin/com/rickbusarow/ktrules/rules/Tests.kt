@@ -15,16 +15,24 @@
 
 package com.rickbusarow.ktrules.rules
 
+import com.google.common.jimfs.Configuration
+import com.google.common.jimfs.Jimfs
+import com.pinterest.ktlint.cli.ruleset.core.api.RuleSetProviderV3
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider
 import com.rickbusarow.ktrules.compat.Code
 import com.rickbusarow.ktrules.compat.EditorConfigOverride
+import com.rickbusarow.ktrules.compat.EditorConfigProperty
 import com.rickbusarow.ktrules.compat.KtLintRuleEngine
 import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.compat.from
 import com.rickbusarow.ktrules.compat.toKtLintRuleProviders49
+import com.rickbusarow.ktrules.ec4j.PROJECT_VERSION_PROPERTY
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.dots
+import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.wrapIn
 import io.kotest.assertions.asClue
 import io.kotest.assertions.withClue
@@ -33,15 +41,16 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
+import java.util.ServiceLoader
 import java.util.stream.Stream
 import io.kotest.matchers.shouldBe as kotestShouldBe
 
 interface Tests {
 
-  val rules: Set<RuleProviderCompat>
+  val ruleProviders: Set<RuleProviderCompat>
     get() = error(
       "If you need to run lint/format tests, " +
-        "you must override the `rules` property in your test class."
+        "you must override the `ruleProviders` property in your test class."
     )
 
   val wrappingStyleDefault: WrappingStyle get() = WrappingStyle.MINIMUM_RAGGED
@@ -52,126 +61,150 @@ interface Tests {
     dots.wrapIn("\n") kotestShouldBe expected.dots.wrapIn("\n")
   }
 
-  fun Set<RuleProviderCompat>.format(
+  fun format(
     @Language("kotlin")
     text: String,
+    rules: Set<RuleProviderCompat> = ruleProviders,
     script: Boolean = false,
-    wrappingStyle: WrappingStyle = wrappingStyleDefault,
-    lineLength: Int = lineLengthDefault,
-    currentVersion: String = currentVersionDefault,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
-        PROJECT_VERSION_PROPERTY to currentVersion
-      )
-  ): String = KtLintRuleEngine(
-    ruleProviders = rules.toKtLintRuleProviders49(),
-    editorConfigOverride = editorConfigOverride
-  ).format(
-    Code.fromSnippet(text.trimIndent(), script = script)
-  )
+    includeAllRules: Boolean = false,
+    lineLength: Int? = lineLengthDefault,
+    wrappingStyle: WrappingStyle? = wrappingStyleDefault,
+    currentVersion: String? = currentVersionDefault,
+    assertions: KtLintTestResult.() -> Unit
+  ) {
+    format(
+      text = text,
+      script = script,
+      includeAllRules = includeAllRules,
+      editorConfigOverride = createEditorConfigOverride(
+        lineLength = lineLength,
+        wrappingStyle = wrappingStyle,
+        currentVersion = currentVersion
+      ),
+      assertions = assertions
+    )
+  }
 
   fun format(
     @Language("kotlin")
     text: String,
+    rules: Set<RuleProviderCompat> = ruleProviders,
     script: Boolean = false,
-    wrappingStyle: WrappingStyle = wrappingStyleDefault,
-    lineLength: Int = lineLengthDefault,
-    currentVersion: String = currentVersionDefault,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
-        PROJECT_VERSION_PROPERTY to currentVersion
-      ),
+    includeAllRules: Boolean = false,
+    editorConfigOverride: EditorConfigOverride,
     assertions: KtLintTestResult.() -> Unit
   ) {
     val errors = mutableListOf<KtLintTestResult.Error>()
-    val outputString = KtLintRuleEngine(
-      ruleProviders = rules.toKtLintRuleProviders49(),
-      editorConfigOverride = editorConfigOverride
-    ).format(
-      Code.fromSnippet(text.trimIndent(), script = script)
-    ) { lintError, corrected ->
-      errors.add(
-        KtLintTestResult.Error(
-          line = lintError.line,
-          col = lintError.col,
-          ruleId = lintError.ruleId.value,
-          detail = lintError.detail,
-          corrected = corrected
+
+    val outputString = withEngine(
+      ruleProviders = rules,
+      editorConfigOverride = editorConfigOverride,
+      includeAllRules = includeAllRules
+    ) {
+      format(Code.fromSnippet(text.trimIndent(), script = script)) { lintError, corrected ->
+        errors.add(
+          KtLintTestResult.Error(
+            line = lintError.line,
+            col = lintError.col,
+            ruleId = lintError.ruleId.value,
+            detail = lintError.detail,
+            corrected = corrected
+          )
         )
-      )
+      }
     }
 
-    val results = KtLintTestResult(output = outputString, allLintErrors = errors)
-
-    results.assertions()
-
-    results.checkNoMoreErrors()
-  }
-
-  fun Set<RuleProviderCompat>.lint(
-    text: String,
-    script: Boolean = false,
-    wrappingStyle: WrappingStyle = wrappingStyleDefault,
-    lineLength: Int = lineLengthDefault,
-    currentVersion: String = currentVersionDefault,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
-        PROJECT_VERSION_PROPERTY to currentVersion
-      )
-  ): List<KtLintTestResult.Error> = buildList {
-    KtLintRuleEngine(
-      ruleProviders = rules.toKtLintRuleProviders49(),
-      editorConfigOverride = editorConfigOverride
-    ).lint(
-      Code.fromSnippet(text.trimIndent(), script = script)
-    ) { lintError ->
-      add(
-        KtLintTestResult.Error(
-          line = lintError.line,
-          col = lintError.col,
-          ruleId = lintError.ruleId.value,
-          detail = lintError.detail,
-          corrected = false
-        )
-      )
+    with(KtLintTestResult(output = outputString, allLintErrors = errors)) {
+      assertions()
+      checkNoMoreErrors()
     }
   }
 
   fun lint(
     text: String,
+    rules: Set<RuleProviderCompat> = ruleProviders,
     script: Boolean = false,
-    wrappingStyle: WrappingStyle = wrappingStyleDefault,
-    lineLength: Int = lineLengthDefault,
-    currentVersion: String = currentVersionDefault,
-    editorConfigOverride: EditorConfigOverride =
-      EditorConfigOverride.from(
-        MAX_LINE_LENGTH_PROPERTY to lineLength,
-        WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue,
-        PROJECT_VERSION_PROPERTY to currentVersion
-      )
+    includeAllRules: Boolean = false,
+    lineLength: Int? = lineLengthDefault,
+    wrappingStyle: WrappingStyle? = wrappingStyleDefault,
+    currentVersion: String? = currentVersionDefault
+  ): List<KtLintTestResult.Error> = lint(
+    text = text,
+    script = script,
+    includeAllRules = includeAllRules,
+    editorConfigOverride = createEditorConfigOverride(
+      lineLength = lineLength,
+      wrappingStyle = wrappingStyle,
+      currentVersion = currentVersion
+    )
+  )
+
+  fun lint(
+    text: String,
+    rules: Set<RuleProviderCompat> = ruleProviders,
+    script: Boolean = false,
+    includeAllRules: Boolean = false,
+    editorConfigOverride: EditorConfigOverride
   ): List<KtLintTestResult.Error> = buildList {
-    KtLintRuleEngine(
-      ruleProviders = rules.toKtLintRuleProviders49(),
-      editorConfigOverride = editorConfigOverride
-    ).lint(
-      Code.fromSnippet(text.trimIndent(), script = script)
-    ) { lintError ->
-      add(
-        KtLintTestResult.Error(
-          line = lintError.line,
-          col = lintError.col,
-          ruleId = lintError.ruleId.value,
-          detail = lintError.detail,
-          corrected = false
+    withEngine(rules, editorConfigOverride, includeAllRules) {
+      lint(Code.fromSnippet(content = text.trimIndent(), script = script)) { lintError ->
+        add(
+          KtLintTestResult.Error(
+            line = lintError.line,
+            col = lintError.col,
+            ruleId = lintError.ruleId.value,
+            detail = lintError.detail,
+            corrected = false
+          )
         )
-      )
+      }
     }
+  }
+
+  fun <T> withEngine(
+    ruleProviders: Set<RuleProviderCompat>,
+    editorConfigOverride: EditorConfigOverride,
+    includeAllRules: Boolean,
+    action: KtLintRuleEngine.() -> T
+  ): T {
+
+    return Jimfs.newFileSystem(Configuration.forCurrentPlatform()).use { fileSystem ->
+      val engine = KtLintRuleEngine(
+        ruleProviders = ruleProviders.toKtLintRuleProviders49()
+          .letIf(includeAllRules) {
+            plus(
+              ServiceLoader.load(RuleSetProviderV3::class.java)
+                .flatMap { it.getRuleProviders() }
+            )
+          },
+        editorConfigOverride = editorConfigOverride,
+        fileSystem = fileSystem
+      )
+
+      engine.action()
+    }
+  }
+
+  fun createEditorConfigOverride(
+    lineLength: Int?,
+    wrappingStyle: WrappingStyle?,
+    currentVersion: String?,
+    vararg otherPairs: Pair<EditorConfigProperty<*>, *>
+  ): EditorConfigOverride {
+    val pairs = buildList {
+      if (lineLength != null) {
+        add(MAX_LINE_LENGTH_PROPERTY to lineLength)
+      }
+      if (wrappingStyle != null) {
+        add(WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue)
+      }
+      if (currentVersion != null) {
+        add(PROJECT_VERSION_PROPERTY to currentVersion)
+      }
+      addAll(otherPairs)
+    }
+
+    return EditorConfigOverride.from(*pairs.toTypedArray())
   }
 
   fun <T> Iterable<T>.container(

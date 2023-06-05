@@ -20,7 +20,7 @@ import org.junit.jupiter.api.TestFactory
 
 class NoDuplicateCopyrightHeaderRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { NoDuplicateCopyrightHeaderRule() }
   )
 
@@ -30,7 +30,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
     "normal" to true
   ).test({ it.first }) { (_, script) ->
 
-    rules.format(
+    format(
       """
       |/*
       | * Copyright (C) 1985 Sylvester Stallone
@@ -46,16 +46,25 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |
       """.trimMargin(),
       script = script
-    ) shouldBe
-      """
-      |/*
-      | * Copyright (C) 1985 Sylvester Stallone
-      | */
-      |
-      |package com.test
-      |
-      |class MyClass
-      """.trimMargin()
+    ) {
+      expectError(
+        line = 5,
+        col = 1,
+        ruleId = NoDuplicateCopyrightHeaderRule.ID,
+        detail = NoDuplicateCopyrightHeaderRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |/*
+        | * Copyright (C) 1985 Sylvester Stallone
+        | */
+        |
+        |package com.test
+        |
+        |class MyClass
+        """.trimMargin()
+    }
   }
 
   @TestFactory
@@ -64,7 +73,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
     "normal" to true
   ).test({ it.first }) { (_, script) ->
 
-    rules.format(
+    format(
       """
       |/*
       | * Copyright (C) 1985 Sylvester Stallone
@@ -80,16 +89,26 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |
       """.trimMargin(),
       script = script
-    ) shouldBe
-      """
-      |/*
-      | * Copyright (C) 1985 Sylvester Stallone
-      | */
-      |
-      |package com.test
-      |
-      |class MyClass
-      """.trimMargin()
+    ) {
+
+      expectError(
+        line = 7,
+        col = 1,
+        ruleId = NoDuplicateCopyrightHeaderRule.ID,
+        detail = NoDuplicateCopyrightHeaderRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |/*
+        | * Copyright (C) 1985 Sylvester Stallone
+        | */
+        |
+        |package com.test
+        |
+        |class MyClass
+        """.trimMargin()
+    }
   }
 
   @TestFactory
@@ -98,7 +117,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
     "normal" to true
   ).test({ it.first }) { (_, script) ->
 
-    rules.format(
+    format(
       """
       |/*
       | * Copyright (C) 1985 Sylvester Stallone
@@ -114,16 +133,26 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |
       """.trimMargin(),
       script = script
-    ) shouldBe
-      """
-      |/*
-      | * Copyright (C) 1985 Sylvester Stallone
-      | */
-      |
-      |import java.io.Serializable
-      |
-      |class MyClass : Serializable
-      """.trimMargin()
+    ) {
+
+      expectError(
+        line = 7,
+        col = 1,
+        ruleId = NoDuplicateCopyrightHeaderRule.ID,
+        detail = NoDuplicateCopyrightHeaderRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |/*
+        | * Copyright (C) 1985 Sylvester Stallone
+        | */
+        |
+        |import java.io.Serializable
+        |
+        |class MyClass : Serializable
+        """.trimMargin()
+    }
   }
 
   @TestFactory
@@ -132,7 +161,7 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
     "normal" to true
   ).test({ it.first }) { (_, script) ->
 
-    rules.format(
+    format(
       """
       |/*
       | * Copyright (C) 1985 Sylvester Stallone
@@ -148,15 +177,25 @@ class NoDuplicateCopyrightHeaderRuleTest : Tests {
       |
       """.trimMargin(),
       script = script
-    ) shouldBe
-      """
-      |/*
-      | * Copyright (C) 1985 Sylvester Stallone
-      | */
-      |
-      |@file:Suppress("MAGIC_NUMBER")
-      |
-      |class MyClass
-      """.trimMargin()
+    ) {
+
+      expectError(
+        line = 7,
+        col = 1,
+        ruleId = NoDuplicateCopyrightHeaderRule.ID,
+        detail = NoDuplicateCopyrightHeaderRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |/*
+        | * Copyright (C) 1985 Sylvester Stallone
+        | */
+        |
+        |@file:Suppress("MAGIC_NUMBER")
+        |
+        |class MyClass
+        """.trimMargin()
+    }
   }
 }

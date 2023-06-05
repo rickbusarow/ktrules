@@ -16,11 +16,12 @@
 package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
+import com.rickbusarow.ktrules.rules.internal.noDots
 import org.junit.jupiter.api.Test
 
 class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { NoTrailingSpacesInRawStringLiteralRule() }
   )
 
@@ -29,28 +30,49 @@ class NoTrailingSpacesInRawStringLiteralRuleTest : Tests {
   @Test
   fun `trailing spaces in a string literal are removed`() {
 
-    // Use the KotlinPoet dot ("·") so that:
+    // Use the interpunct (·) so that:
     // (1) this rule doesn't clean up the whitespaces when running against the full project
     // (2) stuff's actually visible
 
-    rules.format(
+    format(
       """
       |const val name: String = $triple
-      |
-      |  fun foo() = Unit
-      |
+      |·········
+      |··fun·foo()·=·Unit···
+      |·
       |$triple.trimIndent()
       |
-      """.trimMargin()
-        .replace(" ", " ")
-    ) shouldBe
-      """
-      |const val name: String = $triple
-      |
-      |  fun foo() = Unit
-      |
-      |$triple.trimIndent()
-      """.trimMargin()
-        .replace(" ", " ")
+      """.trimMargin().noDots
+    ) {
+
+      expectError(
+        line = 2,
+        col = 1,
+        ruleId = NoTrailingSpacesInRawStringLiteralRule.ID,
+        detail = NoTrailingSpacesInRawStringLiteralRule.ERROR_MESSAGE
+      )
+      expectError(
+        line = 3,
+        col = 10,
+        ruleId = NoTrailingSpacesInRawStringLiteralRule.ID,
+        detail = NoTrailingSpacesInRawStringLiteralRule.ERROR_MESSAGE
+      )
+      expectError(
+        line = 3,
+        col = 11,
+        ruleId = NoTrailingSpacesInRawStringLiteralRule.ID,
+        detail = NoTrailingSpacesInRawStringLiteralRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |const val name: String = $triple
+        |
+        |··fun·foo()·=·Unit
+        |
+        |$triple.trimIndent()
+        """.trimMargin()
+          .noDots
+    }
   }
 }

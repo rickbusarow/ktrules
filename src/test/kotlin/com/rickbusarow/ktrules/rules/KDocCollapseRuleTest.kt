@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 
 class KDocCollapseRuleTest : Tests {
 
-  override val rules: Set<RuleProviderCompat> = setOf(
+  override val ruleProviders: Set<RuleProviderCompat> = setOf(
     RuleProviderCompat { KDocCollapseRule() }
   )
 

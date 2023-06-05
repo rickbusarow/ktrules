@@ -21,14 +21,14 @@ import org.junit.jupiter.api.Test
 
 class KDocTagParamOrPropertyRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { KDocTagParamOrPropertyRule() }
   )
 
   @Test
   fun `@param on a non-property parameter should not emit`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * This is a test function
@@ -42,7 +42,7 @@ class KDocTagParamOrPropertyRuleTest : Tests {
   @Test
   fun `@property on a non-property parameter should be fixed`() {
 
-    rules.format(
+    format(
       """
       /**
        * This is a test function
@@ -50,19 +50,28 @@ class KDocTagParamOrPropertyRuleTest : Tests {
        */
       fun test(str: String) {}
       """.trimIndent()
-    ) shouldBe """
-      /**
-       * This is a test function
-       * @param str a string parameter
-       */
-      fun test(str: String) {}
-    """.trimIndent()
+    ) {
+      expectError(
+        line = 3,
+        col = 4,
+        ruleId = KDocTagParamOrPropertyRule.ID,
+        detail = "The KDoc tag '@property str' should use '@param'."
+      )
+
+      output shouldBe """
+        /**
+         * This is a test function
+         * @param str a string parameter
+         */
+        fun test(str: String) {}
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `@property on a property parameter should not emit`() {
 
-    rules.lint(
+    lint(
       """
       /**
        * This is a test class
@@ -76,7 +85,7 @@ class KDocTagParamOrPropertyRuleTest : Tests {
   @Test
   fun `@param on a property parameter should be fixed`() {
 
-    rules.format(
+    format(
       """
       /**
        * This is a test class
@@ -84,12 +93,22 @@ class KDocTagParamOrPropertyRuleTest : Tests {
        */
       class Test(val name: String)
       """.trimIndent()
-    ) shouldBe """
-      /**
-       * This is a test class
-       * @property name the name property
-       */
-      class Test(val name: String)
-    """.trimIndent()
+    ) {
+
+      expectError(
+        line = 3,
+        col = 4,
+        ruleId = KDocTagParamOrPropertyRule.ID,
+        detail = "The KDoc tag '@param name' should use '@property'."
+      )
+
+      output shouldBe """
+        /**
+         * This is a test class
+         * @property name the name property
+         */
+        class Test(val name: String)
+      """.trimIndent()
+    }
   }
 }

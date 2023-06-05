@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 
 class KDocIndentAfterLeadingAsteriskRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { KDocIndentAfterLeadingAsteriskRule() }
   )
 

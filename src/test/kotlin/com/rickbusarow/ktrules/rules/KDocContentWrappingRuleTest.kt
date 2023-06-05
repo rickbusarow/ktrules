@@ -17,7 +17,7 @@ package com.rickbusarow.ktrules.rules
 
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult
-import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test
 @Suppress("SpellCheckingInspection")
 class KDocContentWrappingRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { KDocContentWrappingRule() }
   )
 
@@ -142,7 +142,7 @@ class KDocContentWrappingRuleTest : Tests {
       )
       """.trimIndent(),
       lineLength = 100,
-      wrappingStyle = GREEDY
+      wrappingStyle = WrappingStyle.GREEDY
     ) {
       expectError(2, 2)
 
@@ -704,8 +704,8 @@ class KDocContentWrappingRuleTest : Tests {
          */
         class TestClass
       """.trimIndent(),
-      wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-      lineLength = 28
+      lineLength = 28,
+      wrappingStyle = WrappingStyle.MINIMUM_RAGGED
     ) {
       expectError(2, 2)
 
@@ -735,8 +735,8 @@ class KDocContentWrappingRuleTest : Tests {
          */
         class TestClass
       """.trimIndent(),
-      wrappingStyle = WrappingStyle.GREEDY,
-      lineLength = 8
+      lineLength = 8,
+      wrappingStyle = WrappingStyle.GREEDY
     ) {
       expectError(2, 2)
 
@@ -770,8 +770,8 @@ class KDocContentWrappingRuleTest : Tests {
          */
         class TestClass
       """.trimIndent(),
-      wrappingStyle = WrappingStyle.MINIMUM_RAGGED,
-      lineLength = 8
+      lineLength = 8,
+      wrappingStyle = WrappingStyle.MINIMUM_RAGGED
     ) {
       expectError(2, 2)
 
@@ -951,7 +951,7 @@ class KDocContentWrappingRuleTest : Tests {
         class TestClass(val name: String)
       """.trimIndent(),
       lineLength = 95,
-      wrappingStyle = GREEDY
+      wrappingStyle = WrappingStyle.GREEDY
     ) shouldBe emptyList()
   }
 
@@ -1107,7 +1107,7 @@ class KDocContentWrappingRuleTest : Tests {
       )
       """.trimIndent(),
       lineLength = 60,
-      wrappingStyle = GREEDY
+      wrappingStyle = WrappingStyle.GREEDY
     ) {
       expectError(2, 2)
 

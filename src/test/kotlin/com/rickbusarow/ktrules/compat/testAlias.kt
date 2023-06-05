@@ -33,6 +33,6 @@ fun EditorConfigOverrideCompanion.from(
   )
 }
 
-fun Set<RuleProviderCompat>.toKtLintRuleProviders49(): MutableSet<RuleProvider> {
+fun Set<RuleProviderCompat>.toKtLintRuleProviders49(): Set<RuleProvider> {
   return mapToSet { it.toKtLintRuleProvider49() }
 }

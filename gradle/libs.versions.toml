@@ -19,6 +19,7 @@ dropbox-dependencyGuard = "0.4.3"
 ec4j = "0.3.0"
 github-release = "2.4.1"
 google-ksp = "1.8.21-1.0.11"
+jimfs = "1.2"
 jUnit = "5.9.3"
 jetbrains-changelog = "2.1.0"
 jetbrains-markdown = "0.4.1"
@@ -85,6 +86,8 @@ google-ksp = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin
 jetbrains-changelog-gradle-plugin = { module = "org.jetbrains.intellij.plugins:gradle-changelog-plugin", version.ref = "jetbrains-changelog" }
 
 jetbrains-markdown = { module = "org.jetbrains:markdown", version.ref = "jetbrains-markdown" }
+
+jimfs = { module = "com.google.jimfs:jimfs", version.ref = "jimfs" }
 
 johnrengelman-shadowJar = { module = "com.github.johnrengelman:shadow", version.ref = "johnrengelman-shadow" }
 

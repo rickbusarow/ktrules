@@ -4,5 +4,12 @@
     <useExperimental>true</useExperimental>
     <treatAsErrors>false</treatAsErrors>
     <formatOnSave>true</formatOnSave>
+    <externalJarPaths>
+      <list>
+        <option value="$PROJECT_DIR$/build/libs/compat49.jar" />
+        <option value="$PROJECT_DIR$/build/libs/compat48.jar" />
+        <option value="$PROJECT_DIR$/build/libs/compat47.jar" />
+      </list>
+    </externalJarPaths>
   </component>
 </project>
