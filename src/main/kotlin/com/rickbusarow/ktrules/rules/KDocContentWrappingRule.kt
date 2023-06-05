@@ -21,8 +21,10 @@ import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.mustRunAfter
-import com.rickbusarow.ktrules.rules.WrappingStyle.GREEDY
-import com.rickbusarow.ktrules.rules.WrappingStyle.MINIMUM_RAGGED
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle.GREEDY
+import com.rickbusarow.ktrules.rules.internal.WrappingStyle.MINIMUM_RAGGED
 import com.rickbusarow.ktrules.rules.internal.markdown.MarkdownNode
 import com.rickbusarow.ktrules.rules.internal.markdown.wrap
 import com.rickbusarow.ktrules.rules.internal.prefixIfNot

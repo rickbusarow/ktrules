@@ -476,6 +476,7 @@ public final class com/rickbusarow/ktrules/rules/NoTrailingSpacesInRawStringLite
 }
 
 public final class com/rickbusarow/ktrules/rules/NoUselessConstructorKeywordRule : com/rickbusarow/ktrules/compat/RuleCompat {
+	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
@@ -484,14 +485,6 @@ public final class com/rickbusarow/ktrules/rules/NoWithTypeWithLambdaRule : com/
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
-}
-
-public final class com/rickbusarow/ktrules/rules/WrappingStyle : java/lang/Enum {
-	public static final field GREEDY Lcom/rickbusarow/ktrules/rules/WrappingStyle;
-	public static final field MINIMUM_RAGGED Lcom/rickbusarow/ktrules/rules/WrappingStyle;
-	public final fun getDisplayValue ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/rules/WrappingStyle;
-	public static fun values ()[Lcom/rickbusarow/ktrules/rules/WrappingStyle;
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/CollectionsKt {
@@ -507,6 +500,19 @@ public final class com/rickbusarow/ktrules/rules/internal/CollectionsKt {
 	public static final fun singleNotNullOf (Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static final fun sortedWith (Ljava/lang/Iterable;[Lkotlin/jvm/functions/Function1;)Ljava/util/List;
 	public static final fun stateful (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/WrappingStyle : java/lang/Enum {
+	public static final field Companion Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle$Companion;
+	public static final field GREEDY Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
+	public static final field MINIMUM_RAGGED Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
+	public final fun getDisplayValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
+	public static fun values ()[Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/WrappingStyle$Companion {
+	public final fun getWRAPPING_STYLE_PROPERTY ()Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/psi/AstKt {

@@ -166,6 +166,7 @@ dependencies {
   testCompileOnly(libs.google.auto.service.annotations)
 
   testImplementation(libs.jetbrains.markdown)
+  testImplementation(libs.jimfs)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.kotest.assertions.core.jvm)

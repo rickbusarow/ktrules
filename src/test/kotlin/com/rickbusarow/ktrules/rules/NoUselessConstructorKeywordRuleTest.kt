@@ -20,61 +20,77 @@ import org.junit.jupiter.api.Test
 
 class NoUselessConstructorKeywordRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { NoUselessConstructorKeywordRule() }
   )
 
   @Test
   fun `annotated constructor keyword is not removed`() {
 
-    rules.format(
+    format(
       """
       |class MyClass @Inject constructor(
       |  val name: String
       |)
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |class MyClass @Inject constructor(
-      |  val name: String
-      |)
-      """.trimMargin()
+    ) {
+
+      output shouldBe
+        """
+        |class MyClass @Inject constructor(
+        |  val name: String
+        |)
+        """.trimMargin()
+    }
   }
 
   @Test
   fun `private constructor keyword is not removed`() {
 
-    rules.format(
+    format(
       """
       |class MyClass private constructor(
       |  val name: String
       |)
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |class MyClass private constructor(
-      |  val name: String
-      |)
-      """.trimMargin()
+    ) {
+
+      output shouldBe
+        """
+        |class MyClass private constructor(
+        |  val name: String
+        |)
+        """.trimMargin()
+    }
   }
 
   @Test
   fun `useless constructor keyword is removed`() {
 
-    rules.format(
+    format(
       """
       |class MyClass constructor(
       |  val name: String
       |)
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |class MyClass(
-      |  val name: String
-      |)
-      """.trimMargin()
+    ) {
+
+      expectError(
+        line = 1,
+        col = 15,
+        ruleId = NoUselessConstructorKeywordRule.ID,
+        detail = NoUselessConstructorKeywordRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |class MyClass(
+        |  val name: String
+        |)
+        """.trimMargin()
+    }
   }
 }

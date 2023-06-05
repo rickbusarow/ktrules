@@ -20,14 +20,14 @@ import org.junit.jupiter.api.Test
 
 class NoSpaceInTargetedAnnotationRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { NoSpaceInTargetedAnnotationRule() }
   )
 
   @Test
   fun `space after colon`() {
 
-    rules.format(
+    format(
       """
       |@file: Suppress("DEPRECATION")
       |
@@ -36,20 +36,29 @@ class NoSpaceInTargetedAnnotationRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |@file:Suppress("DEPRECATION")
-      |
-      |package com.test
-      |
-      |class MyClass
-      """.trimMargin()
+    ) {
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoSpaceInTargetedAnnotationRule.ID,
+        detail = NoSpaceInTargetedAnnotationRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |@file:Suppress("DEPRECATION")
+        |
+        |package com.test
+        |
+        |class MyClass
+        """.trimMargin()
+    }
   }
 
   @Test
   fun `space before colon`() {
 
-    rules.format(
+    format(
       """
       |@file :Suppress("DEPRECATION")
       |
@@ -58,20 +67,29 @@ class NoSpaceInTargetedAnnotationRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |@file:Suppress("DEPRECATION")
-      |
-      |package com.test
-      |
-      |class MyClass
-      """.trimMargin()
+    ) {
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoSpaceInTargetedAnnotationRule.ID,
+        detail = NoSpaceInTargetedAnnotationRule.ERROR_MESSAGE
+      )
+
+      output shouldBe
+        """
+        |@file:Suppress("DEPRECATION")
+        |
+        |package com.test
+        |
+        |class MyClass
+        """.trimMargin()
+    }
   }
 
   @Test
   fun `parameter list spaces are left alone`() {
 
-    rules.format(
+    format(
       """
       |@file:Suppress(
       |  "DEPRECATION"
@@ -82,15 +100,18 @@ class NoSpaceInTargetedAnnotationRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |@file:Suppress(
-      |  "DEPRECATION"
-      |)
-      |
-      |package com.test
-      |
-      |class MyClass
-      """.trimMargin()
+    ) {
+
+      output shouldBe
+        """
+        |@file:Suppress(
+        |  "DEPRECATION"
+        |)
+        |
+        |package com.test
+        |
+        |class MyClass
+        """.trimMargin()
+    }
   }
 }

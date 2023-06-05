@@ -15,7 +15,7 @@
 
 package com.rickbusarow.ktrules
 
-import com.rickbusarow.ktrules.rules.ALL_PROPERTIES
+import com.rickbusarow.ktrules.ec4j.ALL_PROPERTIES
 import com.rickbusarow.ktrules.rules.Tests
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

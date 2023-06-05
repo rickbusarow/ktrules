@@ -51,7 +51,7 @@ class NoUselessConstructorKeywordRule : RuleCompat(ID) {
 
       if (constructorPsi.annotations.isEmpty() && constructorPsi.modifierList == null) {
 
-        emit(node.startOffset, "Useless constructor keyword", true)
+        emit(node.startOffset, ERROR_MESSAGE, true)
         val leadingWhitespaceNode = node.prevLeaf(true)!!
         constructorNode.removeChild(node)
         constructorNode.removeChild(leadingWhitespaceNode)
@@ -61,5 +61,6 @@ class NoUselessConstructorKeywordRule : RuleCompat(ID) {
 
   internal companion object {
     val ID = RuleId("no-useless-constructor-keyword")
+    const val ERROR_MESSAGE: String = "Useless constructor keyword"
   }
 }

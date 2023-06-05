@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 
 class KDocRuleIntegrationTest : Tests {
 
-  override val rules: Set<RuleProviderCompat> = KtRulesRuleSetProvider.getRuleProviders()
+  override val ruleProviders: Set<RuleProviderCompat> = KtRulesRuleSetProvider.getRuleProviders()
 
   @Test
   fun `a default section with two lines of text is not collapsed`() {

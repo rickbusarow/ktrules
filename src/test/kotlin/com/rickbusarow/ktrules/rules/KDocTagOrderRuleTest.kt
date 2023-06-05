@@ -20,14 +20,14 @@ import org.junit.jupiter.api.Test
 
 class KDocTagOrderRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { KDocTagOrderRule() }
   )
 
   @Test
   fun `class tag sorting`() {
 
-    rules.format(
+    format(
       """
       /**
        * @property yellowWatermelon some comment
@@ -94,78 +94,120 @@ class KDocTagOrderRuleTest : Tests {
         val vanillaBean : String,
       )
       """.trimIndent()
-    ) shouldBe """
-      /**
-       * @param T t type
-       * @param R r type
-       * @property age a number, probably
-       * @property name the name property
-       * @property honeydew some comment
-       * @property elderberry some comment
-       * @property yellowWatermelon some comment
-       * @param date some comment
-       * @property grape some comment
-       * @property mango some comment
-       * @property tangerine some comment
-       * @property fig some comment
-       * @property kiwi some comment
-       * @property xigua some comment
-       * @param orange some comment
-       * @property banana some comment
-       * @property cherry some comment
-       * @property jackfruit some comment
-       * @param zucchini some comment
-       * @property ugliFruit some comment
-       * @property quince some comment
-       * @param nectarine some comment
-       * @property watermelon some comment
-       * @property apple some comment
-       * @param pineapple some comment
-       * @property lemon some comment
-       * @property strawberry some comment
-       * @param raspberry some comment
-       * @property imbe some comment
-       * @property vanillaBean some comment
-       * @see Other
-       * @throws IllegalStateException because
-       */
-      class Subject <T, R>(
-        val age: Int,
-        val name: String,
-        val honeydew : String,
-        val elderberry : String,
-        val yellowWatermelon : String,
-        date : String,
-        val grape : String,
-        val mango : String,
-        val tangerine : String,
-        val fig : String,
-        val kiwi : String,
-        val xigua : String,
-        orange : String,
-        val banana : String,
-        val cherry : String,
-        val jackfruit : String,
-        zucchini : String,
-        val ugliFruit : String,
-        val quince : String,
-        nectarine : String,
-        val watermelon : String,
-        val apple : String,
-        pineapple : String,
-        val lemon : String,
-        val strawberry : String,
-        raspberry : String,
-        val imbe : String,
-        val vanillaBean : String,
-      )
-    """.trimIndent()
+    ) {
+
+      val paramDetail = "KDoc tag order is incorrect. @param should be sorted."
+      val propertyDetail = "KDoc tag order is incorrect. @property should be sorted."
+
+      val seeDetail = "KDoc tag order is incorrect. @see should be sorted."
+      val throwsDetail = "KDoc tag order is incorrect. @throws should be sorted."
+
+      expectError(2, 4, KDocTagOrderRule.ID, propertyDetail)
+      expectError(2, 23, KDocTagOrderRule.ID, propertyDetail)
+      expectError(2, 42, KDocTagOrderRule.ID, propertyDetail)
+      expectError(3, 35, KDocTagOrderRule.ID, paramDetail)
+      expectError(5, 2, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 6, col = 4, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 7, col = 8, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 8, col = 19, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 9, col = 14, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 10, col = 27, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 11, col = 23, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 12, col = 22, KDocTagOrderRule.ID, seeDetail)
+      expectError(line = 14, col = 8, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 15, col = 3, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 15, col = 35, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 16, col = 29, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 17, col = 25, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 18, col = 26, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 20, col = 1, KDocTagOrderRule.ID, throwsDetail)
+      expectError(line = 20, col = 33, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 21, col = 28, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 22, col = 23, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 23, col = 24, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 24, col = 28, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 25, col = 28, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 26, col = 25, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 27, col = 22, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 28, col = 26, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 29, col = 27, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 31, col = 11, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 32, col = 18, KDocTagOrderRule.ID, propertyDetail)
+      expectError(line = 32, col = 32, KDocTagOrderRule.ID, propertyDetail)
+
+      output shouldBe """
+        /**
+         * @param T t type
+         * @param R r type
+         * @property age a number, probably
+         * @property name the name property
+         * @property honeydew some comment
+         * @property elderberry some comment
+         * @property yellowWatermelon some comment
+         * @param date some comment
+         * @property grape some comment
+         * @property mango some comment
+         * @property tangerine some comment
+         * @property fig some comment
+         * @property kiwi some comment
+         * @property xigua some comment
+         * @param orange some comment
+         * @property banana some comment
+         * @property cherry some comment
+         * @property jackfruit some comment
+         * @param zucchini some comment
+         * @property ugliFruit some comment
+         * @property quince some comment
+         * @param nectarine some comment
+         * @property watermelon some comment
+         * @property apple some comment
+         * @param pineapple some comment
+         * @property lemon some comment
+         * @property strawberry some comment
+         * @param raspberry some comment
+         * @property imbe some comment
+         * @property vanillaBean some comment
+         * @see Other
+         * @throws IllegalStateException because
+         */
+        class Subject <T, R>(
+          val age: Int,
+          val name: String,
+          val honeydew : String,
+          val elderberry : String,
+          val yellowWatermelon : String,
+          date : String,
+          val grape : String,
+          val mango : String,
+          val tangerine : String,
+          val fig : String,
+          val kiwi : String,
+          val xigua : String,
+          orange : String,
+          val banana : String,
+          val cherry : String,
+          val jackfruit : String,
+          zucchini : String,
+          val ugliFruit : String,
+          val quince : String,
+          nectarine : String,
+          val watermelon : String,
+          val apple : String,
+          pineapple : String,
+          val lemon : String,
+          val strawberry : String,
+          raspberry : String,
+          val imbe : String,
+          val vanillaBean : String,
+        )
+      """.trimIndent()
+    }
   }
 
   @Test
   fun `function tag sorting`() {
 
-    rules.format(
+    format(
       """
       interface Subject {
         /**
@@ -230,75 +272,117 @@ class KDocTagOrderRuleTest : Tests {
           strawberry : String,
           raspberry : String,
           imbe : String,
-          vanillaBean : String,)
+          vanillaBean : String
+        )
       }
       """.trimIndent()
-    ) shouldBe """
-      interface Subject {
-        /**
-         * @param T t type
-         * @param R r type
-         * @param age a number, probably
-         * @param name the name property
-         * @param honeydew some comment
-         * @param elderberry some comment
-         * @param yellowWatermelon some comment
-         * @param date some comment
-         * @param grape some comment
-         * @param mango some comment
-         * @param tangerine some comment
-         * @param fig some comment
-         * @param kiwi some comment
-         * @param xigua some comment
-         * @param orange some comment
-         * @param banana some comment
-         * @param cherry some comment
-         * @param jackfruit some comment
-         * @param zucchini some comment
-         * @param ugliFruit some comment
-         * @param quince some comment
-         * @param nectarine some comment
-         * @param watermelon some comment
-         * @param apple some comment
-         * @param pineapple some comment
-         * @param lemon some comment
-         * @param strawberry some comment
-         * @param raspberry some comment
-         * @param imbe some comment
-         * @param vanillaBean some comment
-         * @see Other
-         * @throws IllegalStateException because
-         */
-        fun <T, R> foo(
-          age: Int,
-          name: String,
-          honeydew : String,
-          elderberry : String,
-          yellowWatermelon : String,
-          date : String,
-          grape : String,
-          mango : String,
-          tangerine : String,
-          fig : String,
-          kiwi : String,
-          xigua : String,
-          orange : String,
-          banana : String,
-          cherry : String,
-          jackfruit : String,
-          zucchini : String,
-          ugliFruit : String,
-          quince : String,
-          nectarine : String,
-          watermelon : String,
-          apple : String,
-          pineapple : String,
-          lemon : String,
-          strawberry : String,
-          raspberry : String,
-          imbe : String,
-          vanillaBean : String,)
-      }
-    """.trimIndent()
+    ) {
+
+      val paramDetail = "KDoc tag order is incorrect. @param should be sorted."
+      val seeDetail = "KDoc tag order is incorrect. @see should be sorted."
+      val throwsDetail = "KDoc tag order is incorrect. @throws should be sorted."
+
+      expectError(line = 3, col = 6, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 3, col = 27, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 4, col = 6, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 5, col = 6, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 6, col = 9, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 7, col = 8, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 8, col = 12, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 9, col = 23, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 10, col = 21, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 11, col = 31, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 12, col = 27, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 13, col = 26, KDocTagOrderRule.ID, seeDetail)
+      expectError(line = 15, col = 7, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 16, col = 2, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 16, col = 33, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 17, col = 30, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 18, col = 26, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 19, col = 27, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 21, col = 3, KDocTagOrderRule.ID, throwsDetail)
+      expectError(line = 21, col = 37, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 22, col = 29, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 23, col = 24, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 24, col = 28, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 25, col = 29, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 26, col = 29, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 27, col = 29, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 28, col = 26, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 29, col = 27, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 30, col = 28, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 32, col = 7, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 33, col = 14, KDocTagOrderRule.ID, paramDetail)
+      expectError(line = 33, col = 30, KDocTagOrderRule.ID, paramDetail)
+
+      output shouldBe """
+        interface Subject {
+          /**
+           * @param T t type
+           * @param R r type
+           * @param age a number, probably
+           * @param name the name property
+           * @param honeydew some comment
+           * @param elderberry some comment
+           * @param yellowWatermelon some comment
+           * @param date some comment
+           * @param grape some comment
+           * @param mango some comment
+           * @param tangerine some comment
+           * @param fig some comment
+           * @param kiwi some comment
+           * @param xigua some comment
+           * @param orange some comment
+           * @param banana some comment
+           * @param cherry some comment
+           * @param jackfruit some comment
+           * @param zucchini some comment
+           * @param ugliFruit some comment
+           * @param quince some comment
+           * @param nectarine some comment
+           * @param watermelon some comment
+           * @param apple some comment
+           * @param pineapple some comment
+           * @param lemon some comment
+           * @param strawberry some comment
+           * @param raspberry some comment
+           * @param imbe some comment
+           * @param vanillaBean some comment
+           * @see Other
+           * @throws IllegalStateException because
+           */
+          fun <T, R> foo(
+            age: Int,
+            name: String,
+            honeydew : String,
+            elderberry : String,
+            yellowWatermelon : String,
+            date : String,
+            grape : String,
+            mango : String,
+            tangerine : String,
+            fig : String,
+            kiwi : String,
+            xigua : String,
+            orange : String,
+            banana : String,
+            cherry : String,
+            jackfruit : String,
+            zucchini : String,
+            ugliFruit : String,
+            quince : String,
+            nectarine : String,
+            watermelon : String,
+            apple : String,
+            pineapple : String,
+            lemon : String,
+            strawberry : String,
+            raspberry : String,
+            imbe : String,
+            vanillaBean : String
+          )
+        }
+      """.trimIndent()
+    }
   }
 }

@@ -20,14 +20,14 @@ import org.junit.jupiter.api.Test
 
 class NoLeadingBlankLinesRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { NoLeadingBlankLinesRule() }
   )
 
   @Test
   fun `package declaration`() {
 
-    rules.format(
+    format(
       """
       |
       |
@@ -37,18 +37,27 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |package com.test
-      |
-      |class MyClass
+    ) {
+
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoLeadingBlankLinesRule.ID,
+        detail = NoLeadingBlankLinesRule.ERROR_MESSAGE
+      )
+
+      output shouldBe """
+        |package com.test
+        |
+        |class MyClass
       """.trimMargin()
+    }
   }
 
   @Test
   fun `file annotation`() {
 
-    rules.format(
+    format(
       """
       |
       |
@@ -60,20 +69,28 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |@file:Suppress("DEPRECATION")
-      |
-      |package com.test
-      |
-      |class MyClass
+    ) {
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoLeadingBlankLinesRule.ID,
+        detail = NoLeadingBlankLinesRule.ERROR_MESSAGE
+      )
+
+      output shouldBe """
+        |@file:Suppress("DEPRECATION")
+        |
+        |package com.test
+        |
+        |class MyClass
       """.trimMargin()
+    }
   }
 
   @Test
   fun `imports with no package declaration`() {
 
-    rules.format(
+    format(
       """
       |
       |
@@ -83,18 +100,26 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |class MyClass : Serializable
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |import java.io.Serializable
-      |
-      |class MyClass : Serializable
+    ) {
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoLeadingBlankLinesRule.ID,
+        detail = NoLeadingBlankLinesRule.ERROR_MESSAGE
+      )
+
+      output shouldBe """
+        |import java.io.Serializable
+        |
+        |class MyClass : Serializable
       """.trimMargin()
+    }
   }
 
   @Test
   fun `code with no imports or package declaration`() {
 
-    rules.format(
+    format(
       """
       |
       |
@@ -102,16 +127,24 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |class MyClass
+    ) {
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoLeadingBlankLinesRule.ID,
+        detail = NoLeadingBlankLinesRule.ERROR_MESSAGE
+      )
+
+      output shouldBe """
+        |class MyClass
       """.trimMargin()
+    }
   }
 
   @Test
   fun `file license header`() {
 
-    rules.format(
+    format(
       """
       |
       |
@@ -125,15 +158,23 @@ class NoLeadingBlankLinesRuleTest : Tests {
       |class MyClass
       |
       """.trimMargin()
-    ) shouldBe
-      """
-      |/*
-      | * Copyright (C) 1985 Sylvester Stallone
-      | */
-      |
-      |package com.test
-      |
-      |class MyClass
+    ) {
+      expectError(
+        line = 1,
+        col = 1,
+        ruleId = NoLeadingBlankLinesRule.ID,
+        detail = NoLeadingBlankLinesRule.ERROR_MESSAGE
+      )
+
+      output shouldBe """
+        |/*
+        | * Copyright (C) 1985 Sylvester Stallone
+        | */
+        |
+        |package com.test
+        |
+        |class MyClass
       """.trimMargin()
+    }
   }
 }

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 
 class KDocBlankLinesRuleTest : Tests {
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { KDocBlankLinesRule() }
   )
 
