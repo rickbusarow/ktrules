@@ -23,9 +23,34 @@ class NoSinceInKDocRuleTest : Tests {
 
   override val currentVersionDefault = "0.2.3"
 
-  override val rules = setOf(
+  override val ruleProviders = setOf(
     RuleProviderCompat { NoSinceInKDocRule() }
   )
+
+  @Test
+  fun `a missing since tag is not added if the version is not defined in editorconfig`() {
+
+    format(
+      """
+      /** a comment `fun foo()` */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """,
+      currentVersion = null
+    ) {
+      expectNoErrors()
+
+      output shouldBe """
+        /** a comment `fun foo()` */
+        data class Subject(
+          val name: String,
+          val age: Int
+        )
+      """.trimIndent()
+    }
+  }
 
   @Test
   fun `a collapsed default section paragraph has the since tag added`() {

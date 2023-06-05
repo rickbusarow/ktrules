@@ -19,6 +19,7 @@ import com.rickbusarow.ktrules.compat.EditorConfigCompat
 import com.rickbusarow.ktrules.compat.ElementType
 import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.ec4j.PROJECT_VERSION_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.mapLines
 import com.rickbusarow.ktrules.rules.internal.prefixIfNot
