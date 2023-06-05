@@ -20,6 +20,7 @@ import com.rickbusarow.ktrules.rules.internal.prefix
 import com.rickbusarow.ktrules.rules.internal.requireNotNull
 import com.rickbusarow.ktrules.rules.internal.trees.Traversals.breadthFirstTraversal
 import com.rickbusarow.ktrules.rules.internal.trees.Traversals.depthFirstTraversal
+import org.jetbrains.kotlin.com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.kdoc.psi.api.KDoc
@@ -35,6 +36,7 @@ import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtParameterList
 import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
+import java.lang.reflect.Constructor
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
@@ -42,7 +44,15 @@ import kotlin.LazyThreadSafetyMode.NONE
  * @since 1.1.0
  */
 fun PsiElement.ktPsiFactory(): KtPsiFactory {
-  return KtPsiFactory(project, markGenerated = true)
+  val className = "org.jetbrains.kotlin.psi.KtPsiFactory"
+  val classObj = Class.forName(className)
+
+  @Suppress("SwallowedException")
+  val ctor: Constructor<*> = classObj.getConstructor(
+    Project::class.java,
+    Boolean::class.javaPrimitiveType
+  )
+  return ctor.newInstance(this.project, true) as KtPsiFactory
 }
 
 /**
