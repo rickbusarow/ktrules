@@ -18,6 +18,7 @@ package com.rickbusarow.ktrules
 import com.google.auto.service.AutoService
 import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.RuleSetProviderV2
+import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 
 @Suppress("ktlint:standard:class-naming", "ClassNaming")
@@ -40,4 +41,9 @@ class KtRulesRuleSetProviderV2_48 : RuleSetProviderV2(
         RuleProvider { RuleCompat48(shim.createNewRuleInstance()) }
       }
   }
+}
+
+/**  */
+fun RuleProviderCompat.toKtLintRuleProvider48(): RuleProvider {
+  return RuleProvider { RuleCompat48(createNewRuleInstance()) }
 }

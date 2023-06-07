@@ -2,6 +2,11 @@
 
 ## 1.1.2-SNAPSHOT (unreleased)
 
+### Fixed
+
+- `kt-rules:no-since-in-kdoc` won't indent by an extra space while adding `@since` to a top-level KDoc
+- `kt-rules:no-since-in-kdoc` won't add `@since null` to a KDoc if the current version property is `null`
+
 ## [1.1.1] - 2023-04-29
 
 ### Fixed

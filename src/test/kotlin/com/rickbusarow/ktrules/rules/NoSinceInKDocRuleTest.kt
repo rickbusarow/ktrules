@@ -53,6 +53,32 @@ class NoSinceInKDocRuleTest : Tests {
   }
 
   @Test
+  fun `updated kdoc is indented properly for a top-level val after a package declaration`() {
+
+    format(
+      """
+      package builds
+
+      /** a comment */
+      const val myProperty = ""
+      """
+    ) {
+      expectError(3, 15)
+
+      output shouldBe """
+      |package builds
+      |
+      |/**
+      | * a comment
+      | *
+      | * @since 0.2.3
+      | */
+      |const val myProperty = ""
+      """.trimMargin()
+    }
+  }
+
+  @Test
   fun `a collapsed default section paragraph has the since tag added`() {
 
     format(

@@ -15,17 +15,13 @@
 
 package com.rickbusarow.ktrules.compat
 
+import com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
 import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 import com.rickbusarow.ktrules.toKtLintProperty49
 import com.rickbusarow.ktrules.toKtLintRuleProvider49
 
-typealias Code = com.pinterest.ktlint.rule.engine.api.Code
-typealias EditorConfigOverride = com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
-typealias EditorConfigOverrideCompanion = com.pinterest.ktlint.rule.engine.api.EditorConfigOverride.Companion
-typealias KtLintRuleEngine = com.pinterest.ktlint.rule.engine.api.KtLintRuleEngine
-
-fun EditorConfigOverrideCompanion.from(
+fun EditorConfigOverride.Companion.from(
   vararg properties: Pair<EditorConfigProperty<*>, *>
 ): EditorConfigOverride {
   return EditorConfigOverride.from(
