@@ -1,6 +1,8 @@
 # Changelog
 
-## 1.1.2-SNAPSHOT (unreleased)
+## 1.1.3-SNAPSHOT (unreleased)
+
+## [1.1.2] - 2023-06-07
 
 ### Fixed
 
@@ -8,6 +10,8 @@
 - `kt-rules:no-since-in-kdoc` won't add `@since null` to a KDoc if the current version property is `null`
 - `kt-rules:kdoc-content-wrapping` won't delete KDoc ends (`*/`) from inside code blocks while wrapping
 - `kt-rules:kdoc-tag-order` won't sort KDoc tags until after rules which add or change tags
+
+**Full Changelog**: https://github.com/RBusarow/ktrules/compare/1.1.1...1.1.2
 
 ## [1.1.1] - 2023-04-29
 
@@ -170,3 +174,4 @@ Hello World
 [1.0.9]: https://github.com/rbusarow/ktrules/releases/tag/1.0.9
 [1.1.0]: https://github.com/rbusarow/ktrules/releases/tag/1.1.0
 [1.1.1]: https://github.com/rbusarow/ktrules/releases/tag/1.1.1
+[1.1.2]: https://github.com/rbusarow/ktrules/releases/tag/1.1.2
