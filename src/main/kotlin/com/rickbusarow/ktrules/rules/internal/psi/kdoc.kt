@@ -296,7 +296,7 @@ fun KDocTag.replaceContentWithNewPsiFromText(newText: String): KDocTag = apply {
 
 /** @since 1.1.1 */
 fun KtPsiFactory.createKDocTagFromText(newText: String, removeLeadingAsterisk: Boolean): KDocTag {
-  return createFileFromText(newText.removeRegex("\\*/\\S*").plus("\n*\n*/"))
+  return createFileFromText(newText.removeRegex("""\*/\S*$""").plus("\n*\n*/"))
     .childrenBreadthFirst()
     .filterIsInstance<KDocTag>()
     .toList()
