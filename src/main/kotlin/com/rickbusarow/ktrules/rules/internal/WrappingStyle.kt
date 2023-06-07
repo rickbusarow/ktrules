@@ -47,7 +47,10 @@ enum class WrappingStyle(val displayValue: String) {
   MINIMUM_RAGGED("equal");
 
   companion object {
-    /** @see WrappingStyle */
+    /**
+     * @see WrappingStyle
+     * @since 1.1.2
+     */
     val WRAPPING_STYLE_PROPERTY: EditorConfigProperty<WrappingStyle> by lazy(NONE) {
       val wrappingStylePropertyType: LowerCasingPropertyType<WrappingStyle> =
         LowerCasingPropertyType(

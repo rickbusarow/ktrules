@@ -28,7 +28,11 @@ internal val ALL_PROPERTIES by lazy {
   )
 }
 
-/** Returns a valid `null` value if the property isn't set */
+/**
+ * Returns a valid `null` value if the property isn't set
+ *
+ * @since 1.1.2
+ */
 internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> by lazy {
 
   val projectVersionPropertyType = NullableStringPropertyType(

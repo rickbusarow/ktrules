@@ -20,6 +20,8 @@ import org.ec4j.core.model.PropertyType
 /**
  * Returns a value of `null` if a value is not defined, instead of the default
  * EC4J behavior which would return an actual String with value of `"null"`.
+ *
+ * @since 1.1.2
  */
 internal class NullableStringPropertyType(
   name: String?,
