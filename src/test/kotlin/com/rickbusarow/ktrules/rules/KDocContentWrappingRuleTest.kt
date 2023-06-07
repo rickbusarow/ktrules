@@ -427,6 +427,80 @@ class KDocContentWrappingRuleTest : Tests {
   }
 
   @Test
+  fun `a KDOC_END inside a fenced code block inside a kdoc is ignored`() {
+
+    format(
+      """
+      /**
+       * Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+       * labore et dolore magna aliqua.
+       *
+       * ```
+       * /** */
+       * ```
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
+      /**
+       * Lorem ipsum dolor sit amet, consectetur
+       * adipiscing elit, sed do eiusmod tempor
+       * incididunt ut labore et dolore magna aliqua.
+       *
+       * ```
+       * /** */
+       * ```
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    }
+  }
+
+  @Test
+  fun `a KDOC_END inside an indented code block inside a kdoc is ignored`() {
+
+    format(
+      """
+      /**
+       * Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+       * labore et dolore magna aliqua.
+       *
+       *    /** */
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    ) {
+      expectError(2, 2)
+
+      output shouldBe """
+      /**
+       * Lorem ipsum dolor sit amet, consectetur
+       * adipiscing elit, sed do eiusmod tempor
+       * incididunt ut labore et dolore magna aliqua.
+       *
+       *    /** */
+       */
+      data class Subject(
+        val name: String,
+        val age: Int
+      )
+      """.trimIndent()
+    }
+  }
+
+  @Test
   fun `a paragraph after a tag comment is indented by two spaces`() {
 
     format(
