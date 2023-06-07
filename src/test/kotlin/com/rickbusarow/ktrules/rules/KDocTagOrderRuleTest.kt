@@ -385,4 +385,86 @@ class KDocTagOrderRuleTest : Tests {
       """.trimIndent()
     }
   }
+
+  @Test
+  fun `tags are sorted after adding a since tag`() {
+
+    format(
+      """
+      interface Subject {
+        /**
+         * @param age a number, probably
+         * @throws IllegalArgumentException because
+         */
+        fun <T, R> foo( age: Int)
+      }
+      """.trimIndent(),
+      rules = setOf(
+        RuleProviderCompat { KDocTagOrderRule() },
+        RuleProviderCompat { NoSinceInKDocRule() }
+      )
+    ) {
+
+      val throwsDetail = "KDoc tag order is incorrect. @throws should be sorted."
+      val sinceDetail = "KDoc tag order is incorrect. @since should be sorted."
+
+      expectError(line = 4, col = 6, KDocTagOrderRule.ID, throwsDetail)
+      expectError(line = 4, col = 24, KDocTagOrderRule.ID, sinceDetail)
+      expectError(line = 5, col = 4, NoSinceInKDocRule.ID, "add `@since 0.2.3` to kdoc")
+
+      output shouldBe """
+        interface Subject {
+          /**
+           * @param age a number, probably
+           * @since 0.2.3
+           * @throws IllegalArgumentException because
+           */
+          fun <T, R> foo( age: Int)
+        }
+      """.trimIndent()
+    }
+  }
+
+  @Test
+  fun `tags are sorted after switching a param to a property`() {
+
+    format(
+      """
+      /**
+       * @throws IllegalArgumentException because
+       * @param age a number
+       */
+      class Subject(
+        val age: Int
+      )
+      """.trimIndent(),
+      rules = setOf(
+        RuleProviderCompat { KDocTagOrderRule() },
+        RuleProviderCompat { KDocTagParamOrPropertyRule() }
+      )
+    ) {
+
+      val throwsDetail = "KDoc tag order is incorrect. @throws should be sorted."
+      val propertyDetail = "KDoc tag order is incorrect. @property should be sorted."
+
+      expectError(line = 2, col = 4, KDocTagOrderRule.ID, throwsDetail)
+      expectError(line = 2, col = 30, KDocTagOrderRule.ID, propertyDetail)
+      expectError(
+        line = 3,
+        col = 4,
+        KDocTagParamOrPropertyRule.ID,
+        "The KDoc tag '@param age' should use '@property'."
+      )
+
+      output shouldBe """
+      /**
+       * @property age a number
+       * @throws IllegalArgumentException because
+       */
+      class Subject(
+        val age: Int
+      )
+      """.trimIndent()
+    }
+  }
 }

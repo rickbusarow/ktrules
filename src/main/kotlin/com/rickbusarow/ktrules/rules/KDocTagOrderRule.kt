@@ -18,6 +18,7 @@ package com.rickbusarow.ktrules.rules
 import com.rickbusarow.ktrules.compat.ElementType
 import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleId
+import com.rickbusarow.ktrules.compat.mustRunAfter
 import com.rickbusarow.ktrules.rules.internal.psi.childrenDepthFirst
 import com.rickbusarow.ktrules.rules.internal.psi.getValueParameters
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
@@ -33,7 +34,13 @@ import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
  *
  * @since 1.0.4
  */
-class KDocTagOrderRule : RuleCompat(ID) {
+class KDocTagOrderRule : RuleCompat(
+  ruleId = ID,
+  visitorModifiers = setOf(
+    mustRunAfter(NoSinceInKDocRule.ID),
+    mustRunAfter(KDocTagParamOrPropertyRule.ID)
+  )
+) {
 
   override fun beforeVisitChildNodes(
     node: ASTNode,
