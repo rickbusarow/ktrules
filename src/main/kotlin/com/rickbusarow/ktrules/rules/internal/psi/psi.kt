@@ -202,20 +202,16 @@ val PsiElement.startOffset: Int get() = textRange.startOffset
  * @since 1.1.0
  */
 fun PsiElement.fileIndent(additionalOffset: Int): String {
-  val fileLines = containingFile.text.lineSequence()
 
-  var acc = startOffset + additionalOffset
+  val lineText = node.prevLeaves()
+    .firstOrNull { it.isWhiteSpaceWithNewline() }
+    ?.text
+    ?.substringAfterLast('\n')
+    ?: return " ".repeat(additionalOffset)
 
-  val numSpaces = fileLines.mapNotNull {
-    if (it.length + 1 < acc) {
-      acc -= (it.length + 1)
-      null
-    } else {
-      acc
-    }
-  }
-    .first()
-  return " ".repeat(numSpaces)
+  val leadingSpaces = lineText.length
+
+  return " ".repeat(leadingSpaces + additionalOffset)
 }
 
 /**

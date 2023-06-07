@@ -140,7 +140,7 @@ class NoSinceInKDocRule : RuleCompat(
     val sections = kdoc.getAllSections()
       .map { section ->
         section.text
-          .mapLines { it.removeRegex("^\\s*\\*") }
+          .mapLines { it.removeRegex("""^\s*\*""") }
           .letIf(section.isInKDocDefaultSection() && !section.node.isInKDocTag()) {
             removeSuffix(" ")
               .removeSuffix("\n")
@@ -163,7 +163,10 @@ class NoSinceInKDocRule : RuleCompat(
     }
 
     val newKdoc = kdoc.ktPsiFactory()
-      .createKDoc(sections + "$leadingNewlineOrBlank @since $version", kdoc.fileIndent(0))
+      .createKDoc(
+        sections = sections + "$leadingNewlineOrBlank @since $version",
+        startIndent = kdoc.fileIndent(0)
+      )
 
     kdoc.replace(newKdoc)
   }
