@@ -16,7 +16,7 @@
     },
     {
       "matchPackagePatterns": ["^com\\.pinterest\\.ktlint:ktlint-"],
-      "matchCurrentVersion": "/0\\.(?:47|48)\\..*/",
+      "matchCurrentVersion": "/0\\.(?:47|48|49)\\..*/",
       "enabled": false
     }
   ],
