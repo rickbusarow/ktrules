@@ -91,7 +91,8 @@ moduleCheck {
 val compatSourceSetNames = listOf(
   "compat47",
   "compat48",
-  "compat49"
+  "compat49",
+  "compat50"
 )
 
 compatSourceSetNames.forEach { ssName ->
@@ -126,13 +127,14 @@ compatSourceSetNames.forEach { ssName ->
 
 val compat47Api: Configuration by configurations.getting
 val compat48Api: Configuration by configurations.getting
-
-val compat49: SourceSet by sourceSets.getting
-val compat49Implementation: Configuration by configurations.getting
 val compat49Api: Configuration by configurations.getting
 
+val compat50: SourceSet by sourceSets.getting
+val compat50Implementation: Configuration by configurations.getting
+val compat50Api: Configuration by configurations.getting
+
 sourceSets.named("test") {
-  compileClasspath += compat49.output + compat49Implementation
+  compileClasspath += compat50.output + compat50Implementation
   runtimeClasspath += output + compileClasspath
 }
 
@@ -149,12 +151,16 @@ dependencies {
   compat48Api(libs.ktlint48.core)
   compat49Api(libs.ec4j.core)
   compat49Api(libs.jetbrains.markdown)
-  compat49Api(libs.ktlint.cli.ruleset.core)
-  compat49Api(libs.ktlint.rule.engine.core)
+  compat49Api(libs.ktlint49.cli.ruleset.core)
+  compat49Api(libs.ktlint49.rule.engine.core)
+  compat50Api(libs.jetbrains.markdown)
+  compat50Api(libs.ktlint.cli.ruleset.core)
+  compat50Api(libs.ktlint.rule.engine.core)
 
   "compat47CompileOnly"(libs.google.auto.service.annotations)
   "compat48CompileOnly"(libs.google.auto.service.annotations)
   "compat49CompileOnly"(libs.google.auto.service.annotations)
+  "compat50CompileOnly"(libs.google.auto.service.annotations)
 
   compileOnly(libs.google.auto.service.annotations)
   compileOnly(libs.kotlin.compiler)
@@ -178,7 +184,6 @@ dependencies {
   testImplementation(libs.kotlin.compiler)
   testImplementation(libs.kotlin.reflect)
   testImplementation(libs.ktlint.cli.ruleset.core)
-  testImplementation(libs.ktlint.core)
   testImplementation(libs.ktlint.rule.engine)
   testImplementation(libs.ktlint.rule.engine.core)
   testImplementation(libs.ktlint.ruleset.standard)
