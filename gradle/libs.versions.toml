@@ -7,7 +7,7 @@ jvmTarget = "1.8"
 kotlin = "1.8.22"
 kotlinApi = "1.7"
 ktlint-lib = "0.50.0"
-ktrules-dev = "1.1.3-SNAPSHOT"
+ktrules-dev = "1.1.3"
 ktrules-released = "1.1.2"
 
 benManes-versions = "0.47.0"
