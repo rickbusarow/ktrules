@@ -65,7 +65,8 @@ internal val MAX_LINE_LENGTH_PROPERTY: EditorConfigProperty<Int>
          *
          * @since 1.1.1
          */
-        property.sourceValue == MAX_LINE_LENGTH_PROPERTY_OFF_EDITOR_CONFIG -> MAX_LINE_LENGTH_PROPERTY_OFF
+        property.sourceValue ==
+          MAX_LINE_LENGTH_PROPERTY_OFF_EDITOR_CONFIG -> MAX_LINE_LENGTH_PROPERTY_OFF
 
         else ->
           PropertyType

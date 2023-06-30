@@ -225,7 +225,8 @@ internal fun MarkdownNode.isFirstParagraphInParent(): Boolean {
 
 /** @since 1.0.4 */
 internal fun MarkdownNode.isListItemDelimiter(): Boolean {
-  return elementType == MarkdownTokenTypes.LIST_BULLET || elementType == MarkdownTokenTypes.LIST_NUMBER
+  return elementType == MarkdownTokenTypes.LIST_BULLET ||
+    elementType == MarkdownTokenTypes.LIST_NUMBER
 }
 
 /** @since 1.0.4 */
