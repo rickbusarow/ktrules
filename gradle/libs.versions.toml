@@ -32,7 +32,7 @@ rickBusarow-doks = "0.1.4"
 rickBusarow-ktlint = "0.1.8"
 rickBusarow-moduleCheck = "0.12.5"
 slf4j = "2.0.7"
-vanniktech-publish = "0.25.2"
+vanniktech-publish = "0.25.3"
 
 [plugins]
 
