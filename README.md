@@ -34,9 +34,7 @@ ktlint_kt-rules_no-space-in-annotation-with-target = enabled
 ktlint_kt-rules_no-trailing-space-in-raw-string-literal = enabled
 ktlint_kt-rules_no-useless-constructor-keyword = enabled
 
-ktlint_kt-rules_project_version = 1.0.0
 kt-rules_project_version = 1.0.0
-ktlint_kt-rules_wrapping_style = equal
 kt-rules_wrapping_style = equal
 
 [{*.kt,*.kts}]
