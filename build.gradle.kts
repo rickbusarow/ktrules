@@ -694,9 +694,7 @@ spotless {
       KotlinExtension::class.java
     ) {
 
-      // KtLint 0.48.0+ is failing when trying to format the snippets
-      ktlint("0.47.1")
-        .setUseExperimental(true)
+      ktlint(libs.versions.ktlint.lib.get())
         .setEditorConfigPath(file(".editorconfig"))
         // Editorconfig doesn't work for code blocks, since they don't have a path which matches the
         // globs.  The band-aid is to parse kotlin settings out the .editorconfig, then pass all the
