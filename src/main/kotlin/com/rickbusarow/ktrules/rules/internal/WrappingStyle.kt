@@ -51,10 +51,39 @@ enum class WrappingStyle(val displayValue: String) {
      * @see WrappingStyle
      * @since 1.1.2
      */
-    val WRAPPING_STYLE_PROPERTY: EditorConfigProperty<WrappingStyle> by lazy(NONE) {
+    @Deprecated("Use `kt-rules_wrapping_style` instead.")
+    val WRAPPING_STYLE_PROPERTY_DEPRECATED: EditorConfigProperty<WrappingStyle> by lazy(NONE) {
       val wrappingStylePropertyType: LowerCasingPropertyType<WrappingStyle> =
         LowerCasingPropertyType(
           "${RULES_PREFIX}_wrapping_style",
+          values().map { it.displayValue }.toString(),
+          PropertyType.PropertyValueParser.EnumValueParser(WrappingStyle::class.java),
+          values().mapToSet { it.displayValue }
+        )
+
+      EditorConfigProperty(
+        name = wrappingStylePropertyType.name,
+        type = wrappingStylePropertyType,
+        defaultValue = MINIMUM_RAGGED,
+        deprecationError = "Use `kt-rules_wrapping_style` instead.",
+        propertyMapper = { property, _ ->
+
+          val name = property?.sourceValue?.trim('"', '\'')?.lowercase()
+
+          values().firstOrNull { it.displayValue == name }
+        },
+        propertyWriter = { it.displayValue }
+      )
+    }
+
+    /**
+     * @see WrappingStyle
+     * @since 1.1.2
+     */
+    val WRAPPING_STYLE_PROPERTY: EditorConfigProperty<WrappingStyle> by lazy(NONE) {
+      val wrappingStylePropertyType: LowerCasingPropertyType<WrappingStyle> =
+        LowerCasingPropertyType(
+          "kt-rules_wrapping_style",
           values().map { it.displayValue }.toString(),
           PropertyType.PropertyValueParser.EnumValueParser(WrappingStyle::class.java),
           values().mapToSet { it.displayValue }
