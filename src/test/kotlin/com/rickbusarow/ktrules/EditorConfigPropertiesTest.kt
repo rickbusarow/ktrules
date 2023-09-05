@@ -63,7 +63,9 @@ class EditorConfigPropertiesTest : Tests {
       ktlint_kt-rules_no-useless-constructor-keyword = enabled
 
       ktlint_kt-rules_project_version = 1.0.0
+      kt-rules_project_version = 1.0.0
       ktlint_kt-rules_wrapping_style = equal
+      kt-rules_wrapping_style = equal
 
       [{*.kt,*.kts}]
       # actual kotlin settings go here
@@ -88,7 +90,7 @@ class EditorConfigPropertiesTest : Tests {
   @Test
   fun `defaultConfig property matches all defined config property IDs`() = test {
 
-    val ruleReg = """(ktlint_kt-rules_.*?) ?=.*""".toRegex()
+    val ruleReg = """((?:ktlint_)?kt-rules_.*?) ?=.*""".toRegex()
 
     val parsedPropertyIds = defaultConfig
       .lines()
