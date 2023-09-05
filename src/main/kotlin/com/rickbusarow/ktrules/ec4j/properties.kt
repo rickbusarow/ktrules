@@ -22,6 +22,7 @@ import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_S
 
 internal const val RULES_PREFIX = "ktlint_kt-rules"
 
+@Suppress("DEPRECATION")
 internal val ALL_PROPERTIES by lazy {
   setOf(
     PROJECT_VERSION_PROPERTY_DEPRECATED,
