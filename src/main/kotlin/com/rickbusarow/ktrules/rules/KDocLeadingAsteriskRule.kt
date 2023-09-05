@@ -98,7 +98,7 @@ class KDocLeadingAsteriskRule : RuleCompat(ID) {
 
     nodeParent.removeChild(this)
 
-    (1..numLines).forEach { i ->
+    for (i in 1..numLines) {
       when {
         i == numLines && next.isKDocEnd() -> {
           nextParent.addChild(PsiWhiteSpaceImpl(newlineIndent), next)
