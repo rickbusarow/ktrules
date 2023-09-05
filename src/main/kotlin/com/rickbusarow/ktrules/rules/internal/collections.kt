@@ -137,3 +137,39 @@ fun <T> Iterable<T>.sortedWith(vararg selectors: (T) -> Comparable<*>): List<T> 
   }
   return toMutableList().apply { sortWith(compareBy(*selectors)) }
 }
+
+/**
+ * This is shorthand for `myList.sublist(toDrop, myList.size)`
+ *
+ * Returns a view of the portion of this list except the first [toDrop] elements.
+ * The returned list is backed by the receiver list, so non-structural changes
+ * in the returned list are reflected in the receiver list, and vice-versa.
+ *
+ * ex:
+ * ```
+ * val originalList = listOf(1, 2, 3, 4)
+ * val view = originalList.dropView(2)
+ * println(view) // prints "[3, 4]"
+ * ```
+ * @see kotlin.collections.drop
+ * @see kotlin.collections.List.subList
+ */
+fun <E> List<E>.dropView(toDrop: Int): List<E> = subList(toDrop, size)
+
+/**
+ * This is shorthand for `myList.sublist(0, myList.size - toDrop)`
+ *
+ * Returns a view of the portion of this list except the last [toDrop] elements.
+ * The returned list is backed by the receiver list, so non-structural changes
+ * in the returned list are reflected in the receiver list, and vice-versa.
+ *
+ * ex:
+ * ```
+ * val originalList = listOf(1, 2, 3, 4)
+ * val view = originalList.dropLastView(2)
+ * println(view) // prints "[1, 2]"
+ * ```
+ * @see kotlin.collections.dropLast
+ * @see kotlin.collections.List.subList
+ */
+fun <E> List<E>.dropLastView(toDrop: Int): List<E> = subList(0, size - toDrop)

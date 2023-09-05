@@ -386,6 +386,26 @@ val ASTNode.column: Int
  */
 fun ASTNode.isPartOfString(): Boolean = parent(ElementType.STRING_TEMPLATE, strict = false) != null
 
+/** @return true if the [ASTNode] is a raw string template, false otherwise. */
+fun ASTNode?.isRawString(): Boolean {
+
+  if (this?.elementType != ElementType.STRING_TEMPLATE) return false
+
+  return firstChildNode?.text == "\"\"\""
+}
+
+/** @return true if the [ASTNode] is the opening quote in a raw string template, false otherwise. */
+fun ASTNode?.isRawStringOpenQuote(): Boolean {
+  if (this?.elementType != ElementType.OPEN_QUOTE) return false
+  return text == "\"\"\"" && parent?.elementType == ElementType.STRING_TEMPLATE
+}
+
+/** @return true if the [ASTNode] is the opening quote in a raw string template, false otherwise. */
+fun ASTNode?.isRawStringClosingGQuote(): Boolean {
+  if (this?.elementType != ElementType.CLOSING_QUOTE) return false
+  return text == "\"\"\"" && parent?.elementType == ElementType.STRING_TEMPLATE
+}
+
 /**
  * @return true if the [ASTNode] is white space, false otherwise.
  * @since 1.1.0

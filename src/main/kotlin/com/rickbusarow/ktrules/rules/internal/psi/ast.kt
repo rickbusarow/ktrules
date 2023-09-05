@@ -92,14 +92,6 @@ fun ASTNode.childrenDepthFirst(): Sequence<ASTNode> {
 }
 
 /**
- * @return a depth-first [Sequence] of this [ASTNode]'s descendants.
- * @since 1.0.6
- */
-fun ASTNode.parentsWithSelf(): Sequence<ASTNode> {
-  return generateSequence(this) { it.parent }
-}
-
-/**
  * Returns a depth-first [Sequence] of all of this [ASTNode]'s
  * descendants that satisfy the specified [predicate].
  *
@@ -145,7 +137,17 @@ fun ASTNode.fileIndent(additionalOffset: Int): String {
 }
 
 /**
+ * @return the receiver node and all its ancestors, starting at the receiver node
+ * @see parents for a sequence starting with the immediate parent
+ * @since 1.0.6
+ */
+fun ASTNode.parentsWithSelf(): Sequence<ASTNode> {
+  return generateSequence(this) { it.parent }
+}
+
+/**
  * @return all ancestors of the receiver node, starting with the immediate parent
+ * @see parentsWithSelf for a sequence starting with the receiver node
  * @since 1.1.0
  */
 fun ASTNode.parents(): Sequence<ASTNode> = generateSequence(treeParent) { node -> node.treeParent }

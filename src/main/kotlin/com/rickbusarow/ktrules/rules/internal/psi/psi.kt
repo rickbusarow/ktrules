@@ -17,6 +17,7 @@ package com.rickbusarow.ktrules.rules.internal.psi
 
 import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.prefix
+import com.rickbusarow.ktrules.rules.internal.removeRegex
 import com.rickbusarow.ktrules.rules.internal.requireNotNull
 import com.rickbusarow.ktrules.rules.internal.trees.Traversals.breadthFirstTraversal
 import com.rickbusarow.ktrules.rules.internal.trees.Traversals.depthFirstTraversal
@@ -207,6 +208,8 @@ fun PsiElement.fileIndent(additionalOffset: Int): String {
     .firstOrNull { it.isWhiteSpaceWithNewline() }
     ?.text
     ?.substringAfterLast('\n')
+    // remove any (invisible) control characters
+    ?.removeRegex("""\cY""")
     ?: return " ".repeat(additionalOffset)
 
   val leadingSpaces = lineText.length

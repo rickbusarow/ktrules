@@ -487,7 +487,14 @@ public final class com/rickbusarow/ktrules/rules/NoWithTypeWithLambdaRule : com/
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 }
 
+public final class com/rickbusarow/ktrules/rules/RawStringIndentationRule : com/rickbusarow/ktrules/compat/RuleCompat {
+	public fun <init> ()V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+
 public final class com/rickbusarow/ktrules/rules/internal/CollectionsKt {
+	public static final fun dropLastView (Ljava/util/List;I)Ljava/util/List;
+	public static final fun dropView (Ljava/util/List;I)Ljava/util/List;
 	public static final fun flatMapToSet (Ljava/lang/Iterable;Ljava/util/Set;Lkotlin/jvm/functions/Function1;)Ljava/util/Set;
 	public static synthetic fun flatMapToSet$default (Ljava/lang/Iterable;Ljava/util/Set;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/util/Set;
 	public static final fun ifNullOrEmpty (Ljava/util/Collection;Lkotlin/jvm/functions/Function0;)Ljava/util/Collection;
@@ -500,6 +507,11 @@ public final class com/rickbusarow/ktrules/rules/internal/CollectionsKt {
 	public static final fun singleNotNullOf (Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static final fun sortedWith (Ljava/lang/Iterable;[Lkotlin/jvm/functions/Function1;)Ljava/util/List;
 	public static final fun stateful (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+}
+
+public final class com/rickbusarow/ktrules/rules/internal/StringKt {
+	public static final fun isPrinted (C)Z
+	public static final fun isSpaceSeparator (C)Z
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/WrappingStyle : java/lang/Enum {
@@ -554,6 +566,9 @@ public final class com/rickbusarow/ktrules/rules/internal/psi/CompatKt {
 	public static final fun isLeaf (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
 	public static final fun isPartOfComment (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
 	public static final fun isPartOfString (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isRawString (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isRawStringClosingGQuote (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
+	public static final fun isRawStringOpenQuote (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
 	public static final fun isRegularStringWithNewline (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
 	public static final fun isRoot (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
 	public static final fun isWhiteSpace (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;)Z
@@ -642,4 +657,3 @@ public final class com/rickbusarow/ktrules/rules/internal/trees/Traversals {
 	public final fun breadthFirstTraversal (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
 	public final fun depthFirstTraversal (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
 }
-

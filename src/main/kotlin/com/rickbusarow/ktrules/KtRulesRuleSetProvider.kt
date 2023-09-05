@@ -30,6 +30,7 @@ import com.rickbusarow.ktrules.rules.NoSpaceInTargetedAnnotationRule
 import com.rickbusarow.ktrules.rules.NoTrailingSpacesInRawStringLiteralRule
 import com.rickbusarow.ktrules.rules.NoUselessConstructorKeywordRule
 import com.rickbusarow.ktrules.rules.NoWithTypeWithLambdaRule
+import com.rickbusarow.ktrules.rules.RawStringIndentationRule
 
 /** @since 1.1.1 */
 object KtRulesRuleSetProvider {
@@ -76,6 +77,7 @@ object KtRulesRuleSetProvider {
     RuleProviderCompat { NoSpaceInTargetedAnnotationRule() },
     RuleProviderCompat { NoTrailingSpacesInRawStringLiteralRule() },
     RuleProviderCompat { NoUselessConstructorKeywordRule() },
-    RuleProviderCompat { NoWithTypeWithLambdaRule() }
+    RuleProviderCompat { NoWithTypeWithLambdaRule() },
+    RuleProviderCompat { RawStringIndentationRule() }
   )
 }

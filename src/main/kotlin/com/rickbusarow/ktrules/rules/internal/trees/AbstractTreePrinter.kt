@@ -15,6 +15,7 @@
 
 package com.rickbusarow.ktrules.rules.internal.trees
 
+import com.rickbusarow.ktrules.rules.internal.isPrinted
 import com.rickbusarow.ktrules.rules.internal.letIf
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.colorized
 import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.Color.Companion.noColors
@@ -232,7 +233,7 @@ abstract class AbstractTreePrinter<T : Any>(
     return getCurrentColor()
   }
 
-  private fun String.countVisibleChars(): Int = noColors().length
+  private fun String.countVisibleChars(): Int = noColors().count { it.isPrinted() }
 
   private enum class NameType {
     SIMPLE,
