@@ -15,17 +15,25 @@
       ]
     },
     {
-      "matchPackagePatterns": ["^com\\.pinterest\\.ktlint:ktlint-"],
-      "matchCurrentVersion": "/0\\.(?:47|48|49)\\..*/",
-      "enabled": false
+      "matchPackagePatterns" : [
+        "^com\\.pinterest\\.ktlint:ktlint-"
+      ],
+      "matchCurrentVersion" : "/0\\.(?:47|48|49)\\..*/",
+      "enabled" : false
     },
     {
-      "matchPackagePatterns": [
+      "matchPackagePatterns" : [
         "^com\\.pinterest\\.ktlint:(?:[\\w-]+)$",
         "^com\\.rickbusarow\\.ktlint:(?:[\\w-]+)$",
         "^com\\.rickbusarow\\.ktrules:(?:[\\w-]+)$"
       ],
-      "groupName": "KtLint things"
+      "groupName" : "KtLint things"
+    },
+    {
+      "matchPackagePatterns" : [
+        "^[\\w\\.]+:[\\w-]+$"
+      ],
+      "groupName" : "All updated deps"
     }
   ],
   "labels" : [
