@@ -1,6 +1,8 @@
 # Changelog
 
-## 1.1.4-SNAPSHOT (unreleased)
+## 1.1.5-SNAPSHOT (unreleased)
+
+## [1.1.4] - 2023-09-05
 
 ### Changed
 
@@ -200,3 +202,4 @@ Hello World
 [1.1.1]: https://github.com/rbusarow/ktrules/releases/tag/1.1.1
 [1.1.2]: https://github.com/rbusarow/ktrules/releases/tag/1.1.2
 [1.1.3]: https://github.com/rbusarow/ktrules/releases/tag/1.1.3
+[1.1.4]: https://github.com/rbusarow/ktrules/releases/tag/1.1.4
