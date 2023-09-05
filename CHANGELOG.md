@@ -6,8 +6,7 @@
 
 - The editorconfig properties `ktlint_kt-rules_project_version` and `ktlint_kt-rules_wrapping_style`
   have been deprecated and replaced with `kt-rules_project_version` and `kt-rules_wrapping_style`
-  respectively.  This is to avoid KtLint trying to parse them as RuleIds.
-
+  respectively. This is to avoid KtLint trying to parse them as RuleIds.
 
 ## [1.1.3] - 2023-06-29
 
