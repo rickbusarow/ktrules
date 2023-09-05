@@ -83,7 +83,7 @@ moduleCheck {
     depths.enabled = true
     graphs {
       enabled = true
-      outputDir = "$buildDir/reports/modulecheck/graphs"
+      outputDir = "${layout.buildDirectory.get().asFile}/reports/modulecheck/graphs"
     }
   }
 }
