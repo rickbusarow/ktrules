@@ -38,7 +38,11 @@ class EditorConfigPropertiesTest : Tests {
       }.sorted()
     }
 
-    val propertyIds by lazy { ALL_PROPERTIES.map { it.name } }
+    val propertyIds by lazy { 
+      ALL_PROPERTIES
+        .map { it.name }
+        .filterNot { it.contains("DEPRECATED") } 
+    }
 
     @Suppress("EditorConfigEmptySection")
     val defaultConfig =
@@ -62,9 +66,7 @@ class EditorConfigPropertiesTest : Tests {
       ktlint_kt-rules_no-trailing-space-in-raw-string-literal = enabled
       ktlint_kt-rules_no-useless-constructor-keyword = enabled
 
-      ktlint_kt-rules_project_version = 1.0.0
       kt-rules_project_version = 1.0.0
-      ktlint_kt-rules_wrapping_style = equal
       kt-rules_wrapping_style = equal
 
       [{*.kt,*.kts}]
