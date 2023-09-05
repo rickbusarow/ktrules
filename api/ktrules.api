@@ -513,6 +513,7 @@ public final class com/rickbusarow/ktrules/rules/internal/WrappingStyle : java/l
 
 public final class com/rickbusarow/ktrules/rules/internal/WrappingStyle$Companion {
 	public final fun getWRAPPING_STYLE_PROPERTY ()Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;
+	public final fun getWRAPPING_STYLE_PROPERTY_DEPRECATED ()Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/psi/AstKt {
