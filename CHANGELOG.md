@@ -12,13 +12,12 @@ Because 1.0.0 has a number of api-breaking changes again, the published artifact
 These artifacts all have the same rule logic, but use different KtLint versions.
 
 | if you use KtLint... |         use the ktrules artifact:          |
-|:--------------------:|:------------------------------------------:|
+| :------------------: | :----------------------------------------: |
 |        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.2.0` |
 |        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.2.0` |
 |        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.2.0` |
 |        0.50.x        | `com.rickbusarow.ktrules:ktrules-50:1.2.0` |
 |        1.0.x         |  `com.rickbusarow.ktrules:ktrules:1.2.0`   |
-
 
 ## [1.1.4] - 2023-09-05
 
@@ -40,7 +39,7 @@ Because 0.50.0 has a number of api-breaking changes again, the published artifac
 These artifacts all have the same rule logic, but use different KtLint versions.
 
 | if you use KtLint... |         use the ktrules artifact:          |
-| :------------------: |:------------------------------------------:|
+| :------------------: | :----------------------------------------: |
 |        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.1.3` |
 |        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.1.3` |
 |        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.1.3` |
