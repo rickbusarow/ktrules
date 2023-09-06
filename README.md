@@ -76,16 +76,16 @@ artifacts corresponding to the KtLint version your project is using.
 // build.gradle.kts
 dependencies {
   // Using the current KtLint (1.0.0) apis
-  ktlint("com.rickbusarow.ktrules:ktrules:1.1.3")
+  ktlint("com.rickbusarow.ktrules:ktrules:1.2.0")
 
   // ... or using the KtLint 0.49.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-49:1.1.3")
+  ktlint("com.rickbusarow.ktrules:ktrules-49:1.2.0")
 
   // ... or using the KtLint 0.48.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-48:1.1.3")
+  ktlint("com.rickbusarow.ktrules:ktrules-48:1.2.0")
 
   // ... or using the KtLint 0.47.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-47:1.1.3")
+  ktlint("com.rickbusarow.ktrules:ktrules-47:1.2.0")
 }
 ```
 
