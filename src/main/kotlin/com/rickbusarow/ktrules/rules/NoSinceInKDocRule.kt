@@ -33,6 +33,7 @@ import com.rickbusarow.ktrules.rules.internal.psi.isInKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTag
 import com.rickbusarow.ktrules.rules.internal.psi.isKDocTagName
 import com.rickbusarow.ktrules.rules.internal.psi.ktPsiFactory
+import com.rickbusarow.ktrules.rules.internal.psi.replaceChild
 import com.rickbusarow.ktrules.rules.internal.removeRegex
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
@@ -168,7 +169,7 @@ class NoSinceInKDocRule : RuleCompat(
         startIndent = kdoc.fileIndent(0)
       )
 
-    kdoc.replace(newKdoc)
+    kdoc.parent.replaceChild(newKdoc, kdoc)
   }
 
   private fun KDocTag.addVersionToSinceTag(version: String) {

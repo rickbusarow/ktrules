@@ -71,7 +71,10 @@ class NoWithTypeWithLambdaRule : RuleCompat(ID) {
         append(lambdaArg.text)
       }
 
-      dotExpression.replace(callExpression.ktPsiFactory().createExpression(newExpressionText))
+      val newExpression = callExpression.ktPsiFactory().createExpression(newExpressionText)
+
+      dotExpression.parent.node.addChild(newExpression.node, dotExpression.node)
+      dotExpression.parent.node.removeChild(dotExpression.node)
     }
   }
 

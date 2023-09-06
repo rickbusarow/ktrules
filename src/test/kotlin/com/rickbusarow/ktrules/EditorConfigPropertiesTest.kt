@@ -38,10 +38,10 @@ class EditorConfigPropertiesTest : Tests {
       }.sorted()
     }
 
-    val propertyIds by lazy { 
+    val propertyIds by lazy {
       ALL_PROPERTIES
         .map { it.name }
-        .filterNot { it.contains("DEPRECATED") } 
+        .filterNot { it.contains("ktlint_") }
     }
 
     @Suppress("EditorConfigEmptySection")

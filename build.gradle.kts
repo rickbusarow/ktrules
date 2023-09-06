@@ -16,7 +16,6 @@
 @file:Suppress("PropertyName", "VariableNaming")
 
 import com.diffplug.gradle.spotless.GroovyGradleExtension
-import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessTask
 import com.rickbusarow.doks.DoksTask
 import com.rickbusarow.ktlint.KtLintTask
@@ -27,16 +26,6 @@ import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import kotlinx.validation.KotlinApiBuildTask
 import kotlinx.validation.KotlinApiCompareTask
 import modulecheck.utils.capitalize
-import org.ec4j.core.Cache.Caches
-import org.ec4j.core.PropertyTypeRegistry
-import org.ec4j.core.Resource.Resources
-import org.ec4j.core.ResourcePath.ResourcePaths
-import org.ec4j.core.ResourcePropertiesService
-import org.ec4j.core.model.EditorConfig
-import org.ec4j.core.model.Version
-import org.ec4j.core.parser.EditorConfigModelHandler
-import org.ec4j.core.parser.EditorConfigParser
-import org.ec4j.core.parser.ErrorHandler
 import org.jetbrains.changelog.date
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
@@ -44,12 +33,14 @@ import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
 import org.jetbrains.kotlin.gradle.targets.js.npm.SemVer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URL
-import java.nio.charset.StandardCharsets
 import kotlin.text.RegexOption.MULTILINE
 
 buildscript {
   dependencies {
     classpath(libs.rickBusarow.ktrules)
+  }
+  configurations.classpath {
+    exclude(group = "org.gradle")
   }
 }
 
@@ -65,10 +56,8 @@ plugins {
   alias(libs.plugins.ktlint)
   alias(libs.plugins.kotlinx.binaryCompatibility)
   alias(libs.plugins.jetbrains.changelog)
-  // alias(libs.plugins.shadowJar)
   alias(libs.plugins.moduleCheck)
   alias(libs.plugins.spotless)
-  // alias(libs.plugins.vanniktech.publish)
   id("maven-publish")
   id("signing")
 }
@@ -92,26 +81,20 @@ val compatSourceSetNames = listOf(
   "compat47",
   "compat48",
   "compat49",
-  "compat50"
+  "compat50",
+  "compat100"
 )
 
 compatSourceSetNames.forEach { ssName ->
-  val implName = "${ssName}Implementation"
-  val apiName = "${ssName}Api"
 
   sourceSets.register(ssName) {
     java.srcDir("src/$ssName/kotlin")
     resources.srcDir("src/$ssName/resources")
     compileClasspath += sourceSets["main"].output
 
-    compileClasspath += configurations[implName]
-    compileClasspath += configurations[apiName]
     runtimeClasspath += output + compileClasspath
   }
-  configurations.matching { it.name == implName || it.name == apiName }.configureEach {
-    isCanBeResolved = true
-    isCanBeConsumed = true
-  }
+
   tasks.register("${ssName}Jar", Jar::class.java) {
     from(sourceSets[ssName].output)
     from(sourceSets["main"].output)
@@ -128,13 +111,14 @@ compatSourceSetNames.forEach { ssName ->
 val compat47Api: Configuration by configurations.getting
 val compat48Api: Configuration by configurations.getting
 val compat49Api: Configuration by configurations.getting
-
-val compat50: SourceSet by sourceSets.getting
-val compat50Implementation: Configuration by configurations.getting
 val compat50Api: Configuration by configurations.getting
 
+val compat100: SourceSet by sourceSets.getting
+val compat100Implementation: Configuration by configurations.getting
+val compat100Api: Configuration by configurations.getting
+
 sourceSets.named("test") {
-  compileClasspath += compat50.output + compat50Implementation
+  compileClasspath += compat100.output
   runtimeClasspath += output + compileClasspath
 }
 
@@ -144,6 +128,9 @@ dependencies {
   api(libs.jetbrains.markdown)
   api(libs.kotlin.reflect)
 
+  compat100Api(libs.jetbrains.markdown)
+  compat100Api(libs.ktlint.cli.ruleset.core)
+  compat100Api(libs.ktlint.rule.engine.core)
   compat47Api(libs.jetbrains.markdown)
   compat47Api(libs.ktlint47.core)
   compat48Api(libs.ec4j.core)
@@ -157,6 +144,7 @@ dependencies {
   compat50Api(libs.ktlint.cli.ruleset.core)
   compat50Api(libs.ktlint.rule.engine.core)
 
+  "compat100CompileOnly"(libs.google.auto.service.annotations)
   "compat47CompileOnly"(libs.google.auto.service.annotations)
   "compat48CompileOnly"(libs.google.auto.service.annotations)
   "compat49CompileOnly"(libs.google.auto.service.annotations)
@@ -688,21 +676,6 @@ spotless {
     prettier(libs.versions.prettier.lib.get())
 
     withinBlocksRegex(
-      "kotlin block in markdown",
-      //language=regexp
-      """\R```kotlin.*\n((?:(?! *```)[\s\S])*)""",
-      KotlinExtension::class.java
-    ) {
-
-      ktlint(libs.versions.ktlint.lib.get())
-        .setEditorConfigPath(file(".editorconfig"))
-        // Editorconfig doesn't work for code blocks, since they don't have a path which matches the
-        // globs.  The band-aid is to parse kotlin settings out the .editorconfig, then pass all the
-        // properties in as a map.
-        .editorConfigOverride(editorConfigKotlinProperties())
-    }
-
-    withinBlocksRegex(
       "groovy block in markdown",
       //language=regexp
       """```groovy.*\n((?:(?!```)[\s\S])*)""",
@@ -713,57 +686,6 @@ spotless {
     }
   }
 }
-
-fun editorConfigKotlinProperties(): Map<String, String> {
-
-  val ecFile = file(".editorconfig")
-
-  return extensions.extraProperties.getOrPut(ecFile.path) {
-    editorConfigKotlinProperties(ecFile, rootDir)
-  }
-}
-
-inline fun <reified T> ExtraPropertiesExtension.getOrPut(name: String, default: () -> T): T {
-  return getOrNullAs<T>(name) ?: default().also { set(name, it) }
-}
-
-fun ExtraPropertiesExtension.getOrNull(name: String): Any? = if (has(name)) get(name) else null
-
-inline fun <reified T> ExtraPropertiesExtension.getOrNullAs(name: String): T? {
-  val existing = getOrNull(name) ?: return null
-  return existing as T
-}
-
-fun editorConfigKotlinProperties(editorConfigFile: File, rootDir: File): Map<String, String> {
-
-  val myCache = Caches.none()
-  val propService = ResourcePropertiesService.builder()
-    .cache(myCache)
-    .defaultEditorConfig(editorConfig(editorConfigFile))
-    .rootDirectory(rootDir.toResourcePaths())
-    .build()
-
-  return propService
-    .queryProperties(rootDir.resolve("foo.kt").toResource())
-    .properties
-    .values
-    .associate { it.name to it.sourceValue }
-}
-
-fun editorConfig(editorConfigFile: File): EditorConfig {
-
-  val parser = EditorConfigParser.builder().build()
-  val resource = editorConfigFile.toResource()
-
-  val handler = EditorConfigModelHandler(PropertyTypeRegistry.default_(), Version.CURRENT)
-
-  parser.parse(resource, handler, ErrorHandler.THROW_SYNTAX_ERRORS_IGNORE_OTHERS)
-
-  return handler.editorConfig
-}
-
-fun File.toResource() = Resources.ofPath(toPath(), StandardCharsets.UTF_8)
-fun File.toResourcePaths() = ResourcePaths.ofPath(toPath(), StandardCharsets.UTF_8)
 
 githubRelease {
 

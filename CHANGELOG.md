@@ -2,6 +2,22 @@
 
 ## 1.1.5-SNAPSHOT (unreleased)
 
+The default artifact is now updated
+to [KtLint 1.0.0](https://github.com/pinterest/ktlint/releases/tag/1.0.0).
+
+Because 1.0.0 has a number of api-breaking changes again, the published artifacts have been split.
+
+These artifacts all have the same rule logic, but use different KtLint versions.
+
+| if you use KtLint... |         use the ktrules artifact:          |
+|:--------------------:|:------------------------------------------:|
+|        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.1.5` |
+|        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.1.5` |
+|        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.1.5` |
+|        0.50.x        | `com.rickbusarow.ktrules:ktrules-50:1.1.5` |
+|        1.0.x         |  `com.rickbusarow.ktrules:ktrules:1.1.5`   |
+
+
 ## [1.1.4] - 2023-09-05
 
 ### Changed
@@ -9,6 +25,8 @@
 - The editorconfig properties `ktlint_kt-rules_project_version` and `ktlint_kt-rules_wrapping_style`
   have been deprecated and replaced with `kt-rules_project_version` and `kt-rules_wrapping_style`
   respectively. This is to avoid KtLint trying to parse them as RuleIds.
+
+**Full Changelog**: https://github.com/RBusarow/ktrules/compare/1.1.3...1.1.4
 
 ## [1.1.3] - 2023-06-29
 
@@ -20,11 +38,11 @@ Because 0.50.0 has a number of api-breaking changes again, the published artifac
 These artifacts all have the same rule logic, but use different KtLint versions.
 
 | if you use KtLint... |         use the ktrules artifact:          |
-| :------------------: | :----------------------------------------: |
-|        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.1.0` |
-|        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.1.0` |
-|        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.1.0` |
-|        0.50.x        |  `com.rickbusarow.ktrules:ktrules:1.1.0`   |
+| :------------------: |:------------------------------------------:|
+|        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.1.3` |
+|        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.1.3` |
+|        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.1.3` |
+|        0.50.x        |  `com.rickbusarow.ktrules:ktrules:1.1.3`   |
 
 **Full Changelog**: https://github.com/RBusarow/ktrules/compare/1.1.2...1.1.3
 

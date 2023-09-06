@@ -70,7 +70,7 @@ class NoTrailingSpacesInRawStringLiteralRule : RuleCompat(ID) {
 
   private fun ASTNode.removeTrailingSpaces() {
     val newText = text.trimEnd()
-    (this as LeafPsiElement).replaceWithText(newText)
+    (this as LeafPsiElement).rawReplaceWithText(newText)
   }
 
   private fun String.hasTrailingSpace() = takeLast(1) == " "

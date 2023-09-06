@@ -337,3 +337,9 @@ inline fun <T : PsiElement> T.removeAllChildren(
       .forEach { it.delete() }
   }
 }
+
+/** */
+fun PsiElement.replaceChild(newChild: PsiElement, oldChild: PsiElement) {
+  node.addChild(newChild.node, oldChild.node)
+  node.removeChild(oldChild.node)
+}
