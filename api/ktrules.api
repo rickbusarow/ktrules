@@ -622,6 +622,7 @@ public final class com/rickbusarow/ktrules/rules/internal/psi/PsiKt {
 	public static final fun ktPsiFactory (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)Lorg/jetbrains/kotlin/psi/KtPsiFactory;
 	public static final fun removeAllChildren (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;
 	public static synthetic fun removeAllChildren$default (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;
+	public static final fun replaceChild (Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)V
 	public static final fun tagTextWithoutLeadingAsterisks (Lorg/jetbrains/kotlin/kdoc/psi/impl/KDocTag;)Ljava/lang/String;
 }
 

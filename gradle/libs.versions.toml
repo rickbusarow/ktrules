@@ -6,7 +6,7 @@ jdk = "11"
 jvmTarget = "11"
 kotlin = "1.9.10"
 kotlinApi = "1.7"
-ktlint-lib = "0.50.0"
+ktlint-lib = "1.0.0"
 ktrules-dev = "1.1.5-SNAPSHOT"
 ktrules-released = "1.1.3"
 
@@ -29,6 +29,7 @@ kotlinx-binaryCompatibility = "0.13.2"
 prettier-lib = "2.8.4"
 prettier-plugin-sh = "0.12.8"
 rickBusarow-doks = "0.1.4"
+rickBusarow-kgx = "0.1.1"
 rickBusarow-ktlint = "0.1.8"
 rickBusarow-moduleCheck = "0.12.5"
 slf4j = "2.0.9"
@@ -136,6 +137,14 @@ ktlint49-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimenta
 ktlint49-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:0.49.1"
 ktlint49-test = "com.pinterest.ktlint:ktlint-test:0.49.1"
 
+ktlint50-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:0.50.0"
+ktlint50-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:0.50.0"
+ktlint50-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:0.50.0"
+ktlint50-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:0.50.0"
+ktlint50-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:0.50.0"
+ktlint50-test = "com.pinterest.ktlint:ktlint-test:0.50.0"
+
+ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-lib" }
 ktlint-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }
 ktlint-rule-engine-core = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint-lib" }
 ktlint-rule-engine = { module = "com.pinterest.ktlint:ktlint-rule-engine", version.ref = "ktlint-lib" }
@@ -144,6 +153,8 @@ ktlint-ruleset-standard = { module = "com.pinterest.ktlint:ktlint-ruleset-standa
 ktlint-test = { module = "com.pinterest.ktlint:ktlint-test", version.ref = "ktlint-lib" }
 
 rickBusarow-ktlint = { module = "com.rickbusarow.ktlint:ktlint-gradle-plugin", version.ref = "rickBusarow-ktlint" }
+
+rickBusarow-kgx = { module = "com.rickbusarow.kgx:kotlin-gradle-extensions", version.ref = "rickBusarow-kgx" }
 
 rickBusarow-ktrules = { module = "com.rickbusarow.ktrules:ktrules", version.ref = "ktrules-released" }
 
