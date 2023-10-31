@@ -4,7 +4,7 @@
 jdk = "11"
 # the jdk used in packaging
 jvmTarget = "11"
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 kotlinApi = "1.7"
 ktlint-lib = "1.0.0"
 ktrules-dev = "1.2.1-SNAPSHOT"
