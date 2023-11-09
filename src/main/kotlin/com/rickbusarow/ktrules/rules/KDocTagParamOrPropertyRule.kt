@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.kdoc.parser.KDocKnownTag
 import org.jetbrains.kotlin.psi.KtTypeParameterListOwner
+import org.jetbrains.kotlin.psi.psiUtil.isPrivate
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
@@ -55,7 +56,7 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
       val paramNameToValOrVar = buildMap {
 
         functionOrClass.getValueParameters().forEach { param ->
-          put(param.name!!, param.hasValOrVar())
+          put(param.name!!, param.hasValOrVar() && !param.isPrivate())
         }
         functionOrClass.typeParameters.forEach { param ->
           put(param.name!!, false)
