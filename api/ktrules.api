@@ -631,6 +631,7 @@ public abstract class com/rickbusarow/ktrules/rules/internal/trees/AbstractTreeP
 	public fun <init> (Ljava/lang/Character;)V
 	public synthetic fun <init> (Ljava/lang/Character;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public abstract fun children (Ljava/lang/Object;)Lkotlin/sequences/Sequence;
+	public final fun getWhitespaceChar ()Ljava/lang/Character;
 	public abstract fun parent (Ljava/lang/Object;)Ljava/lang/Object;
 	public final fun printTreeString (Ljava/lang/Object;)V
 	public abstract fun simpleClassName (Ljava/lang/Object;)Ljava/lang/String;

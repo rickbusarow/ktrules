@@ -1,6 +1,35 @@
 # Changelog
 
-## 1.2.1-SNAPSHOT (unreleased)
+## 1.2.2-SNAPSHOT (unreleased)
+
+## [1.2.1] - 2023-11-08
+
+### Fixed
+
+- treat private constructor properties as parameters by @RBusarow in https://github.com/rickbusarow/ktrules/pull/150
+
+### 🧰 Maintenance
+
+- update mikepenz/action-junit-report action to v4 by @renovate in https://github.com/rickbusarow/ktrules/pull/131
+- update benmanes.versions to v0.48.0 by @renovate in https://github.com/rickbusarow/ktrules/pull/134
+- update dependency com.autonomousapps.dependency-analysis to v1.22.0 by @renovate in https://github.com/rickbusarow/ktrules/pull/136
+- update dependencyanalysis to v1.25.0 by @renovate in https://github.com/rickbusarow/ktrules/pull/138
+- update dependency com.diffplug.spotless to v6.22.0 by @renovate in https://github.com/rickbusarow/ktrules/pull/139
+- update dependency gradle to v8.4 by @renovate in https://github.com/rickbusarow/ktrules/pull/140
+- update plugin com.gradle.enterprise to v3.15.1 by @renovate in https://github.com/rickbusarow/ktrules/pull/141
+- update stefanzweifel/git-auto-commit-action action to v5 by @renovate in https://github.com/rickbusarow/ktrules/pull/142
+- update dependency com.github.ben-manes.versions to v0.49.0 by @renovate in https://github.com/rickbusarow/ktrules/pull/143
+- update dependency com.github.breadmoirai.github-release to v2.5.1 by @renovate in https://github.com/rickbusarow/ktrules/pull/144
+- update dependency org.jetbrains.dokka to v1.9.10 by @renovate in https://github.com/rickbusarow/ktrules/pull/145
+- update dependency io.gitlab.arturbosch.detekt to v1.23.3 by @renovate in https://github.com/rickbusarow/ktrules/pull/146
+- update dependency com.rickbusarow.kgx:kotlin-gradle-extensions to v0.1.8 by @renovate in https://github.com/rickbusarow/ktrules/pull/152
+- update dependency org.jetbrains:markdown to v0.5.2 by @renovate in https://github.com/rickbusarow/ktrules/pull/153
+- update junit5 monorepo to v5.10.1 by @renovate in https://github.com/rickbusarow/ktrules/pull/154
+- update kotlin to v1.9.20 by @renovate in https://github.com/rickbusarow/ktrules/pull/155
+- update ktlint to v1.0.1 by @renovate in https://github.com/rickbusarow/ktrules/pull/156
+- update kotest to v5.8.0 by @renovate in https://github.com/rickbusarow/ktrules/pull/157
+
+**Full Changelog**: https://github.com/rickbusarow/ktrules/compare/1.2.0...1.2.1
 
 ## [1.2.0] - 2023-09-06
 
@@ -223,3 +252,4 @@ Hello World
 [1.1.3]: https://github.com/rbusarow/ktrules/releases/tag/1.1.3
 [1.1.4]: https://github.com/rbusarow/ktrules/releases/tag/1.1.4
 [1.2.0]: https://github.com/rbusarow/ktrules/releases/tag/1.2.0
+[1.2.1]: https://github.com/rbusarow/ktrules/releases/tag/1.2.1

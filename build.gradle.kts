@@ -39,12 +39,8 @@ buildscript {
   dependencies {
     classpath(libs.rickBusarow.ktrules)
   }
-  configurations.classpath {
-    exclude(group = "org.gradle")
-  }
 }
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.detekt)
