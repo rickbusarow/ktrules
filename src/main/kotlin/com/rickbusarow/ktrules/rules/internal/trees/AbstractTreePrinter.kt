@@ -30,7 +30,7 @@ import com.rickbusarow.ktrules.rules.internal.trees.AbstractTreePrinter.NameType
  * @since 1.1.0
  */
 abstract class AbstractTreePrinter<T : Any>(
-  private val whitespaceChar: Char? = null
+  val whitespaceChar: Char? = null
 ) {
   private val elementSimpleNameMap = mutableMapOf<T, String>()
   private val elementTypeNameMap = mutableMapOf<T, String>()
