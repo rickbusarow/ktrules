@@ -10,13 +10,13 @@ changelog:
     labels:
       - ignore-for-release
     authors:
-      - dependabot
-      - dependabot[bot]
-      - renovate
-      - renovate[bot]
-      - renovate-bot
-      - kodiakhq
-      - kodiakhq[bot]
+#      - dependabot
+#      - dependabot[bot]
+#      - renovate
+#      - renovate[bot]
+#      - renovate-bot
+#      - kodiakhq
+#      - kodiakhq[bot]
 
   categories:
     - title: 🚀 Features
