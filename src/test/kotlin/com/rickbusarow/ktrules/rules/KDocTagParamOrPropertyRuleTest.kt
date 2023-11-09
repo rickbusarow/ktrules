@@ -18,6 +18,7 @@ package com.rickbusarow.ktrules.rules
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 
 class KDocTagParamOrPropertyRuleTest : Tests {
 
@@ -83,32 +84,80 @@ class KDocTagParamOrPropertyRuleTest : Tests {
   }
 
   @Test
-  fun `@param on a property parameter should be fixed`() {
+  fun `@param on a private property should not emit`() {
 
-    format(
+    lint(
       """
       /**
        * This is a test class
        * @param name the name property
        */
-      class Test(val name: String)
+      class Test(private val name: String)
+      """.trimIndent()
+    ) shouldBe emptyList()
+  }
+
+  @Test
+  fun `@property on a private property should be fixed`() {
+
+    format(
+      """
+      /**
+       * This is a test class
+       * @property name the name property
+       */
+      class Test(private val name: String)
       """.trimIndent()
     ) {
-
       expectError(
         line = 3,
         col = 4,
         ruleId = KDocTagParamOrPropertyRule.ID,
-        detail = "The KDoc tag '@param name' should use '@property'."
+        detail = "The KDoc tag '@property name' should use '@param'."
       )
 
       output shouldBe """
         /**
          * This is a test class
-         * @property name the name property
+         * @param name the name property
          */
-        class Test(val name: String)
+        class Test(private val name: String)
       """.trimIndent()
     }
   }
+
+  @TestFactory
+  fun `@param on a non-private property parameter should be fixed`() =
+    listOf(
+      "public",
+      "internal",
+      "protected"
+    ).test({ it }) { visibility ->
+
+      format(
+        """
+        /**
+         * This is a test class
+         * @param name the name property
+         */
+        open class Test($visibility val name: String)
+        """.trimIndent()
+      ) {
+
+        expectError(
+          line = 3,
+          col = 4,
+          ruleId = KDocTagParamOrPropertyRule.ID,
+          detail = "The KDoc tag '@param name' should use '@property'."
+        )
+
+        output shouldBe """
+          /**
+           * This is a test class
+           * @property name the name property
+           */
+          open class Test($visibility val name: String)
+        """.trimIndent()
+      }
+    }
 }
