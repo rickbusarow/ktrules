@@ -28,12 +28,6 @@
         "^com\\.rickbusarow\\.ktrules:(?:[\\w-]+)$"
       ],
       "groupName" : "KtLint things"
-    },
-    {
-      "matchPackagePatterns" : [
-        "^[\\w\\.]+:[\\w-]+$"
-      ],
-      "groupName" : "All updated deps"
     }
   ],
   "labels" : [

@@ -700,43 +700,40 @@ githubRelease {
   }
   owner.set("rbusarow")
 
-  tagName { versionString }
-  releaseName { versionString }
+  tagName.set(versionString)
+  releaseName.set(versionString)
 
   generateReleaseNotes.set(false)
 
-  body {
-
-    if (versionString.endsWith("-SNAPSHOT")) {
-      throw GradleException(
-        "do not create a GitHub release for a snapshot. (version is $versionString)."
-      )
-    }
-
-    val escapedVersion = Regex.escape(versionString)
-
-    val dateSuffixRegex = """ +- +\d{4}-\d{2}-\d{2}.*""".toRegex()
-    val currentVersionRegex = """(?:^|\n)## \[$escapedVersion]$dateSuffixRegex""".toRegex()
-    val lastVersionRegex = """## \[(.*?)]$dateSuffixRegex""".toRegex()
-
-    // capture everything in between '## [<this version>]' and a new line which starts with '## '
-    val versionSectionRegex =
-      """$currentVersionRegex\n([\s\S]*?)(?=\n+$lastVersionRegex)""".toRegex()
-
-    versionSectionRegex
-      .find(file("CHANGELOG.md").readText())
-      ?.groupValues
-      ?.getOrNull(1)
-      ?.trim()
-      ?.also { body ->
-        if (body.isBlank()) {
-          throw GradleException("The changelog for this version cannot be blank.")
-        }
+  body.set(
+    provider {
+      if (versionString.endsWith("-SNAPSHOT")) {
+        throw GradleException(
+          "do not create a GitHub release for a snapshot. (version is $versionString)."
+        )
       }
-      ?: throw GradleException(
-        "could not find a matching change log for $versionSectionRegex"
-      )
-  }
+      val escapedVersion = Regex.escape(versionString)
+      val dateSuffixRegex = """ +- +\d{4}-\d{2}-\d{2}.*""".toRegex()
+      val currentVersionRegex = """(?:^|\n)## \[$escapedVersion]$dateSuffixRegex""".toRegex()
+      val lastVersionRegex = """## \[(.*?)]$dateSuffixRegex""".toRegex()
+      // capture everything in between '## [<this version>]' and a new line which starts with '## '
+      val versionSectionRegex =
+        """$currentVersionRegex\n([\s\S]*?)(?=\n+$lastVersionRegex)""".toRegex()
+      versionSectionRegex
+        .find(file("CHANGELOG.md").readText())
+        ?.groupValues
+        ?.getOrNull(1)
+        ?.trim()
+        ?.also { body ->
+          if (body.isBlank()) {
+            throw GradleException("The changelog for this version cannot be blank.")
+          }
+        }
+        ?: throw GradleException(
+          "could not find a matching change log for $versionSectionRegex"
+        )
+    }
+  )
 
   overwrite.set(false)
   dryRun.set(false)

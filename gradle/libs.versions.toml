@@ -19,16 +19,17 @@ dropbox-dependencyGuard = "0.4.3"
 ec4j = "0.3.0"
 github-release = "2.5.1"
 google-ksp = "1.9.10-1.0.13"
-jimfs = "1.3.0"
 jUnit = "5.10.0"
 jetbrains-changelog = "2.2.0"
 jetbrains-markdown = "0.5.0"
+jimfs = "1.3.0"
 johnrengelman-shadow = "8.1.1"
 kotest = "5.7.2"
 kotlinx-binaryCompatibility = "0.13.2"
 prettier-lib = "2.8.4"
 prettier-plugin-sh = "0.12.8"
 rickBusarow-doks = "0.1.4"
+rickBusarow-github-release = "2.5.2"
 rickBusarow-kgx = "0.1.1"
 rickBusarow-ktlint = "0.1.8"
 rickBusarow-moduleCheck = "0.12.5"
@@ -43,7 +44,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 doks = { id = "com.rickbusarow.doks", version.ref = "rickBusarow-doks" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 dropbox-dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dropbox-dependencyGuard" }
-github-release = { id = "com.github.breadmoirai.github-release", version.ref = "github-release" }
+github-release = { id = "com.rickbusarow.github-release-fork", version.ref = "rickBusarow-github-release" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 jetbrains-changelog = { id = "org.jetbrains.changelog", version.ref = "jetbrains-changelog" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
