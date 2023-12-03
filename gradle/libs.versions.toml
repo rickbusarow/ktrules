@@ -11,7 +11,7 @@ ktrules-dev = "1.2.2-SNAPSHOT"
 ktrules-released = "1.2.1"
 
 benManes-versions = "0.50.0"
-dependencyAnalysis = "1.25.0"
+dependencyAnalysis = "1.27.0"
 detekt = "1.23.3"
 diffplug-spotless = "6.23.2"
 dokka = "1.9.10"
