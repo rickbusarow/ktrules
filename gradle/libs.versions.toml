@@ -6,7 +6,7 @@ jdk = "11"
 jvmTarget = "11"
 kotlin = "1.9.21"
 kotlinApi = "1.7"
-ktlint-lib = "1.0.1"
+ktlint-lib = "1.1.0"
 ktrules-dev = "1.2.2-SNAPSHOT"
 ktrules-released = "1.2.1"
 
