@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2024 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,7 +27,7 @@ import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.compat.from
-import com.rickbusarow.ktrules.compat.toKtLintRuleProviders100
+import com.rickbusarow.ktrules.compat.toKtLintRuleProviders110
 import com.rickbusarow.ktrules.ec4j.PROJECT_VERSION_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
@@ -98,7 +98,7 @@ interface Tests : HasDynamicTests {
     val errors = mutableListOf<KtLintTestResult.LintError>()
 
     val outputString = withEngine(
-      ruleProviders = rules.toKtLintRuleProviders100(),
+      ruleProviders = rules.toKtLintRuleProviders110(),
       editorConfig = editorConfig,
       includeAllRules = includeAllRules,
       action = {
@@ -154,7 +154,7 @@ interface Tests : HasDynamicTests {
     editorConfig: EditorConfig?
   ): List<KtLintTestResult.LintError> = buildList {
     withEngine(
-      ruleProviders = rules.toKtLintRuleProviders100(),
+      ruleProviders = rules.toKtLintRuleProviders110(),
       editorConfig = editorConfig,
       includeAllRules = includeAllRules,
       action = fun KtLintRuleEngine.() {
