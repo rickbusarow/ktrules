@@ -70,13 +70,19 @@ In order to maintain compatibility with older versions of KtLint, KtRules publis
 artifacts which rely upon the different KtLint api versions. You should choose only one of these
 artifacts corresponding to the KtLint version your project is using.
 
-<!--doks maven-artifact:4, current-ktlint-version:1-->
+<!--doks maven-artifact:6, current-ktlint-version:1-->
 
 ```kotlin
 // build.gradle.kts
 dependencies {
-  // Using the current KtLint (1.0.1) apis
+  // Using the current KtLint (1.1.0) apis
   ktlint("com.rickbusarow.ktrules:ktrules:1.2.1")
+
+  // ... or using the KtLint 1.0.x apis
+  ktlint("com.rickbusarow.ktrules:ktrules-100:1.2.1")
+
+  // ... or using the KtLint 0.50.x apis
+  ktlint("com.rickbusarow.ktrules:ktrules-50:1.2.1")
 
   // ... or using the KtLint 0.49.x apis
   ktlint("com.rickbusarow.ktrules:ktrules-49:1.2.1")
