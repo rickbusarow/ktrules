@@ -1,0 +1,29 @@
+public final class com/rickbusarow/ktrules/EditorConfigCompat100 : com/rickbusarow/ktrules/compat/EditorConfigCompat {
+	public fun <init> (Lcom/pinterest/ktlint/rule/engine/core/api/editorconfig/EditorConfig;)V
+	public fun contains (Ljava/lang/String;)Z
+	public fun get (Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;)Ljava/lang/Object;
+	public fun getEditorConfigValueOrNull (Lorg/ec4j/core/model/PropertyType;Ljava/lang/String;)Ljava/lang/Object;
+	public fun map (Lkotlin/jvm/functions/Function1;)Ljava/util/Collection;
+}
+
+public final class com/rickbusarow/ktrules/EditorConfigCompat100Kt {
+	public static final fun toKtLintProperty100 (Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;)Lcom/pinterest/ktlint/rule/engine/core/api/editorconfig/EditorConfigProperty;
+}
+
+public final class com/rickbusarow/ktrules/KtRulesRuleSetProviderV3_100 : com/pinterest/ktlint/cli/ruleset/core/api/RuleSetProviderV3 {
+	public fun <init> ()V
+	public fun getRuleProviders ()Ljava/util/Set;
+}
+
+public final class com/rickbusarow/ktrules/KtRulesRuleSetProviderV3_100Kt {
+	public static final fun toKtLintRuleProvider100 (Lcom/rickbusarow/ktrules/compat/RuleProviderCompat;)Lcom/pinterest/ktlint/rule/engine/core/api/RuleProvider;
+}
+
+public final class com/rickbusarow/ktrules/RuleCompat100 : com/pinterest/ktlint/rule/engine/core/api/Rule {
+	public fun <init> (Lcom/rickbusarow/ktrules/compat/RuleCompat;)V
+	public fun afterLastNode ()V
+	public fun afterVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeFirstNode (Lcom/pinterest/ktlint/rule/engine/core/api/editorconfig/EditorConfig;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+}
+

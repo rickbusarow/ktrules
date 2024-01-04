@@ -1,0 +1,34 @@
+public final class com/rickbusarow/ktrules/EditorConfigCompat47 : com/rickbusarow/ktrules/compat/EditorConfigCompat {
+	public fun <init> (Ljava/util/Map;)V
+	public fun contains (Ljava/lang/String;)Z
+	public fun get (Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;)Ljava/lang/Object;
+	public fun getEditorConfigValueOrNull (Lorg/ec4j/core/model/PropertyType;Ljava/lang/String;)Ljava/lang/Object;
+	public fun map (Lkotlin/jvm/functions/Function1;)Ljava/util/Collection;
+}
+
+public final class com/rickbusarow/ktrules/EditorConfigCompat47Kt {
+	public static final fun toKtLintProperty (Lcom/rickbusarow/ktrules/compat/EditorConfigProperty;)Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;
+}
+
+public final class com/rickbusarow/ktrules/KtRulesRuleSetProviderV1_47 : com/pinterest/ktlint/core/RuleSetProvider {
+	public fun <init> ()V
+	public fun get ()Lcom/pinterest/ktlint/core/RuleSet;
+}
+
+public final class com/rickbusarow/ktrules/KtRulesRuleSetProviderV2_47 : com/pinterest/ktlint/core/RuleSetProviderV2 {
+	public fun <init> ()V
+	public fun getRuleProviders ()Ljava/util/Set;
+}
+
+public final class com/rickbusarow/ktrules/RuleCompat47 : com/pinterest/ktlint/core/Rule, com/pinterest/ktlint/core/api/UsesEditorConfigProperties {
+	public fun <init> (Lcom/rickbusarow/ktrules/compat/RuleCompat;)V
+	public fun afterLastNode ()V
+	public fun afterVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeFirstNode (Ljava/util/Map;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun getEditorConfigProperties ()Ljava/util/List;
+	public fun getEditorConfigValue (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;)Ljava/lang/Object;
+	public fun getEditorConfigValue (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;)Ljava/lang/Object;
+	public fun writeEditorConfigProperty (Ljava/util/Map;Lcom/pinterest/ktlint/core/api/UsesEditorConfigProperties$EditorConfigProperty;Lcom/pinterest/ktlint/core/api/DefaultEditorConfigProperties$CodeStyleValue;)Ljava/lang/String;
+}
+

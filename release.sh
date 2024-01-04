@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright (C) 2023 Rick Busarow
+# Copyright (C) 2024 Rick Busarow
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,7 +18,7 @@
 # exit when any command fails
 set -e
 
-VERSION_TOML=gradle/libs.versions.toml
+GRADLE_PROPERTIES=gradle.properties
 
 step=0
 
@@ -70,18 +70,13 @@ NEXT_VERSION=$(awk '/.*\(unreleased)/ { print $2}' CHANGELOG.md | sed 's/\"//g')
 
 function parseVersionAndSyncDocs() {
 
-  # Parse the 'ktrules-dev' version from libs.versions.toml
-  # Removes the double quotes around the raw string value
-  VERSION_DEV=$(awk -F ' *= *' '$1=="ktrules-dev"{print $2}' $VERSION_TOML | sed 's/\"//g')
-  # Removes the double quotes around the raw string value
-  VERSION_RELEASED=$(awk -F ' *= *' '$1=="ktrules-released"{print $2}' $VERSION_TOML | sed 's/\"//g')
+  # Parse the 'VERSION_NAME' version from gradle.properties
+  VERSION_NAME=$(awk -F ' *= *' '$1=="VERSION_NAME"{print $2; exit}' $GRADLE_PROPERTIES | sed 's/\"//g')
 
   # Add `@since ____` tags to any new KDoc
-  progress "Add \`@since ____\` tags to any new KDoc"
-  ./gradlew updateEditorConfigVersion
-  killAll -9 java
+  progress "Add \@since ____\ tags to any new KDoc"
   ./gradlew ktlintFormat
-  maybeCommit "add @since tags to new KDoc for $VERSION_DEV"
+  maybeCommit "add @since tags to new KDoc for $VERSION_NAME"
 
   # format docs
   progress "format docs"
@@ -91,7 +86,7 @@ function parseVersionAndSyncDocs() {
   # update the version references in docs before versioning them
   progress "Update docs versions"
   ./gradlew doks
-  maybeCommit "update version references in docs to $VERSION_DEV"
+  maybeCommit "update version references in docs to $VERSION_NAME"
 }
 
 # update all versions/docs for the release version
@@ -108,20 +103,20 @@ progress "run the check task"
 progress "Publish Maven release"
 ./gradlew publish --no-configuration-cache
 
-# Create the "Releasing ______" commit and a new tag for the current `VERSION_DEV`
+# Create the "Releasing ______" commit and a new tag for the current `VERSION_NAME`
 progress "commit the release and tag"
-git commit --allow-empty -am "Releasing ${VERSION_DEV}"
-git tag "${VERSION_DEV}"
+git commit --allow-empty -am "Releasing ${VERSION_NAME}"
+git tag "${VERSION_NAME}"
 git push --tags
 
 progress "create the release on GitHub"
 ./gradlew githubRelease
 
 progress "update the dev version to ${NEXT_VERSION}"
-OLD="(^ *ktrules-dev *= *)\"${VERSION_DEV}\""
-NEW="\$1\"${NEXT_VERSION}\""
-# Write the new -SNAPSHOT version to the versions toml file
-perl -pi -e "s/$OLD/$NEW/" $VERSION_TOML
+OLD="VERSION_NAME=${VERSION_NAME}"
+NEW="VERSION_NAME=${NEXT_VERSION}"
+# Write the new -SNAPSHOT version to the properties file
+perl -pi -e "s/$OLD/$NEW/" $GRADLE_PROPERTIES
 git commit -am "update dev version to ${NEXT_VERSION}"
 
 # update all versions/docs for the next version
@@ -134,7 +129,7 @@ echo '\__ \ |_| | (_| (__| _|\__ \__ \'
 echo '|___/\___/ \___\___|___|___/___/'
 echo
 echo
-echo The release is done and a new docs version has been created for Docusaurus.
+echo The release is done.
 echo
 echo Next, just create a PR to merge all these distinct commits into the remote main branch.
 echo

@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: "11"
+          java-version: "17"
 
       # break the publishing builds down a little into smaller steps
       # because gradle-build-action's caching is all-or-nothing.  If the full publish task

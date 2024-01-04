@@ -1,36 +1,37 @@
 {
-  "$schema" : "https://docs.renovatebot.com/renovate-schema.json",
-  "extends" : [
-    "config:base"
-  ],
-  "rebaseWhen" : "conflicted",
-  "rebaseLabel" : "rebase",
-  "packageRules" : [
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "rebaseWhen": "conflicted",
+  "rebaseLabel": "rebase",
+  "packageRules": [
     {
-      "groupName" : "Kotlin and compiler plugins",
-      "matchPackagePatterns" : [
+      "groupName": "Kotlin and compiler plugins",
+      "matchPackagePatterns": [
         "^org\\.jetbrains\\.kotlin:(?:[\\w-]+)$",
         "^com\\.google\\.devtools\\.ksp:(?:[\\w-]+)$",
         "^com\\.square\\.anvil:(?:[\\w-]+)$"
       ]
     },
     {
-      "matchPackagePatterns" : [
-        "^com\\.pinterest\\.ktlint:ktlint-"
-      ],
-      "matchCurrentVersion" : "/0\\.(?:47|48|49|50)\\..*/",
-      "enabled" : false
+      "matchPackagePatterns": ["^com\\.pinterest\\.ktlint:ktlint-"],
+      "matchCurrentVersion": "/0\\.(?:47|48|49|50)\\..*/",
+      "enabled": false
     },
     {
-      "matchPackagePatterns" : [
+      "matchPackagePatterns": ["^com\\.pinterest\\.ktlint:ktlint-"],
+      "matchCurrentVersion": "/1\\.0\\.\\..*/",
+      "enabled": false
+    },
+    {
+      "groupName": "KtLint things",
+      "matchPackagePatterns": [
         "^com\\.pinterest\\.ktlint:(?:[\\w-]+)$",
         "^com\\.rickbusarow\\.ktlint:(?:[\\w-]+)$",
         "^com\\.rickbusarow\\.ktrules:(?:[\\w-]+)$"
-      ],
-      "groupName" : "KtLint things"
+      ]
     }
   ],
-  "labels" : [
+  "labels": [
     "dependencies",
     "automerge"
   ]

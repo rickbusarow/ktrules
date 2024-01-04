@@ -3,6 +3,7 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="ClassName" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <scope name="Tests" level="WEAK WARNING" enabled="false" />
+      <option name="namePattern" value="[A-Z][A-Za-z\d_]*" />
     </inspection_tool>
     <inspection_tool class="EditorConfigHeaderUniqueness" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RemoveRedundantBackticks" enabled="true" level="WARNING" enabled_by_default="true">

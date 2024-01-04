@@ -14,7 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   static-analysis:
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +33,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: "11"
+          java-version: "17"
 
       - name: detekt
         uses: gradle/gradle-build-action@v2
@@ -97,7 +96,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: "11"
+          java-version: "17"
 
       - name: all tests
         uses: gradle/gradle-build-action@v2
@@ -131,7 +130,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: "11"
+          java-version: "17"
 
       - name: all tests
         uses: gradle/gradle-build-action@v2
