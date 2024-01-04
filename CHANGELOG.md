@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.3.1-SNAPSHOT (unreleased)
+## 1.3.2-SNAPSHOT (unreleased)
 
-## [1.3.0] - 2021-01-03
+## [1.3.1] - 2021-01-03
 
 The default artifact is now updated to [KtLint 1.1.0](https://github.com/pinterest/ktlint/releases/tag/1.1.0).
 
@@ -19,7 +19,11 @@ These artifacts all have the same rule logic, but use different KtLint versions.
 |        1.0.x         | `com.rickbusarow.ktrules:ktrules-100:1.3.0` |
 |        1.1.x         |   `com.rickbusarow.ktrules:ktrules:1.3.0`   |
 
-**Full Changelog**: https://github.com/rickbusarow/ktrules/compare/1.2.1...1.3.0
+**Full Changelog**: https://github.com/rickbusarow/ktrules/compare/1.2.1...1.3.1
+
+## [1.3.0] - 2021-01-03
+
+Skip this release and use [1.3.1](#131---2021-01-03) instead.
 
 ## [1.2.1] - 2023-11-08
 
@@ -273,3 +277,4 @@ Hello World
 [1.2.0]: https://github.com/rbusarow/ktrules/releases/tag/1.2.0
 [1.2.1]: https://github.com/rbusarow/ktrules/releases/tag/1.2.1
 [1.3.0]: https://github.com/rbusarow/ktrules/releases/tag/1.3.0
+[1.3.1]: https://github.com/rbusarow/ktrules/releases/tag/1.3.1
