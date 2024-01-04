@@ -2,6 +2,21 @@
 
 ## 1.2.2-SNAPSHOT (unreleased)
 
+The default artifact is now updated to [KtLint 1.1.0](https://github.com/pinterest/ktlint/releases/tag/1.1.0).
+
+The published artifacts have been split again.
+
+These artifacts all have the same rule logic, but use different KtLint versions.
+
+| if you use KtLint... |          use the ktrules artifact:          |
+| :------------------: | :-----------------------------------------: |
+|        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.2.2`  |
+|        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.2.2`  |
+|        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.2.2`  |
+|        0.50.x        | `com.rickbusarow.ktrules:ktrules-50:1.2.2`  |
+|        1.0.x         | `com.rickbusarow.ktrules:ktrules-100:1.2.2` |
+|        1.1.x         |   `com.rickbusarow.ktrules:ktrules:1.2.2`   |
+
 ## [1.2.1] - 2023-11-08
 
 ### Fixed

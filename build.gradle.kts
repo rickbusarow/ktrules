@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2024 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -78,7 +78,8 @@ val compatSourceSetNames = listOf(
   "compat48",
   "compat49",
   "compat50",
-  "compat100"
+  "compat100",
+  "compat110"
 )
 
 compatSourceSetNames.forEach { ssName ->
@@ -108,13 +109,14 @@ val compat47Api: Configuration by configurations.getting
 val compat48Api: Configuration by configurations.getting
 val compat49Api: Configuration by configurations.getting
 val compat50Api: Configuration by configurations.getting
-
-val compat100: SourceSet by sourceSets.getting
-val compat100Implementation: Configuration by configurations.getting
 val compat100Api: Configuration by configurations.getting
 
+val compat110: SourceSet by sourceSets.getting
+val compat110Implementation: Configuration by configurations.getting
+val compat110Api: Configuration by configurations.getting
+
 sourceSets.named("test") {
-  compileClasspath += compat100.output
+  compileClasspath += compat110.output
   runtimeClasspath += output + compileClasspath
 }
 
@@ -124,23 +126,21 @@ dependencies {
   api(libs.jetbrains.markdown)
   api(libs.kotlin.reflect)
 
-  compat100Api(libs.jetbrains.markdown)
-  compat100Api(libs.ktlint.cli.ruleset.core)
-  compat100Api(libs.ktlint.rule.engine.core)
-  compat47Api(libs.jetbrains.markdown)
+  compat100Api(libs.ktlint100.cli.ruleset.core)
+  compat100Api(libs.ktlint100.rule.engine.core)
+  compat110Api(libs.ktlint110.cli.ruleset.core)
+  compat110Api(libs.ktlint110.rule.engine.core)
   compat47Api(libs.ktlint47.core)
   compat48Api(libs.ec4j.core)
-  compat48Api(libs.jetbrains.markdown)
   compat48Api(libs.ktlint48.core)
   compat49Api(libs.ec4j.core)
-  compat49Api(libs.jetbrains.markdown)
   compat49Api(libs.ktlint49.cli.ruleset.core)
   compat49Api(libs.ktlint49.rule.engine.core)
-  compat50Api(libs.jetbrains.markdown)
   compat50Api(libs.ktlint.cli.ruleset.core)
   compat50Api(libs.ktlint.rule.engine.core)
 
   "compat100CompileOnly"(libs.google.auto.service.annotations)
+  "compat110CompileOnly"(libs.google.auto.service.annotations)
   "compat47CompileOnly"(libs.google.auto.service.annotations)
   "compat48CompileOnly"(libs.google.auto.service.annotations)
   "compat49CompileOnly"(libs.google.auto.service.annotations)

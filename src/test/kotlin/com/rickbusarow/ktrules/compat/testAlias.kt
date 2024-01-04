@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2024 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,17 +18,17 @@ package com.rickbusarow.ktrules.compat
 import com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
 import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.rules.internal.mapToSet
-import com.rickbusarow.ktrules.toKtLintProperty100
-import com.rickbusarow.ktrules.toKtLintRuleProvider100
+import com.rickbusarow.ktrules.toKtLintProperty110
+import com.rickbusarow.ktrules.toKtLintRuleProvider110
 
 fun EditorConfigOverride.Companion.from(
   vararg properties: Pair<EditorConfigProperty<*>, *>
 ): EditorConfigOverride {
   return EditorConfigOverride.from(
-    *properties.map { it.first.toKtLintProperty100() to it.second }.toTypedArray()
+    *properties.map { it.first.toKtLintProperty110() to it.second }.toTypedArray()
   )
 }
 
-fun Set<RuleProviderCompat>.toKtLintRuleProviders100(): Set<RuleProvider> {
-  return mapToSet { it.toKtLintRuleProvider100() }
+fun Set<RuleProviderCompat>.toKtLintRuleProviders110(): Set<RuleProvider> {
+  return mapToSet { it.toKtLintRuleProvider110() }
 }
