@@ -33,7 +33,7 @@ rickBusarow-github-release = "2.5.2"
 rickBusarow-kgx = "0.1.9"
 rickBusarow-ktlint = "0.2.2"
 rickBusarow-moduleCheck = "0.12.5"
-slf4j = "2.0.10"
+slf4j = "2.0.11"
 vanniktech-publish = "0.27.0"
 
 [plugins]
