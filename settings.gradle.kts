@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2024 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,11 +13,27 @@
  * limitations under the License.
  */
 
+rootProject.name = "ktrules"
+
 pluginManagement {
   repositories {
+    val allowMavenLocal = providers
+      .gradleProperty("${rootProject.name}.allow-maven-local")
+      .orNull.toBoolean()
+    if (allowMavenLocal) {
+      logger.lifecycle("${rootProject.name} -- allowing mavenLocal for plugins")
+      mavenLocal()
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
+  }
+
+  includeBuild("build-logic")
+
+  plugins {
+    id("module") apply false
+    id("root") apply false
   }
 }
 
@@ -25,54 +41,35 @@ plugins {
   id("com.gradle.enterprise") version "3.16.2"
 }
 
-gradleEnterprise {
-  buildScan {
-
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
-
-    publishAlways()
-
-    // https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-
-    tag(if (System.getenv("CI").isNullOrBlank()) "Local" else "CI")
-
-    val gitHubActions = System.getenv("GITHUB_ACTIONS")?.toBoolean() ?: false
-
-    if (gitHubActions) {
-      // ex: `octocat/Hello-World` as in github.com/octocat/Hello-World
-      val repository = System.getenv("GITHUB_REPOSITORY")!!
-      val runId = System.getenv("GITHUB_RUN_ID")!!
-
-      link(
-        "GitHub Action Run",
-        "https://github.com/$repository/actions/runs/$runId"
-      )
-    }
-  }
-}
-
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
   repositories {
-    google()
+    val allowMavenLocal = providers
+      .gradleProperty("${rootProject.name}.allow-maven-local")
+      .orNull.toBoolean()
+
+    if (allowMavenLocal) {
+      logger.lifecycle("${rootProject.name} -- allowing mavenLocal for dependencies")
+      mavenLocal()
+    }
+    gradlePluginPortal()
     mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
+    google()
   }
 }
 
-rootProject.name = "ktrules"
-
-// If this project is the real root of the build, copy the root project's properties file to included
-// builds, to ensure that Gradle settings are identical and there's only 1 daemon.
-// Note that with this copy, any changes to the included build's properties file will be overwritten.
-if (gradle.parent == null) {
-  (settings as org.gradle.initialization.DefaultSettings).includedBuilds
-    .forEach { includedBuildSpec ->
-      rootDir.resolve("gradle.properties")
-        .copyTo(
-          target = includedBuildSpec.rootDir.resolve("gradle.properties"),
-          overwrite = true
-        )
-    }
+gradleEnterprise {
+  buildScan {
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfServiceAgree = "yes"
+    publishAlways()
+  }
 }
+
+include(":ktrules-api")
+// include(":ktrules-47")
+// include(":ktrules-48")
+// include(":ktrules-49")
+// include(":ktrules-50")
+// include(":ktrules-100")
+// include(":ktrules-110")

@@ -18,7 +18,14 @@
       "matchPackagePatterns" : [
         "^com\\.pinterest\\.ktlint:ktlint-"
       ],
-      "matchCurrentVersion" : "/(?:1\\.0\\.1)|(?:0\\.(?:47|48|49|50|)\\..*)/",
+      "matchCurrentVersion" : "/0\\.(?:47|48|49|50|)\\..*/",
+      "enabled" : false
+    },
+    {
+      "matchPackagePatterns" : [
+        "^com\\.pinterest\\.ktlint:ktlint-"
+      ],
+      "matchCurrentVersion" : "1.0.1",
       "enabled" : false
     },
     {
