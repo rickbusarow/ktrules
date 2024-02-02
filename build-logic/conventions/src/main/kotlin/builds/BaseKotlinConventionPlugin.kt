@@ -22,11 +22,9 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.targets
 import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.Serializable
-import kotlin.jvm.java
 
 interface KotlinJvmExtension : KotlinExtension
 interface KotlinMultiplatformExtension : KotlinExtension
@@ -46,13 +44,6 @@ abstract class BaseKotlinConventionPlugin : Plugin<Project> {
     jetbrainsExtension.jvmToolchain(target.JDK_INT)
 
     configureKotlinOptions(target, extension)
-
-    target.tasks.register("buildTests") { buildTests ->
-      buildTests.dependsOn(jetbrainsExtension.targets.map { it.artifactsTaskName })
-    }
-    target.tasks.register("buildAll") { buildAll ->
-      buildAll.dependsOn(jetbrainsExtension.targets.map { it.artifactsTaskName })
-    }
 
     target.plugins.withId("java") {
       target.tasks.withType(JavaCompile::class.java).configureEach { task ->
@@ -84,8 +75,8 @@ abstract class BaseKotlinConventionPlugin : Plugin<Project> {
 
           val shouldBeStrict = when {
             extension.explicitApi.orNull == false -> false
-            sourceSetName == "test" -> false
             sourceSetName == null -> false
+            sourceSetName.endsWith("test", true) -> false
             else -> true
           }
           if (shouldBeStrict) {

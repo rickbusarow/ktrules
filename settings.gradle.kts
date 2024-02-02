@@ -66,10 +66,4 @@ gradleEnterprise {
   }
 }
 
-include(":ktrules-api")
-// include(":ktrules-47")
-// include(":ktrules-48")
-// include(":ktrules-49")
-// include(":ktrules-50")
-// include(":ktrules-100")
-// include(":ktrules-110")
+include(":ktrules")

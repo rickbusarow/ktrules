@@ -15,11 +15,14 @@
 
 package builds
 
+import org.gradle.api.plugins.ExtensionAware
+
 abstract class RootExtension :
   PokoExtension,
   PublishingExtension
 
 abstract class KotlinJvmModuleExtension :
+  ExtensionAware,
   KotlinJvmExtension,
   PokoExtension,
   PublishingExtension,

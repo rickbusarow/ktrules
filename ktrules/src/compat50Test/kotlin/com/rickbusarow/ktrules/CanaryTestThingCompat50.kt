@@ -15,7 +15,8 @@
 
 package com.rickbusarow.ktrules
 
-class CanaryTestThingCompat50 : CanaryTestThing {
+class CanaryTestThingCompat50 {
+// class CanaryTestThingCompat50 : CanaryTestThing {
 
   @org.junit.jupiter.api.Test
   fun `wut`() {

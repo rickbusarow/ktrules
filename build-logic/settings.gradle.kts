@@ -15,7 +15,7 @@
 
 import java.util.Properties
 
-rootProject.name = "ktrules-build-logic"
+rootProject.name = "build-logic"
 
 pluginManagement {
   val allowMavenLocal = providers

@@ -16,27 +16,24 @@
 package com.rickbusarow.ktrules
 
 import com.pinterest.ktlint.core.KtLint
-import com.pinterest.ktlint.core.RuleProvider
 import com.pinterest.ktlint.core.api.EditorConfigOverride
-import com.rickbusarow.ktrules.compat.EditorConfigProperty
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.rules.Tests
-import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.intellij.lang.annotations.Language
 
 interface TestsCompat : Tests<EditorConfigOverride> {
 
-  fun EditorConfigOverride.Companion.from(
-    vararg properties: Pair<EditorConfigProperty<*>, *>
-  ): EditorConfigOverride {
-    return from(
-      *properties.map { it.first.toKtLintProperty() to it.second }.toTypedArray()
-    )
-  }
+  // fun EditorConfigOverride.Companion.from(
+  //   vararg properties: Pair<EditorConfigProperty<*>, *>
+  // ): EditorConfigOverride {
+  //   return from(
+  //     *properties.map { it.first.toKtLintProperty() to it.second }.toTypedArray()
+  //   )
+  // }
 
-  fun Set<RuleProviderCompat>.toKtLintRuleProviders(): Set<RuleProvider> {
-    return mapToSet { it.toKtLintRuleProvider() }
-  }
+  // fun Set<RuleProviderCompat>.toKtLintRuleProviders(): Set<RuleProvider> {
+  //   return mapToSet { it.toKtLintRuleProvider() }
+  // }
 
   override fun format(
     @Language("kotlin")

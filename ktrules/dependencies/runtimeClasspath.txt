@@ -1,0 +1,10 @@
+it.unimi.dsi:fastutil-core:8.5.12
+org.ec4j.core:ec4j-core:0.3.0
+org.jetbrains.kotlin:kotlin-reflect:1.9.22
+org.jetbrains.kotlin:kotlin-stdlib-common:1.9.22
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0
+org.jetbrains.kotlin:kotlin-stdlib:1.9.22
+org.jetbrains:annotations:13.0
+org.jetbrains:markdown-jvm:0.6.1
+org.jetbrains:markdown:0.6.1

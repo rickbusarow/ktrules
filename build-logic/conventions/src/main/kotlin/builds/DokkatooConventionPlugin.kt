@@ -17,13 +17,10 @@ package builds
 
 import com.rickbusarow.kgx.dependsOn
 import com.rickbusarow.kgx.isRootProject
-import com.rickbusarow.kgx.libsCatalog
 import com.rickbusarow.kgx.projectDependency
-import com.rickbusarow.kgx.version
 import com.rickbusarow.ktlint.KtLintTask
 import com.vanniktech.maven.publish.tasks.JavadocJar
 import dev.adamko.dokkatoo.DokkatooExtension
-import dev.adamko.dokkatoo.dokka.plugins.DokkaVersioningPluginParameters
 import dev.adamko.dokkatoo.tasks.DokkatooGenerateTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -40,13 +37,16 @@ abstract class DokkatooConventionPlugin : Plugin<Project> {
 
     target.extensions.configure(DokkatooExtension::class.java) { dokkatoo ->
 
-      dokkatoo.versions.jetbrainsDokka.set(target.libsCatalog.version("dokka"))
+      dokkatoo.versions.jetbrainsDokka.set(target.libs.versions.dokka)
 
       dokkatoo.moduleVersion.set(target.VERSION_NAME)
       val fullModuleName = target.path.removePrefix(":")
       dokkatoo.moduleName.set(fullModuleName)
 
       dokkatoo.dokkatooSourceSets.configureEach { sourceSet ->
+
+        sourceSet.sourceRoots.from(target.file("src/${sourceSet.name}/kotlin"))
+
         sourceSet.documentedVisibilities(
           dev.adamko.dokkatoo.dokka.parameters.VisibilityModifier.PRIVATE,
           dev.adamko.dokkatoo.dokka.parameters.VisibilityModifier.INTERNAL,
@@ -69,14 +69,14 @@ abstract class DokkatooConventionPlugin : Plugin<Project> {
         }
 
         sourceSet.sourceLink { sourceLinkBuilder ->
-          sourceLinkBuilder.localDirectory.set(target.file("src/main"))
+          sourceLinkBuilder.localDirectory.set(target.file("src/${sourceSet.name}"))
 
           val modulePath = target.path.replace(":", "/")
             .replaceFirst("/", "")
 
           // URL showing where the source code can be accessed through the web browser
           sourceLinkBuilder.remoteUrl.set(
-            URI("${target.GITHUB_REPOSITORY}/blob/main/$modulePath/src/main")
+            URI("${target.GITHUB_REPOSITORY}/blob/main/$modulePath/src/${sourceSet.name}")
           )
           // Suffix which is used to append the line number to the URL. Use #L for GitHub
           sourceLinkBuilder.remoteLineSuffix.set("#L")
@@ -108,18 +108,6 @@ abstract class DokkatooConventionPlugin : Plugin<Project> {
         val pluginConfig = "dokkatooPluginHtml"
 
         target.dependencies.add(pluginConfig, target.libs.dokka.all.modules)
-        target.dependencies.add(pluginConfig, target.libs.dokka.versioning)
-
-        val dokkaArchiveBuildDir = target.rootProject.layout
-          .buildDirectory
-          .dir("tmp/dokka-archive")
-
-        dokkatoo.pluginsConfiguration
-          .withType(DokkaVersioningPluginParameters::class.java).configureEach { versioning ->
-            versioning.version.set(target.VERSION_NAME)
-            versioning.olderVersionsDir.set(dokkaArchiveBuildDir)
-            versioning.renderVersionsNavigationOnAllPages.set(true)
-          }
 
         dokkatoo.dokkatooPublications.configureEach {
           it.suppressObviousFunctions.set(true)

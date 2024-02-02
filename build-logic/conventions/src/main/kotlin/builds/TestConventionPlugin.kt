@@ -18,8 +18,6 @@ package builds
 import com.rickbusarow.kgx.isRealRootProject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestFramework
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
@@ -29,28 +27,8 @@ abstract class TestConventionPlugin : Plugin<Project> {
 
   override fun apply(target: Project) {
 
-    val includeTags: ListProperty<String> = target.objects
-      .listProperty(String::class.java)
-
-    if (target.hasProperty("kase.includeTags")) {
-      includeTags.addAll(target.properties["kase.includeTags"].toString().split(','))
-    }
-
     target.tasks.withType(Test::class.java).configureEach { task ->
       task.useJUnitPlatform()
-
-      val junitPlatformOptions = task.testFrameworkProperty
-        .map { frameWork ->
-          (frameWork as JUnitPlatformTestFramework).options
-        }
-
-      task.doFirst {
-
-        val tags = includeTags.orNull
-        if (!tags.isNullOrEmpty()) {
-          junitPlatformOptions.get().includeTags(*tags.toTypedArray())
-        }
-      }
 
       task.testLogging {
         it.events = setOf(FAILED)

@@ -66,7 +66,7 @@ private fun Project.configurePublish(artifactId: String, pomDescription: String,
 
     extension.pom { mavenPom ->
       mavenPom.description.set(pomDescription)
-      mavenPom.name.set(artifactId)
+      // mavenPom.name.set(artifactId)
 
       mavenPom.url.set("https://www.github.com/$GITHUB_OWNER_REPO/")
 
@@ -99,7 +99,10 @@ private fun Project.configurePublish(artifactId: String, pomDescription: String,
     extensions.configure(PublishingExtension::class.java) { publishingExtension ->
       publishingExtension.publications.withType(MavenPublication::class.java)
         .configureEach { publication ->
-          publication.artifactId = artifactId
+
+          publication.suppressAllPomMetadataWarnings()
+
+          // publication.artifactId = artifactId
           publication.pom.description.set(pomDescription)
           publication.groupId = groupId
         }
@@ -120,6 +123,7 @@ private fun Project.configurePublish(artifactId: String, pomDescription: String,
     it.notCompatibleWithConfigurationCache("")
     // skip signing for -SNAPSHOT publishing
     it.onlyIf { !(version as String).endsWith("SNAPSHOT") }
+    it.inputs.files(tasks.named("kotlinSourcesJar"))
   }
 }
 

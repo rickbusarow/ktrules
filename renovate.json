@@ -5,13 +5,23 @@
   ],
   "rebaseWhen" : "conflicted",
   "rebaseLabel" : "rebase",
+  "semanticCommits": "enabled",
   "packageRules" : [
     {
-      "groupName" : "Kotlin and compiler plugins",
-      "matchPackagePatterns" : [
-        "^org\\.jetbrains\\.kotlin:(?:[\\w-]+)$",
-        "^com\\.google\\.devtools\\.ksp:(?:[\\w-]+)$",
-        "^com\\.square\\.anvil:(?:[\\w-]+)$"
+      "groupName": "Kotlin and compiler plugins",
+      "matchPackagePrefixes": [
+        "org.jetbrains.kotlin:",
+        "com.google.devtools.ksp:",
+        "com.square.anvil:",
+        "dev.drewhamilton.poko:"
+      ]
+    },
+    {
+      "groupName": "KtLint libs",
+      "matchPackagePrefixes": [
+        "com.pinterest.ktlint:",
+        "com.rickbusarow.ktlint:",
+        "com.rickbusarow.ktrules:"
       ]
     },
     {
@@ -34,7 +44,7 @@
         "^com\\.rickbusarow\\.ktlint:(?:[\\w-]+)$",
         "^com\\.rickbusarow\\.ktrules:(?:[\\w-]+)$"
       ],
-      "groupName" : "KtLint things"
+      "groupName" : "KtLint Libs"
     }
   ],
   "labels" : [

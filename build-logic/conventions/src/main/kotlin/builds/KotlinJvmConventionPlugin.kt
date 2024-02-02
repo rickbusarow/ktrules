@@ -15,13 +15,12 @@
 
 package builds
 
-import com.rickbusarow.kgx.applyOnce
 import org.gradle.api.Project
 
 abstract class KotlinJvmConventionPlugin : BaseKotlinConventionPlugin() {
 
   override fun apply(target: Project) {
-    target.plugins.applyOnce("org.jetbrains.kotlin.jvm")
+    target.plugins.apply("org.jetbrains.kotlin.jvm")
 
     super.apply(target)
   }

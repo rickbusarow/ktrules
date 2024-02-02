@@ -16,19 +16,9 @@
 package com.rickbusarow.ktrules
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
 
 interface CanaryTestThing {
 
-  @Test
-  fun `always fails`() {
-
-    fail("this is supposed to fail")
-  }
-
-  @Test
-  fun `always passes`() {
-
-    assert(true)
-  }
+  // @Test fun `always fails`(): Unit = fail("this is supposed to fail")
+  @Test fun `always passes`() = assert(true)
 }

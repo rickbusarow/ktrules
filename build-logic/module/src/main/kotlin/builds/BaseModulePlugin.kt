@@ -47,6 +47,7 @@ abstract class KotlinJvmModulePlugin : BaseModulePlugin() {
     target.extensions.create("jvmModule", KotlinJvmModuleExtension::class.java)
 
     target.plugins.apply(KotlinJvmConventionPlugin::class.java)
+    target.plugins.apply(FeatureVariantsPlugin::class.java)
 
     super.apply(target)
   }
