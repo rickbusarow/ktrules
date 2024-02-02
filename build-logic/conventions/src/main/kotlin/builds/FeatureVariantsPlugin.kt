@@ -15,6 +15,7 @@
 
 package builds
 
+import com.dropbox.gradle.plugins.dependencyguard.DependencyGuardPluginExtension
 import com.rickbusarow.kgx.dependsOn
 import com.rickbusarow.kgx.gradleLazy
 import com.rickbusarow.kgx.javaExtension
@@ -99,8 +100,11 @@ open class FeatureVariantsExtension @Inject constructor(
         }
       }
 
+      target.extensions.getByType(DependencyGuardPluginExtension::class.java)
+        .configuration(variant.prodSourceSet.runtimeClasspathConfigurationName)
+
       target.tasks.named("check").dependsOn(variant.testTaskName)
-      // target.tasks.named("testAll").dependsOn(variant.testTaskProvider)
+      target.tasks.named("testAll").dependsOn(variant.testTaskProvider)
 
       target.extensions.configure(IdeaModel::class.java) { idea ->
         idea.module { module ->
@@ -171,13 +175,14 @@ abstract class FeatureVariant @Inject constructor(
 
     ss.java.srcDir(testKotlinDir)
     ss.resources.srcDir(testResourceDir)
-    ss.compileClasspath += (ss.output + test.output + main.compileClasspath)
+    ss.compileClasspath += (ss.output + test.output)
     ss.runtimeClasspath += (ss.output + test.output)
   }
 
   val kotlinTestSourceSet: KotlinSourceSet by target.kotlinExtension.sourceSets
     .named(testSourceSetName) { kss ->
       kss.dependsOn(kotlinTest)
+      // kss.dependsOn(kotlinProdSourceSet.get())
       kss.kotlin.srcDir(testKotlinDir)
       kss.resources.srcDir(testResourceDir)
     }
@@ -217,6 +222,7 @@ abstract class FeatureVariant @Inject constructor(
     by kotlin.target.compilations.named(testSourceSetName) {
 
       it.associateWith(kotlinMainCompilation)
+      // it.associateWith(prodCompilation)
     }
 
   val configurations = target.configurations

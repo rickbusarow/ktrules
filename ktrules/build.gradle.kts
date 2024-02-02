@@ -29,7 +29,7 @@ jvmModule {
     pomDescription = "KtLint rules"
   )
 
-  // tasks.register("testAll", Test::class.java) { group = "Verification" }
+  tasks.register("testAll", Test::class.java) { group = "Verification" }
 
   featureVariants {
     variant("compat47") {
@@ -127,5 +127,6 @@ dependencies {
     variant.compileOnlyConfig.dependencies.addLater(libs.google.auto.service.annotations)
     variant.kspConfig.dependencies.addLater(libs.google.auto.service.annotations)
     variant.testImplementationConfig.dependencies.addLater(libs.rickBusarow.kase)
+    variant.testImplementationConfig.dependencies.addLater(libs.jimfs)
   }
 }
