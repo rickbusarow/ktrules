@@ -50,7 +50,6 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 doks = { id = "com.rickbusarow.doks", version.ref = "rickBusarow-doks" }
 dropbox-dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dropbox-dependencyGuard" }
-github-release = { id = "com.rickbusarow.github-release-fork", version.ref = "rickBusarow-github-release" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 jetbrains-changelog = { id = "org.jetbrains.changelog", version.ref = "jetbrains-changelog" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
