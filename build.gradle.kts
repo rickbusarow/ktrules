@@ -38,6 +38,7 @@ import kotlin.text.RegexOption.MULTILINE
 buildscript {
   dependencies {
     classpath(libs.rickBusarow.ktrules)
+    classpath(libs.rickBusarow.kgx)
   }
 }
 
@@ -519,7 +520,11 @@ publishing {
           pom.withXml {
 
             (
-              (asNode().get("dependencies") as groovy.util.NodeList).firstOrNull() as? groovy.util.Node
+              (
+                asNode().get(
+                  "dependencies"
+                ) as groovy.util.NodeList
+                ).firstOrNull() as? groovy.util.Node
                 ?: asNode().appendNode("dependencies")
               )
               .apply {

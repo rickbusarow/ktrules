@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2024 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,6 +19,7 @@ pluginManagement {
     mavenCentral()
     google()
   }
+  includeBuild("../mahout")
 }
 
 plugins {
@@ -55,24 +56,14 @@ gradleEnterprise {
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
   repositories {
-    google()
     mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
+    google()
   }
 }
 
 rootProject.name = "ktrules"
 
-// If this project is the real root of the build, copy the root project's properties file to included
-// builds, to ensure that Gradle settings are identical and there's only 1 daemon.
-// Note that with this copy, any changes to the included build's properties file will be overwritten.
-if (gradle.parent == null) {
-  (settings as org.gradle.initialization.DefaultSettings).includedBuilds
-    .forEach { includedBuildSpec ->
-      rootDir.resolve("gradle.properties")
-        .copyTo(
-          target = includedBuildSpec.rootDir.resolve("gradle.properties"),
-          overwrite = true
-        )
-    }
-}
+include(
+  ":ktrules-api",
+  ":ktrules-psi"
+)
