@@ -21,6 +21,7 @@ pluginManagement {
     mavenCentral()
     google()
   }
+  includeBuild("../mahout")
 }
 
 plugins {
@@ -75,6 +76,11 @@ dependencyResolutionManagement {
 }
 
 include("lib")
+
+include(
+  ":ktrules-api",
+  ":ktrules-psi"
+)
 
 if (inGHA) {
   fun Long.gigabytes(): String {
