@@ -152,7 +152,7 @@ ktlint100-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experiment
 ktlint100-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.0.1"
 ktlint100-test = "com.pinterest.ktlint:ktlint-test:1.0.1"
 
-ktlint110-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.1.1"
+ktlint110-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.2.1"
 ktlint110-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.1.1"
 ktlint110-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:1.1.1"
 ktlint110-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:1.1.1"
