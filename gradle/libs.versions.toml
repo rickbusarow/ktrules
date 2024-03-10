@@ -6,7 +6,7 @@ jdk = "11"
 jvmTarget = "11"
 kotlin = "1.9.23"
 kotlinApi = "1.7"
-ktlint-lib = "1.1.1"
+ktlint-lib = "1.2.1"
 ktrules-dev = "1.3.2-SNAPSHOT"
 ktrules-released = "1.3.1"
 
@@ -145,20 +145,27 @@ ktlint50-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimenta
 ktlint50-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:0.50.0"
 ktlint50-test = "com.pinterest.ktlint:ktlint-test:0.50.0"
 
-ktlint100-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.1.1"
-ktlint100-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.1.1"
+ktlint100-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.0.1"
+ktlint100-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.0.1"
 ktlint100-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:1.0.1"
 ktlint100-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:1.0.1"
-ktlint100-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.1.1"
-ktlint100-test = "com.pinterest.ktlint:ktlint-test:1.1.1"
+ktlint100-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.0.1"
+ktlint100-test = "com.pinterest.ktlint:ktlint-test:1.0.1"
 
-ktlint110-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-lib" }
-ktlint110-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }
-ktlint110-rule-engine-core = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint-lib" }
-ktlint110-rule-engine = { module = "com.pinterest.ktlint:ktlint-rule-engine", version.ref = "ktlint-lib" }
-ktlint110-ruleset-experimental = { module = "com.pinterest.ktlint:ktlint-ruleset-experimental", version.ref = "ktlint-lib" }
-ktlint110-ruleset-standard = { module = "com.pinterest.ktlint:ktlint-ruleset-standard", version.ref = "ktlint-lib" }
-ktlint110-test = { module = "com.pinterest.ktlint:ktlint-test", version.ref = "ktlint-lib" }
+ktlint110-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.1.1"
+ktlint110-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.1.1"
+ktlint110-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:1.1.1"
+ktlint110-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:1.1.1"
+ktlint110-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.1.1"
+ktlint110-test = "com.pinterest.ktlint:ktlint-test:1.1.1"
+
+ktlint120-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-lib" }
+ktlint120-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }
+ktlint120-rule-engine-core = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint-lib" }
+ktlint120-rule-engine = { module = "com.pinterest.ktlint:ktlint-rule-engine", version.ref = "ktlint-lib" }
+ktlint120-ruleset-experimental = { module = "com.pinterest.ktlint:ktlint-ruleset-experimental", version.ref = "ktlint-lib" }
+ktlint120-ruleset-standard = { module = "com.pinterest.ktlint:ktlint-ruleset-standard", version.ref = "ktlint-lib" }
+ktlint120-test = { module = "com.pinterest.ktlint:ktlint-test", version.ref = "ktlint-lib" }
 
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-lib" }
 ktlint-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }

@@ -79,7 +79,8 @@ val compatSourceSetNames = listOf(
   "compat49",
   "compat50",
   "compat100",
-  "compat110"
+  "compat110",
+  "compat120"
 )
 
 compatSourceSetNames.forEach { ssName ->
@@ -110,13 +111,14 @@ val compat48Api: Configuration by configurations.getting
 val compat49Api: Configuration by configurations.getting
 val compat50Api: Configuration by configurations.getting
 val compat100Api: Configuration by configurations.getting
-
-val compat110: SourceSet by sourceSets.getting
-val compat110Implementation: Configuration by configurations.getting
 val compat110Api: Configuration by configurations.getting
 
+val compat120: SourceSet by sourceSets.getting
+val compat120Implementation: Configuration by configurations.getting
+val compat120Api: Configuration by configurations.getting
+
 sourceSets.named("test") {
-  compileClasspath += compat110.output
+  compileClasspath += compat120.output
   runtimeClasspath += output + compileClasspath
 }
 
@@ -132,6 +134,9 @@ dependencies {
   compat110Api(libs.jetbrains.markdown)
   compat110Api(libs.ktlint110.cli.ruleset.core)
   compat110Api(libs.ktlint110.rule.engine.core)
+  compat120Api(libs.jetbrains.markdown)
+  compat120Api(libs.ktlint110.cli.ruleset.core)
+  compat120Api(libs.ktlint110.rule.engine.core)
   compat47Api(libs.jetbrains.markdown)
   compat47Api(libs.ktlint47.core)
   compat48Api(libs.ec4j.core)
@@ -148,6 +153,7 @@ dependencies {
 
   "compat100CompileOnly"(libs.google.auto.service.annotations)
   "compat110CompileOnly"(libs.google.auto.service.annotations)
+  "compat120CompileOnly"(libs.google.auto.service.annotations)
   "compat47CompileOnly"(libs.google.auto.service.annotations)
   "compat48CompileOnly"(libs.google.auto.service.annotations)
   "compat49CompileOnly"(libs.google.auto.service.annotations)
@@ -180,6 +186,7 @@ dependencies {
   testImplementation(libs.ktlint.ruleset.standard)
   testImplementation(libs.ktlint.test)
   testImplementation(libs.slf4j.api)
+  testImplementation(libs.slf4j.simple)
 }
 
 val VERSION_CURRENT = libs.versions.ktrules.dev.get()
@@ -229,13 +236,14 @@ tasks.named("apiCheck") { mustRunAfter("apiDump") }
 val updateEditorConfigVersion by tasks.registering {
 
   val file = file(".editorconfig")
+  val current = VERSION_CURRENT
 
   doLast {
     val oldText = file.readText()
 
     val reg = """^(ktlint_kt-rules_project_version *?= *?)\S*$""".toRegex(MULTILINE)
 
-    val newText = oldText.replace(reg, "$1$VERSION_CURRENT")
+    val newText = oldText.replace(reg, "$1$current")
 
     if (newText != oldText) {
       file.writeText(newText)
@@ -519,7 +527,11 @@ publishing {
           pom.withXml {
 
             (
-              (asNode().get("dependencies") as groovy.util.NodeList).firstOrNull() as? groovy.util.Node
+              (
+                asNode().get(
+                  "dependencies"
+                ) as groovy.util.NodeList
+                ).firstOrNull() as? groovy.util.Node
                 ?: asNode().appendNode("dependencies")
               )
               .apply {
