@@ -1,9 +1,12 @@
 {
-  "onboardingBranch": "github-renovate/configure",
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-  "dependencyDashboardTitle": "Dependency Dashboard",
-  "onboarding": true,
-  "branchPrefix": "github-renovate/",
-  "platform": "github"
+  "onboardingBranch" : "github-renovate/configure",
+  "$schema" : "https://docs.renovatebot.com/renovate-schema.json",
+  "gitAuthor" : "Renovate Bot <bot@renovateapp.com>",
+  "dependencyDashboardTitle" : "Dependency Dashboard",
+  "repositories" : [
+    "rickbusarow/ktrules"
+  ],
+  "onboarding" : true,
+  "branchPrefix" : "github-renovate/",
+  "platform" : "github"
 }
