@@ -11,7 +11,7 @@ The published artifacts have been split again.
 These artifacts all have the same rule logic, but use different KtLint versions.
 
 | if you use KtLint... |          use the ktrules artifact:          |
-|:--------------------:|:-------------------------------------------:|
+| :------------------: | :-----------------------------------------: |
 |        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.4.0`  |
 |        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.4.0`  |
 |        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.4.0`  |
