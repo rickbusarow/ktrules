@@ -52,7 +52,7 @@ jobs:
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes (used by main repo)
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
+        uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5
         with:
           commit_message: Apply KtLint format
           commit_options: "--no-verify --signoff"
@@ -74,7 +74,7 @@ jobs:
       # If Doks generated changes, commit and push those changes.
       - name: commit changes (used by main repo)
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
+        uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5
         with:
           commit_message: Apply Doks updates
           commit_options: "--no-verify --signoff"
