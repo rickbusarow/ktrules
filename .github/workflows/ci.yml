@@ -37,14 +37,14 @@ jobs:
           java-version: "11"
 
       - name: detekt
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: detektAll
           cache-read-only: false
 
       - name: KtLint format (used by main repo)
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: ktlintFormat
           cache-read-only: false
@@ -59,14 +59,14 @@ jobs:
 
       - name: KtLint check (used by forks)
         if: github.event.pull_request.head.repo.full_name != github.repository
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: ktlintCheck
           cache-read-only: false
 
       - name: Doks format (used by main repo)
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: doks
           cache-read-only: false
@@ -81,7 +81,7 @@ jobs:
 
       - name: Doks check (used by forks)
         if: github.event.pull_request.head.repo.full_name != github.repository
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: doksCheck
           cache-read-only: false
@@ -100,7 +100,7 @@ jobs:
           java-version: "11"
 
       - name: all tests
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: test "${{ env.ubuntuGradleArgs }}"
           cache-read-only: false
@@ -134,7 +134,7 @@ jobs:
           java-version: "11"
 
       - name: all tests
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39 # v3
         with:
           arguments: test "${{ env.windowsGradleArgs }}"
           cache-read-only: false
