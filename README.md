@@ -75,7 +75,7 @@ artifacts corresponding to the KtLint version your project is using.
 ```kotlin
 // build.gradle.kts
 dependencies {
-  // Using the current KtLint (1.3.0) apis
+  // Using the current KtLint (1.3.1) apis
   ktlint("com.rickbusarow.ktrules:ktrules:1.4.0")
 
   // ... or using the KtLint 1.1.x apis
