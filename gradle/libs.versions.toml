@@ -10,7 +10,7 @@ ktlint-lib = "1.5.0"
 ktrules-dev = "1.5.0-SNAPSHOT"
 ktrules-released = "1.4.0"
 
-benManes-versions = "0.51.0"
+benManes-versions = "0.52.0"
 dependencyAnalysis = "1.32.0"
 detekt = "1.23.6"
 diffplug-spotless = "7.0.2"
