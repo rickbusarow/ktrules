@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Rick Busarow
+ * Copyright (C) 2025 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,6 +26,7 @@ import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import kotlinx.validation.KotlinApiBuildTask
 import kotlinx.validation.KotlinApiCompareTask
 import modulecheck.utils.capitalize
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.jetbrains.changelog.date
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
@@ -265,6 +266,15 @@ tasks.withType<KtLintTask>().configureEach {
 
 tasks.test {
   useJUnitPlatform()
+
+  testLogging {
+    events("skipped", "failed")
+    exceptionFormat = FULL
+    showCauses = true
+    showExceptions = true
+    showStackTraces = true
+    showStandardStreams = false
+  }
 
   // Illegal reflective operation warnings while KtLint formats.  It's a Kotlin issue.
   // https://github.com/pinterest/ktlint/issues/1618
