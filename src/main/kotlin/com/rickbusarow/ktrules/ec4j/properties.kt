@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2025 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,46 +38,42 @@ internal val ALL_PROPERTIES by lazy {
  * @since 1.1.2
  */
 @Deprecated("to be removed in the next release.  Use `PROJECT_VERSION_PROPERTY` instead.")
-internal val PROJECT_VERSION_PROPERTY_DEPRECATED: EditorConfigProperty<String?> by lazy {
-
-  val projectVersionPropertyType = NullableStringPropertyType(
+internal val PROJECT_VERSION_PROPERTY_DEPRECATED: EditorConfigProperty<String?>
+  get() = NullableStringPropertyType(
     "${RULES_PREFIX}_project_version",
     "the current project version as a literal string"
-  )
+  ).let { type ->
 
-  EditorConfigProperty(
-    name = projectVersionPropertyType.name,
-    type = projectVersionPropertyType,
-    defaultValue = null,
-    deprecationError = "Use just kt-rules_project_version instead",
-    propertyMapper = { property, _ ->
-
-      property?.sourceValue?.trim('"', '\'')
-    }
-  )
-}
+    EditorConfigProperty(
+      name = type.name,
+      type = type,
+      defaultValue = null,
+      deprecationError = "Use just kt-rules_project_version instead",
+      propertyMapper = { property, _ ->
+        property?.sourceValue?.trim('"', '\'')
+      }
+    )
+  }
 
 /**
  * Returns a valid `null` value if the property isn't set
  *
  * @since 1.1.4
  */
-internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?> by lazy {
-
-  val projectVersionPropertyType = NullableStringPropertyType(
+internal val PROJECT_VERSION_PROPERTY: EditorConfigProperty<String?>
+  get() = NullableStringPropertyType(
     // don't prefix this with `ktlint_` because it's not a rule ID.
     // KtLint's parsing will fail if it sees this editorconfig property.
     name = "kt-rules_project_version",
     description = "the current project version as a literal string"
-  )
+  ).let { type ->
 
-  EditorConfigProperty(
-    name = projectVersionPropertyType.name,
-    type = projectVersionPropertyType,
-    defaultValue = null,
-    propertyMapper = { property, _ ->
-
-      property?.sourceValue?.trim('"', '\'')
-    }
-  )
-}
+    EditorConfigProperty(
+      name = type.name,
+      type = type,
+      defaultValue = null,
+      propertyMapper = { property, _ ->
+        property?.sourceValue?.trim('"', '\'')
+      }
+    )
+  }

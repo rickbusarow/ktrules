@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Rick Busarow
+ * Copyright (C) 2025 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,14 +32,15 @@ import com.rickbusarow.ktrules.ec4j.PROJECT_VERSION_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.dots
+import com.rickbusarow.ktrules.rules.internal.toStringPretty
 import com.rickbusarow.ktrules.rules.internal.wrapIn
 import io.kotest.assertions.asClue
 import io.kotest.assertions.withClue
 import io.kotest.matchers.collections.shouldBeEmpty
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.psi.KtFile
-import java.nio.file.Files
 import java.util.ServiceLoader
+import kotlin.io.path.writeText
 import io.kotest.matchers.shouldBe as kotestShouldBe
 
 interface Tests : HasDynamicTests {
@@ -121,7 +122,13 @@ interface Tests : HasDynamicTests {
       }
     )
 
-    with(KtLintTestResult(output = outputString, allLintErrors = errors)) {
+    with(
+      KtLintTestResult(
+        output = outputString,
+        allLintErrors = errors,
+        editorConfig = editorConfig
+      )
+    ) {
       assertions()
       checkNoMoreErrors()
     }
@@ -195,7 +202,7 @@ interface Tests : HasDynamicTests {
         null -> null
         is EditorConfig.File -> {
           val path = fileSystem.getPath(".editorconfig")
-          Files.write(path, editorConfig.content.toByteArray())
+          path.writeText(editorConfig.content)
           null
         }
 
@@ -230,15 +237,9 @@ interface Tests : HasDynamicTests {
     currentVersion: String?
   ): EditorConfigOverride {
     val pairs = buildList {
-      if (lineLength != null) {
-        add(MAX_LINE_LENGTH_PROPERTY to lineLength)
-      }
-      if (wrappingStyle != null) {
-        add(WRAPPING_STYLE_PROPERTY to wrappingStyle.displayValue)
-      }
-      if (currentVersion != null) {
-        add(PROJECT_VERSION_PROPERTY to currentVersion)
-      }
+      add(MAX_LINE_LENGTH_PROPERTY to lineLength)
+      add(WRAPPING_STYLE_PROPERTY to wrappingStyle?.displayValue)
+      add(PROJECT_VERSION_PROPERTY to currentVersion)
     }
 
     return EditorConfigOverride.from(*pairs.toTypedArray())
@@ -284,7 +285,8 @@ interface Tests : HasDynamicTests {
 
   data class KtLintTestResult(
     val output: String,
-    val allLintErrors: List<KtLintTestResult.LintError>
+    val allLintErrors: List<KtLintTestResult.LintError>,
+    val editorConfig: EditorConfig
   ) {
 
     private val remaining = allLintErrors.toMutableList()
@@ -360,6 +362,9 @@ interface Tests : HasDynamicTests {
         |
         | -- remaining errors:
         |${remaining.joinToString("\n")}
+        |
+        | -- editorconfig
+        |${editorConfig.toString().toStringPretty()}
         |""".replaceIndentByMargin()
     }
 

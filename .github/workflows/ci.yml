@@ -84,13 +84,21 @@ jobs:
           name: test-results-${{ matrix.runner }}
           path: ${{ github.workspace }}/**/build/reports/tests/
 
-      - name: Unit test results
-        uses: mikepenz/action-junit-report@ee6b445351cd81e2f73a16a0e52d598aeac2197f # v5
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@c1a285145b9d317df6ced56c09f525b5c2b6f755 # v1
+        id: app-token
         if: failure()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: '**/build/**/TEST-*.xml'
-          check_name: Unit Test Results - ${{runner.os}}
+          app-id: ${{ secrets.PR_BOT_APP_ID }}
+          private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}
+
+      - name: Unit test results
+        uses: mikepenz/action-junit-report@62516aa379bff6370c95fd5894d5a27fb6619d9b # v5
+        if: failure()
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          report_paths: "**/build/**/TEST-*.xml"
+          check_name: Unit Test Results - ubuntu
 
   all-checks:
     if: always()
