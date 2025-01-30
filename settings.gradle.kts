@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Rick Busarow
+ * Copyright (C) 2025 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+rootProject.name = "ktrules"
+
 pluginManagement {
   repositories {
     gradlePluginPortal()
@@ -22,24 +24,38 @@ pluginManagement {
 }
 
 plugins {
-  id("com.gradle.enterprise") version "3.18"
+  id("com.gradle.develocity") version "3.19"
 }
 
-gradleEnterprise {
+val inGHA = !System.getenv("GITHUB_ACTIONS").isNullOrEmpty()
+
+develocity {
   buildScan {
 
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
+    uploadInBackground = true
 
-    publishAlways()
+    termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
+    termsOfUseAgree = "yes"
 
-    // https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+    capture {
+      testLogging = true
+      buildLogging = true
+      fileFingerprints = true
+    }
 
-    tag(if (System.getenv("CI").isNullOrBlank()) "Local" else "CI")
+    obfuscation {
+      hostname { "<hostName>" }
+      ipAddresses { listOf("<ip address>") }
+      username { "<username>" }
+    }
 
-    val gitHubActions = System.getenv("GITHUB_ACTIONS")?.toBoolean() ?: false
+    tag(if (inGHA) "GitHub-Actions" else "Local")
 
-    if (gitHubActions) {
+    publishing {
+      onlyIf { inGHA }
+    }
+
+    if (inGHA) {
       // ex: `octocat/Hello-World` as in github.com/octocat/Hello-World
       val repository = System.getenv("GITHUB_REPOSITORY")!!
       val runId = System.getenv("GITHUB_RUN_ID")!!
@@ -61,18 +77,33 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "ktrules"
+if (inGHA) {
+  fun Long.gigabytes(): String {
+    return "%.1f GB".format(toDouble() / (1024 * 1024 * 1024)).padEnd(52)
+  }
 
-// If this project is the real root of the build, copy the root project's properties file to included
-// builds, to ensure that Gradle settings are identical and there's only 1 daemon.
-// Note that with this copy, any changes to the included build's properties file will be overwritten.
-if (gradle.parent == null) {
-  (settings as org.gradle.initialization.DefaultSettings).includedBuilds
-    .forEach { includedBuildSpec ->
-      rootDir.resolve("gradle.properties")
-        .copyTo(
-          target = includedBuildSpec.rootDir.resolve("gradle.properties"),
-          overwrite = true
-        )
-    }
+  val os = System.getProperty("os.name").toString().padEnd(52)
+  val processors = Runtime.getRuntime().availableProcessors().toString().padEnd(52)
+  val totalMemory = Runtime.getRuntime().totalMemory().gigabytes()
+  val freeMemory = Runtime.getRuntime().freeMemory().gigabytes()
+  val maxMemory = Runtime.getRuntime().maxMemory().gigabytes()
+  println(
+    """
+    ╔══════════════════════════════════════════════════╗
+    ║                  CI environment                  ║
+    ║                                                  ║
+    ║                     OS - $os                     ║
+    ║   available processors - $processors             ║
+    ║                                                  ║
+    ║       allocated memory - $totalMemory            ║
+    ║            free memory - $freeMemory             ║
+    ║             max memory - $maxMemory              ║
+    ╚══════════════════════════════════════════════════╝
+    """.trimIndent()
+      .lineSequence()
+      .joinToString("\n") { line ->
+        val sub = line.substringBeforeLast('║', "")
+        if (sub.length > 51) sub.substring(0..50) + '║' else line
+      }
+  )
 }
