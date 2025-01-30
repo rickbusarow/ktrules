@@ -27,7 +27,7 @@ import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.compat.from
-import com.rickbusarow.ktrules.compat.toKtLintRuleProviders140
+import com.rickbusarow.ktrules.compat.toKtLintRuleProviders150
 import com.rickbusarow.ktrules.ec4j.PROJECT_VERSION_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
@@ -99,7 +99,7 @@ interface Tests : HasDynamicTests {
     val errors = mutableListOf<KtLintTestResult.LintError>()
 
     val outputString = withEngine(
-      ruleProviders = rules.toKtLintRuleProviders140(),
+      ruleProviders = rules.toKtLintRuleProviders150(),
       editorConfig = editorConfig,
       includeAllRules = includeAllRules,
       action = {
@@ -161,7 +161,7 @@ interface Tests : HasDynamicTests {
     editorConfig: EditorConfig?
   ): List<KtLintTestResult.LintError> = buildList {
     withEngine(
-      ruleProviders = rules.toKtLintRuleProviders140(),
+      ruleProviders = rules.toKtLintRuleProviders150(),
       editorConfig = editorConfig,
       includeAllRules = includeAllRules,
       action = fun KtLintRuleEngine.() {

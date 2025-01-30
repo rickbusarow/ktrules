@@ -34,7 +34,11 @@ class NoLeadingBlankLinesRule : RuleCompat(ID) {
     emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
   ) {
 
-    if (node.elementType == ElementType.FILE) {
+    val f = ElementType.FILE
+
+    val et = node.elementType
+
+    if (et == f) {
 
       node.children()
         .takeWhile { it.text.isBlank() }

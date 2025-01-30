@@ -293,8 +293,7 @@ object ElementType {
   val INFIX_KEYWORD: IElementType = KtTokens.INFIX_KEYWORD
   val CONST_KEYWORD: IElementType = KtTokens.CONST_KEYWORD
   val SUSPEND_KEYWORD: IElementType = KtTokens.SUSPEND_KEYWORD
-  val HEADER_KEYWORD: IElementType = KtTokens.HEADER_KEYWORD
-  val IMPL_KEYWORD: IElementType = KtTokens.IMPL_KEYWORD
+
   val EXPECT_KEYWORD: IElementType = KtTokens.EXPECT_KEYWORD
   val ACTUAL_KEYWORD: IElementType = KtTokens.ACTUAL_KEYWORD
 
