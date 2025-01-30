@@ -17,7 +17,7 @@
       ]
     },
     {
-      "matchCurrentVersion" : "/(?:1\\.[01]\\.1)|(?:0\\.(?:47|48|49|50|)\\..*)/",
+      "matchCurrentVersion" : "/(?:1\\.[0-4]\\.[01])|(?:0\\.(?:47|48|49|50|)\\..*)/",
       "enabled" : false,
       "matchPackageNames" : [
         "com.pinterest.ktlint:{/,}**"
