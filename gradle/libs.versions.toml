@@ -4,10 +4,10 @@
 jdk = "11"
 # the jdk used in packaging
 jvmTarget = "11"
-kotlin = "1.9.25"
+kotlin = "2.0.21"
 kotlinApi = "1.7"
-ktlint-lib = "1.3.1"
-ktrules-dev = "1.4.1-SNAPSHOT"
+ktlint-lib = "1.4.1"
+ktrules-dev = "1.5.0-SNAPSHOT"
 ktrules-released = "1.4.0"
 
 benManes-versions = "0.51.0"
@@ -16,9 +16,9 @@ detekt = "1.23.6"
 diffplug-spotless = "6.25.0"
 dokka = "2.0.0"
 dropbox-dependencyGuard = "0.5.0"
-ec4j = "0.3.0"
+ec4j = "1.1.0"
 github-release = "2.5.2"
-google-ksp = "1.9.25-1.0.20"
+google-ksp = "2.0.21-1.0.26"
 jUnit = "5.10.3"
 jetbrains-changelog = "2.2.1"
 jetbrains-markdown = "0.7.3"
@@ -48,6 +48,7 @@ github-release = { id = "com.rickbusarow.github-release-fork", version.ref = "ri
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 jetbrains-changelog = { id = "org.jetbrains.changelog", version.ref = "jetbrains-changelog" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinx-binaryCompatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binaryCompatibility" }
 ktlint = { id = "com.rickbusarow.ktlint", version.ref = "rickBusarow-ktlint" }
 moduleCheck = { id = "com.rickbusarow.module-check", version.ref = "rickBusarow-moduleCheck" }
@@ -167,6 +168,22 @@ ktlint120-ruleset-experimental = { module = "com.pinterest.ktlint:ktlint-ruleset
 ktlint120-ruleset-standard = { module = "com.pinterest.ktlint:ktlint-ruleset-standard", version.ref = "ktlint-lib" }
 ktlint120-test = { module = "com.pinterest.ktlint:ktlint-test", version.ref = "ktlint-lib" }
 
+ktlint130-cli = "com.pinterest.ktlint:ktlint-cli:1.3.1"
+ktlint130-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.3.1"
+ktlint130-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.3.1"
+ktlint130-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:1.3.1"
+ktlint130-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:1.3.1"
+ktlint130-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.3.1"
+ktlint130-test = "com.pinterest.ktlint:ktlint-test:1.3.1"
+
+ktlint140-cli = "com.pinterest.ktlint:ktlint-cli:1.4.1"
+ktlint140-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.4.1"
+ktlint140-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.4.1"
+ktlint140-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:1.4.1"
+ktlint140-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:1.4.1"
+ktlint140-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.4.1"
+ktlint140-test = "com.pinterest.ktlint:ktlint-test:1.4.1"
+
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-lib" }
 ktlint-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }
 ktlint-rule-engine-core = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint-lib" }
@@ -187,19 +204,3 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 vanniktech-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "vanniktech-publish" }
 
 zacSweers-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:1.2.0"
-
-[bundles]
-jUnit = [
-  "junit-engine",
-  "junit-jupiter",
-  "junit-jupiter-api",
-  "junit-params",
-]
-kotest = [
-  "kotest-assertions-api",
-  "kotest-assertions-core-jvm",
-  "kotest-assertions-shared",
-  "kotest-common",
-  "kotest-extensions",
-  "kotest-property-jvm",
-]

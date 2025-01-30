@@ -51,9 +51,7 @@ develocity {
 
     tag(if (inGHA) "GitHub-Actions" else "Local")
 
-    publishing {
-      onlyIf { inGHA }
-    }
+    // publishing { onlyIf { true} }
 
     if (inGHA) {
       // ex: `octocat/Hello-World` as in github.com/octocat/Hello-World
@@ -71,11 +69,12 @@ develocity {
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
   repositories {
-    google()
     mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
+    google()
   }
 }
+
+include("lib")
 
 if (inGHA) {
   fun Long.gigabytes(): String {
