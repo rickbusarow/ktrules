@@ -16,9 +16,9 @@
 @file:Suppress("PropertyName", "VariableNaming")
 
 import com.diffplug.gradle.spotless.GroovyGradleExtension
-import com.diffplug.gradle.spotless.SpotlessTask
 import com.rickbusarow.doks.DoksTask
 import com.rickbusarow.ktlint.KtLintTask
+import com.rickbusarow.ktlint.internal.div
 import kotlinx.validation.KotlinApiBuildTask
 import kotlinx.validation.KotlinApiCompareTask
 import org.jetbrains.changelog.date
@@ -38,11 +38,11 @@ plugins {
   alias(libs.plugins.doks)
   alias(libs.plugins.dokka)
   alias(libs.plugins.github.release)
-  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.ktlint)
   alias(libs.plugins.kotlinx.binaryCompatibility)
   alias(libs.plugins.jetbrains.changelog)
-  alias(libs.plugins.moduleCheck)
+  // alias(libs.plugins.moduleCheck)
   alias(libs.plugins.spotless)
   id("maven-publish")
   id("signing")
@@ -60,7 +60,7 @@ doks {
     docs("README.md", "CHANGELOG.md")
 
     sampleCodeSource.from(
-      fileTree(projectDir.resolve("src/test/kotlin")) {
+      fileTree(projectDir / "lib" / "src/test/kotlin") {
         include("**/*.kt")
       }
     )
@@ -87,7 +87,6 @@ doks {
 
 tasks.withType<DoksTask>().configureEach {
   mustRunAfter(tasks.withType<KotlinCompile>())
-  mustRunAfter("apiDump")
 }
 
 val updateEditorConfigVersion by tasks.registering {
@@ -125,11 +124,10 @@ val fix by tasks.registering {
   group = "Verification"
   description = "Runs all auto-fix linting tasks"
 
-  dependsOn("apiDump")
   dependsOn("doks")
   dependsOn("ktlintFormat")
   dependsOn("spotlessApply")
-  dependsOn("moduleCheckAuto")
+  // dependsOn("moduleCheckAuto")
 }
 
 // This is a convenience task which applies all available fixes before running `check`. Each
@@ -163,10 +161,6 @@ val checkVersionIsNotSnapshot by tasks.registering {
       "The project's version name cannot have a -SNAPSHOT suffix, but it was $VERSION_CURRENT."
     }
   }
-}
-
-tasks.withType<SpotlessTask>().configureEach {
-  mustRunAfter("apiDump")
 }
 
 spotless {

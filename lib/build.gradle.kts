@@ -25,7 +25,6 @@ import io.gitlab.arturbosch.detekt.DetektGenerateConfigTask
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import kotlinx.validation.KotlinApiBuildTask
 import kotlinx.validation.KotlinApiCompareTask
-import modulecheck.utils.capitalize
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
@@ -33,7 +32,6 @@ import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
 import org.jetbrains.kotlin.gradle.targets.js.npm.SemVer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URL
-import kotlin.text.RegexOption.MULTILINE
 
 plugins {
   alias(libs.plugins.detekt)
@@ -56,7 +54,8 @@ val compatSourceSetNames = listOf(
   "compat110",
   "compat120",
   "compat130",
-  "compat140"
+  "compat140",
+  "compat150"
 )
 
 dependencyGuard {
@@ -65,6 +64,8 @@ dependencyGuard {
   configuration("runtimeClasspath")
   configuration("compileClasspath")
 }
+
+val main: SourceSet by sourceSets.getting
 
 compatSourceSetNames.forEach { ssName ->
 
@@ -75,21 +76,20 @@ compatSourceSetNames.forEach { ssName ->
   sourceSets.register(ssName) {
     java.srcDir("src/$ssName/kotlin")
     resources.srcDir("src/$ssName/resources")
-    compileClasspath += sourceSets["main"].output
-
+    compileClasspath += main.output
     runtimeClasspath += output + compileClasspath
   }
 
   tasks.register("${ssName}Jar", Jar::class.java) {
     from(sourceSets[ssName].output)
-    from(sourceSets["main"].output)
+    from(main.output)
     archiveFileName.set("$ssName.jar")
   }
 
   tasks.register("${ssName}SourcesJar", Jar::class.java) {
     archiveClassifier.set("sources")
     from(sourceSets[ssName].allSource)
-    from(sourceSets["main"].allSource)
+    from(main.allSource)
   }
 }
 
@@ -101,13 +101,14 @@ val compat100Api: Configuration by configurations.getting
 val compat110Api: Configuration by configurations.getting
 val compat120Api: Configuration by configurations.getting
 val compat130Api: Configuration by configurations.getting
-
-val compat140: SourceSet by sourceSets.getting
-val compat140Implementation: Configuration by configurations.getting
 val compat140Api: Configuration by configurations.getting
 
+val compat150: SourceSet by sourceSets.getting
+val compat150Implementation: Configuration by configurations.getting
+val compat150Api: Configuration by configurations.getting
+
 sourceSets.named("test") {
-  compileClasspath += compat140.output
+  compileClasspath += compat150.output
   runtimeClasspath += output + compileClasspath
 }
 
@@ -138,6 +139,10 @@ dependencies {
   compat140Api(libs.ktlint140.cli.ruleset.core)
   compat140Api(libs.ktlint140.rule.engine.core)
 
+  compat150Api(libs.jetbrains.markdown)
+  compat150Api(libs.ktlint150.cli.ruleset.core)
+  compat150Api(libs.ktlint150.rule.engine.core)
+
   compat47Api(libs.jetbrains.markdown)
   compat47Api(libs.ktlint47.core)
 
@@ -160,6 +165,7 @@ dependencies {
   "compat120CompileOnly"(libs.google.auto.service.annotations)
   "compat130CompileOnly"(libs.google.auto.service.annotations)
   "compat140CompileOnly"(libs.google.auto.service.annotations)
+  "compat150CompileOnly"(libs.google.auto.service.annotations)
   "compat47CompileOnly"(libs.google.auto.service.annotations)
   "compat48CompileOnly"(libs.google.auto.service.annotations)
   "compat49CompileOnly"(libs.google.auto.service.annotations)
@@ -209,26 +215,7 @@ tasks.withType<DoksTask>().configureEach {
 
 tasks.named("apiCheck") { mustRunAfter("apiDump") }
 
-val updateEditorConfigVersion by tasks.registering {
-
-  val file = file(".editorconfig")
-  val current = VERSION_CURRENT
-
-  doLast {
-    val oldText = file.readText()
-
-    val reg = """^(ktlint_kt-rules_project_version *?= *?)\S*$""".toRegex(MULTILINE)
-
-    val newText = oldText.replace(reg, "$1$current")
-
-    if (newText != oldText) {
-      file.writeText(newText)
-    }
-  }
-}
-
 tasks.withType<KtLintTask>().configureEach {
-  dependsOn(updateEditorConfigVersion)
 
   mustRunAfter(
     tasks.matching {
@@ -348,7 +335,7 @@ val detektExcludes = listOf(
 extensions.configure<DetektExtension> {
 
   autoCorrect = false
-  config.from("$projectDir/detekt/detekt.yml")
+  config.from("$rootDir/detekt/detekt.yml")
   buildUponDefaultConfig = true
 
   source.from(
@@ -365,7 +352,7 @@ tasks.withType<Detekt>().configureEach {
 
   autoCorrect = false
   parallel = true
-  config.from("$projectDir/detekt/detekt.yml")
+  config.from("$rootDir/detekt/detekt.yml")
   buildUponDefaultConfig = true
 
   reports {
@@ -413,10 +400,8 @@ val fix by tasks.registering {
   description = "Runs all auto-fix linting tasks"
 
   dependsOn("apiDump")
-  dependsOn("doks")
   dependsOn("ktlintFormat")
   dependsOn("spotlessApply")
-  dependsOn("moduleCheckAuto")
   dependsOn(deleteEmptyDirs)
 }
 

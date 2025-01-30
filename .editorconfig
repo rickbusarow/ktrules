@@ -41,7 +41,7 @@ kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
 # test methods with descriptive names.
 ktlint_ignore_back_ticked_identifier = true
 
-ktlint_kt-rules_project_version = 1.4.1-SNAPSHOT
+ktlint_kt-rules_project_version = 1.5.0-SNAPSHOT
 ktlint_kt-rules_wrapping_style = equal
 
 # Disabled rules for 0.48.0+
