@@ -15,8 +15,6 @@
 
 @file:Suppress("PropertyName", "VariableNaming")
 
-import com.diffplug.gradle.spotless.GroovyGradleExtension
-import com.diffplug.gradle.spotless.SpotlessTask
 import com.rickbusarow.doks.DoksTask
 import com.rickbusarow.ktlint.KtLintTask
 import io.gitlab.arturbosch.detekt.Detekt
@@ -39,7 +37,6 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.ktlint)
   alias(libs.plugins.dropbox.dependencyGuard)
-  alias(libs.plugins.spotless)
   id("maven-publish")
   id("signing")
   kotlin("kapt")
@@ -401,7 +398,6 @@ val fix by tasks.registering {
 
   dependsOn("apiDump")
   dependsOn("ktlintFormat")
-  dependsOn("spotlessApply")
   dependsOn(deleteEmptyDirs)
 }
 
@@ -632,42 +628,6 @@ tasks.withType(AbstractDokkaLeafTask::class.java).configureEach {
       )
       // Suffix which is used to append the line number to the URL. Use #L for GitHub
       remoteLineSuffix.set("#L")
-    }
-  }
-}
-
-tasks.withType<SpotlessTask>().configureEach {
-  mustRunAfter("apiDump")
-}
-
-spotless {
-  format("markdown") {
-    target(
-      fileTree(projectDir) {
-        include("**/*.md")
-        include("**/*.mdx")
-
-        exclude("**/.docusaurus/**")
-        exclude("**/build/**")
-        exclude("**/dokka-archive/**")
-        exclude("**/node_modules/**")
-        exclude("website/static/api/**")
-        exclude("artifacts.json")
-        exclude(".gradle/**")
-        exclude(".git/**")
-      }
-    )
-
-    prettier(libs.versions.prettier.lib.get())
-
-    withinBlocksRegex(
-      "groovy block in markdown",
-      //language=regexp
-      """```groovy.*\n((?:(?!```)[\s\S])*)""",
-      GroovyGradleExtension::class.java
-    ) {
-      greclipse()
-      indentWithSpaces(2)
     }
   }
 }
