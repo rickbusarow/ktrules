@@ -20,6 +20,7 @@ out/
 # Gradle files
 .gradle/
 build/
+.DS_STORE
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -86,10 +87,6 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
-# ignore the gradle.properties of any subproject,
-# since they're created and updated automatically by the main settings script
-/**/gradle.properties
 
 # auto-generated from the root .editorconfig in order to add extra disabled rules
 build-logic/.editorconfig
