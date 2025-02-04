@@ -12,7 +12,7 @@ env:
 jobs:
   publish-snapshot:
     runs-on: macos-latest
-    if: github.repository == 'RBusarow/ktrules'
+    if: github.repository == 'rickbusarow/ktrules'
     timeout-minutes: 30
 
     steps:
