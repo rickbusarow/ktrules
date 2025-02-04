@@ -1,6 +1,29 @@
 # Changelog
 
-## 1.4.1-SNAPSHOT (unreleased)
+## 1.5.1-SNAPSHOT (unreleased)
+
+## [1.5.0] - 2025-02-04
+
+The default artifact is now updated to [KtLint 1.5.0](https://github.com/pinterest/ktlint/releases/tag/1.5.0).
+
+The published artifacts have been split again.
+
+These artifacts all have the same rule logic, but use different KtLint versions.
+
+| if you use KtLint... |          use the ktrules artifact:          |
+|:--------------------:|:-------------------------------------------:|
+|        0.47.x        | `com.rickbusarow.ktrules:ktrules-47:1.4.0`  |
+|        0.48.x        | `com.rickbusarow.ktrules:ktrules-48:1.4.0`  |
+|        0.49.x        | `com.rickbusarow.ktrules:ktrules-49:1.4.0`  |
+|        0.50.x        | `com.rickbusarow.ktrules:ktrules-50:1.4.0`  |
+|        1.0.x         | `com.rickbusarow.ktrules:ktrules-100:1.4.0` |
+|        1.1.x         | `com.rickbusarow.ktrules:ktrules-110:1.4.0` |
+|        1.2.x         | `com.rickbusarow.ktrules:ktrules-120:1.4.0` |
+|        1.3.x         | `com.rickbusarow.ktrules:ktrules-130:1.4.0` |
+|        1.4.x         | `com.rickbusarow.ktrules:ktrules-140:1.4.0` |
+|        1.5.x         |   `com.rickbusarow.ktrules:ktrules:1.4.0`   |
+
+**Full Changelog**: https://github.com/rickbusarow/ktrules/compare/1.4.0...1.5.0
 
 ## [1.4.0] - 2023-03-10
 
@@ -298,3 +321,5 @@ Hello World
 [1.2.1]: https://github.com/rbusarow/ktrules/releases/tag/1.2.1
 [1.3.0]: https://github.com/rbusarow/ktrules/releases/tag/1.3.0
 [1.3.1]: https://github.com/rbusarow/ktrules/releases/tag/1.3.1
+[1.4.0]: https://github.com/rbusarow/ktrules/releases/tag/1.4.0
+[1.5.0]: https://github.com/rbusarow/ktrules/releases/tag/1.5.0
