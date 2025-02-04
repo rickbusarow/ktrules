@@ -76,37 +76,37 @@ artifacts corresponding to the KtLint version your project is using.
 // build.gradle.kts
 dependencies {
   // Using the current KtLint (1.5.0) apis
-  ktlint("com.rickbusarow.ktrules:ktrules:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules:1.4.0")
 
   // ... or using the KtLint 1.5.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-150:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-150:1.4.0")
 
   // ... or using the KtLint 1.4.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-140:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-140:1.4.0")
 
   // ... or using the KtLint 1.3.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-130:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-130:1.4.0")
 
   // ... or using the KtLint 1.2.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-120:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-120:1.4.0")
 
   // ... or using the KtLint 1.1.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-110:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-110:1.4.0")
 
   // ... or using the KtLint 1.0.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-100:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-100:1.4.0")
 
   // ... or using the KtLint 0.50.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-50:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-50:1.4.0")
 
   // ... or using the KtLint 0.49.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-49:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-49:1.4.0")
 
   // ... or using the KtLint 0.48.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-48:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-48:1.4.0")
 
   // ... or using the KtLint 0.47.x apis
-  ktlint("com.rickbusarow.ktrules:ktrules-47:1.5.0")
+  ktlint("com.rickbusarow.ktrules:ktrules-47:1.4.0")
 }
 ```
 
