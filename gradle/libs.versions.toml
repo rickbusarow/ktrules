@@ -8,7 +8,7 @@ kotlin = "2.0.21"
 kotlinApi = "1.7"
 ktlint-lib = "1.5.0"
 ktrules-dev = "1.5.1-SNAPSHOT"
-ktrules-released = "1.4.0"
+ktrules-released = "1.5.0"
 
 benManes-versions = "0.52.0"
 dependencyAnalysis = "2.8.0"
