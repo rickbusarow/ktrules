@@ -23,6 +23,11 @@ package com.rickbusarow.ktrules.compat
  */
 @Suppress("EnumEntryName", "EnumNaming")
 enum class CodeStyleValueCompat {
+  /**
+   * renamed to `android_studio`
+   *
+   * @since 1.1.1
+   */
   @Deprecated(
     message = "Marked for removal in KtLint 0.50. Value is renamed to 'android_studio'.",
     replaceWith = ReplaceWith("android_studio")
@@ -63,6 +68,11 @@ enum class CodeStyleValueCompat {
    */
   ktlint_official,
 
+  /**
+   * renamed to `intellij_idea`
+   *
+   * @since 1.1.1
+   */
   @Deprecated(
     message = "Marked for removal in KtLint 0.50. Value is renamed to 'intellij_idea'.",
     replaceWith = ReplaceWith("intellij_idea")

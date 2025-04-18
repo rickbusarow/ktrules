@@ -46,6 +46,7 @@ enum class WrappingStyle(val displayValue: String) {
    */
   MINIMUM_RAGGED("equal");
 
+  /** @since 1.1.2 */
   companion object {
     /**
      * @see WrappingStyle
