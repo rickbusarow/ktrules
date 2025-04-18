@@ -335,7 +335,7 @@ val detektExcludes = listOf(
 extensions.configure<DetektExtension> {
 
   autoCorrect = false
-  config.from("$projectDir/detekt/detekt.yml")
+  config.from("$rootDir/detekt/detekt.yml")
   buildUponDefaultConfig = true
 
   source.from(
@@ -352,7 +352,7 @@ tasks.withType<Detekt>().configureEach {
 
   autoCorrect = false
   parallel = true
-  config.from("$projectDir/detekt/detekt.yml")
+  config.from("$rootDir/detekt/detekt.yml")
   buildUponDefaultConfig = true
 
   reports {
@@ -637,7 +637,7 @@ tasks.withType(AbstractDokkaLeafTask::class.java).configureEach {
 }
 
 tasks.withType<SpotlessTask>().configureEach {
-  mustRunAfter("apiDump")
+  mustRunAfter("apiDump", "dependencyGuard")
 }
 
 spotless {
