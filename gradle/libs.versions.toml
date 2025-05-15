@@ -34,7 +34,7 @@ rickBusarow-kgx = "0.1.12"
 rickBusarow-ktlint = "0.2.2"
 rickBusarow-moduleCheck = "0.12.5"
 slf4j = "2.0.17"
-vanniktech-publish = "0.31.0"
+vanniktech-publish = "0.32.0"
 
 [plugins]
 
