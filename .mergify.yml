@@ -86,6 +86,8 @@ pull_request_rules:
       rebase:
         autosquash: true
         bot_account: *name_merge_bot
+      review:
+        type: APPROVE
       label:
         remove:
           - *name_approved
@@ -113,6 +115,7 @@ pull_request_rules:
     conditions: []
     actions:
       queue:
+
 priority_rules:
   - name: priority for queue `duplicated Queue PRs for rebase-merge when CI passes and
       approved from Re-queue any PR with a 'requeue' label`
