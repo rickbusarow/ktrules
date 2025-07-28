@@ -6,7 +6,7 @@ jdk = "11"
 jvmTarget = "11"
 kotlin = "2.0.21"
 kotlinApi = "1.7"
-ktlint-lib = "1.6.0"
+ktlint-lib = "1.7.1"
 ktrules-dev = "1.5.1-SNAPSHOT"
 ktrules-released = "1.5.0"
 
@@ -184,13 +184,13 @@ ktlint140-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experiment
 ktlint140-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.4.1"
 ktlint140-test = "com.pinterest.ktlint:ktlint-test:1.4.1"
 
-ktlint150-cli = "com.pinterest.ktlint:ktlint-cli:1.6.0"
-ktlint150-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.6.0"
-ktlint150-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.6.0"
+ktlint150-cli = "com.pinterest.ktlint:ktlint-cli:1.7.1"
+ktlint150-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint150-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 ktlint150-rule-engine = "com.pinterest.ktlint:ktlint-rule-engine:1.6.0"
 ktlint150-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimental:1.5.0"
-ktlint150-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.6.0"
-ktlint150-test = "com.pinterest.ktlint:ktlint-test:1.6.0"
+ktlint150-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:1.7.1"
+ktlint150-test = "com.pinterest.ktlint:ktlint-test:1.7.1"
 
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-lib" }
 ktlint-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }
