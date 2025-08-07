@@ -75,9 +75,8 @@ dependencyResolutionManagement {
   }
 }
 
-include("lib")
-
 include(
+  ":lib",
   ":ktrules-api",
   ":ktrules-psi"
 )

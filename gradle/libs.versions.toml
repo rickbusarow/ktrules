@@ -28,6 +28,7 @@ rickBusarow-doks = "0.3.0"
 rickBusarow-github-release = "2.5.2"
 rickBusarow-kgx = "0.1.12"
 rickBusarow-ktlint = "0.2.2"
+rickBusarow-mahout = "0.1.0-SNAPSHOT"
 slf4j = "2.0.17"
 
 [plugins]
@@ -43,6 +44,9 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinx-binaryCompatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binaryCompatibility" }
 ktlint = { id = "com.rickbusarow.ktlint", version.ref = "rickBusarow-ktlint" }
 spotless = { id = "com.diffplug.spotless", version.ref = "diffplug-spotless" }
+
+mahout-kotlin-jvm-module = { id = "com.rickbusarow.mahout.kotlin-jvm-module", version.ref = "rickBusarow-mahout" }
+mahout-root = { id = "com.rickbusarow.mahout.root", version.ref = "rickBusarow-mahout" }
 
 [libraries]
 
