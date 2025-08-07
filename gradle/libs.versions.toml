@@ -146,26 +146,26 @@ ktlint50-ruleset-experimental = "com.pinterest.ktlint:ktlint-ruleset-experimenta
 ktlint50-ruleset-standard = "com.pinterest.ktlint:ktlint-ruleset-standard:0.50.0"
 ktlint50-test = "com.pinterest.ktlint:ktlint-test:0.50.0"
 
-ktlint100-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.0.1"
-ktlint100-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.0.1"
+ktlint100-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint100-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 
-ktlint110-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.1.1"
-ktlint110-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.1.1"
+ktlint110-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint110-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 
 ktlint120-cli-ruleset-core = { module = "com.pinterest.ktlint:ktlint-cli-ruleset-core", version.ref = "ktlint-lib" }
 ktlint120-rule-engine-core = { module = "com.pinterest.ktlint:ktlint-rule-engine-core", version.ref = "ktlint-lib" }
 
-ktlint130-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.3.1"
-ktlint130-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.3.1"
+ktlint130-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint130-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 
-ktlint140-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.4.1"
-ktlint140-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.4.1"
+ktlint140-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint140-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 
-ktlint150-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.5.0"
-ktlint150-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.5.0"
+ktlint150-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint150-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 
-ktlint160-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.6.0"
-ktlint160-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.6.0"
+ktlint160-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
+ktlint160-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
 
 ktlint170-cli-ruleset-core = "com.pinterest.ktlint:ktlint-cli-ruleset-core:1.7.1"
 ktlint170-rule-engine-core = "com.pinterest.ktlint:ktlint-rule-engine-core:1.7.1"
