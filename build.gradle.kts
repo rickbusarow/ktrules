@@ -29,6 +29,7 @@ import kotlin.text.RegexOption.MULTILINE
 buildscript {
   dependencies {
     classpath(libs.rickBusarow.ktrules)
+    classpath(libs.rickBusarow.kgx)
   }
 }
 

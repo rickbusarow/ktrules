@@ -15,11 +15,13 @@
 
 package com.rickbusarow.ktrules
 
+import com.pinterest.ktlint.rule.engine.core.api.AutocorrectDecision
 import com.pinterest.ktlint.rule.engine.core.api.Rule
 import com.pinterest.ktlint.rule.engine.core.api.RuleId
 import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
 import com.rickbusarow.ktrules.compat.EmitWithUnit
 import com.rickbusarow.ktrules.compat.RuleCompat
+import com.rickbusarow.ktrules.compat.RuleCompat.AutocorrectDecisionCompat
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
@@ -29,10 +31,10 @@ import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /** */
-class RuleCompat120(private val ruleCompat: RuleCompat) :
+class RuleCompat160(private val ruleCompat: RuleCompat) :
   Rule(
-    RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
-    About(
+    ruleId = RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
+    about = About(
       maintainer = KtRulesRuleSetProvider.About.MAINTAINER,
       repositoryUrl = KtRulesRuleSetProvider.About.REPOSITORY_URL,
       issueTrackerUrl = KtRulesRuleSetProvider.About.ISSUE_TRACKER_URL
@@ -55,11 +57,11 @@ class RuleCompat120(private val ruleCompat: RuleCompat) :
       }
     },
     usesEditorConfigProperties = ruleCompat.usesEditorConfigProperties
-      .mapToSet { shimProperty -> shimProperty.toKtLintProperty120() }
+      .mapToSet { shimProperty -> shimProperty.toKtLintProperty160() }
   ) {
 
   override fun beforeFirstNode(editorConfig: EditorConfig) {
-    ruleCompat.beforeFirstNode(EditorConfigCompat120(editorConfig))
+    ruleCompat.beforeFirstNode(EditorConfigCompat160(editorConfig))
     super.beforeFirstNode(editorConfig)
   }
 

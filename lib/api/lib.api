@@ -24,6 +24,7 @@ public final class com/rickbusarow/ktrules/compat/CodeStyleValueCompat : java/la
 	public static final field intellij_idea Lcom/rickbusarow/ktrules/compat/CodeStyleValueCompat;
 	public static final field ktlint_official Lcom/rickbusarow/ktrules/compat/CodeStyleValueCompat;
 	public static final field official Lcom/rickbusarow/ktrules/compat/CodeStyleValueCompat;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/compat/CodeStyleValueCompat;
 	public static fun values ()[Lcom/rickbusarow/ktrules/compat/CodeStyleValueCompat;
 }
@@ -349,12 +350,27 @@ public abstract class com/rickbusarow/ktrules/compat/RuleCompat {
 	public synthetic fun <init> (Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun afterLastNode ()V
+	public fun afterVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 	public fun afterVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 	public fun beforeFirstNode (Lcom/rickbusarow/ktrules/compat/EditorConfigCompat;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
 	public final fun getRuleId-EPqpifQ ()Ljava/lang/String;
 	public final fun getUsesEditorConfigProperties ()Ljava/util/Set;
 	public final fun getVisitorModifiers ()Ljava/util/Set;
+}
+
+public final class com/rickbusarow/ktrules/compat/RuleCompat$AutocorrectDecisionCompat : java/lang/Enum {
+	public static final field ALLOW_AUTOCORRECT Lcom/rickbusarow/ktrules/compat/RuleCompat$AutocorrectDecisionCompat;
+	public static final field NO_AUTOCORRECT Lcom/rickbusarow/ktrules/compat/RuleCompat$AutocorrectDecisionCompat;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun ifAutocorrectAllowed (Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/compat/RuleCompat$AutocorrectDecisionCompat;
+	public static fun values ()[Lcom/rickbusarow/ktrules/compat/RuleCompat$AutocorrectDecisionCompat;
+}
+
+public abstract interface class com/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision : kotlin/jvm/functions/Function3 {
+	public abstract fun invoke (ILjava/lang/String;Z)Lcom/rickbusarow/ktrules/compat/RuleCompat$AutocorrectDecisionCompat;
 }
 
 public abstract class com/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat {
@@ -376,12 +392,20 @@ public final class com/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierComp
 public final class com/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAfterRuleCompat$ModeCompat : java/lang/Enum {
 	public static final field ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED Lcom/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAfterRuleCompat$ModeCompat;
 	public static final field REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED Lcom/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAfterRuleCompat$ModeCompat;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAfterRuleCompat$ModeCompat;
 	public static fun values ()[Lcom/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAfterRuleCompat$ModeCompat;
 }
 
 public final class com/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAsLateAsPossibleCompat : com/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat {
 	public static final field INSTANCE Lcom/rickbusarow/ktrules/compat/RuleCompat$VisitorModifierCompat$RunAsLateAsPossibleCompat;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/rickbusarow/ktrules/compat/RuleCompatKt {
+	public static final fun toEmitWithDecision (Lkotlin/jvm/functions/Function3;Z)Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;
 }
 
 public final class com/rickbusarow/ktrules/compat/RuleId : java/io/Serializable {
@@ -404,85 +428,85 @@ public abstract interface class com/rickbusarow/ktrules/compat/RuleProviderCompa
 
 public final class com/rickbusarow/ktrules/rules/KDocBlankLinesRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocCollapseRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeFirstNode (Lcom/rickbusarow/ktrules/compat/EditorConfigCompat;)V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocContentWrappingRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
 	public fun beforeFirstNode (Lcom/rickbusarow/ktrules/compat/EditorConfigCompat;)V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocIndentAfterLeadingAsteriskRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocLeadingAsteriskRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocTagOrderRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/KDocTagParamOrPropertyRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoDuplicateCopyrightHeaderRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoLeadingBlankLinesRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoSinceInKDocRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public fun <init> ()V
 	public fun beforeFirstNode (Lcom/rickbusarow/ktrules/compat/EditorConfigCompat;)V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoSpaceInTargetedAnnotationRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoTrailingSpacesInRawStringLiteralRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoUselessConstructorKeywordRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/NoWithTypeWithLambdaRule : com/rickbusarow/ktrules/compat/RuleCompat {
 	public static final field ERROR_MESSAGE Ljava/lang/String;
 	public fun <init> ()V
-	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;ZLkotlin/jvm/functions/Function3;)V
+	public fun beforeVisitChildNodes (Lorg/jetbrains/kotlin/com/intellij/lang/ASTNode;Lcom/rickbusarow/ktrules/compat/RuleCompat$EmitWithDecision;)V
 }
 
 public final class com/rickbusarow/ktrules/rules/internal/CollectionsKt {
@@ -505,6 +529,7 @@ public final class com/rickbusarow/ktrules/rules/internal/WrappingStyle : java/l
 	public static final field GREEDY Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
 	public static final field MINIMUM_RAGGED Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
 	public final fun getDisplayValue ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
 	public static fun values ()[Lcom/rickbusarow/ktrules/rules/internal/WrappingStyle;
 }

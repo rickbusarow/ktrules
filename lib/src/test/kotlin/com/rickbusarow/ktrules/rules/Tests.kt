@@ -21,20 +21,21 @@ import com.pinterest.ktlint.cli.ruleset.core.api.RuleSetProviderV3
 import com.pinterest.ktlint.rule.engine.api.Code
 import com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
 import com.pinterest.ktlint.rule.engine.api.KtLintRuleEngine
+import com.pinterest.ktlint.rule.engine.core.api.AutocorrectDecision
 import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.KtRulesRuleSetProvider
 import com.rickbusarow.ktrules.compat.MAX_LINE_LENGTH_PROPERTY
 import com.rickbusarow.ktrules.compat.RuleId
 import com.rickbusarow.ktrules.compat.RuleProviderCompat
 import com.rickbusarow.ktrules.compat.from
-import com.rickbusarow.ktrules.compat.toKtLintRuleProviders150
+import com.rickbusarow.ktrules.compat.toKtLintRuleProviders
 import com.rickbusarow.ktrules.ec4j.PROJECT_VERSION_PROPERTY
+import com.rickbusarow.ktrules.rules.Tests.KtLintTestResult.LintError
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle
 import com.rickbusarow.ktrules.rules.internal.WrappingStyle.Companion.WRAPPING_STYLE_PROPERTY
 import com.rickbusarow.ktrules.rules.internal.dots
 import com.rickbusarow.ktrules.rules.internal.toStringPretty
 import com.rickbusarow.ktrules.rules.internal.wrapIn
-import io.kotest.assertions.asClue
 import io.kotest.assertions.withClue
 import io.kotest.matchers.collections.shouldBeEmpty
 import org.intellij.lang.annotations.Language
@@ -96,28 +97,34 @@ interface Tests : HasDynamicTests {
     ),
     assertions: KtLintTestResult.() -> Unit
   ) {
-    val errors = mutableListOf<KtLintTestResult.LintError>()
+    val errors = mutableListOf<LintError>()
 
     val outputString = withEngine(
-      ruleProviders = rules.toKtLintRuleProviders150(),
+      ruleProviders = rules.toKtLintRuleProviders(),
       editorConfig = editorConfig,
       includeAllRules = includeAllRules,
       action = {
+
         format(
           Code.fromSnippet(
             text.trimIndent(),
             script = script
           )
-        ) { lintError, corrected ->
+        ) { lintError ->
           errors.add(
-            KtLintTestResult.LintError(
+            LintError(
               line = lintError.line,
               col = lintError.col,
               ruleId = lintError.ruleId.value,
               detail = lintError.detail,
-              corrected = corrected
+              corrected = lintError.canBeAutoCorrected
             )
           )
+          if (lintError.canBeAutoCorrected) {
+            AutocorrectDecision.ALLOW_AUTOCORRECT
+          } else {
+            AutocorrectDecision.NO_AUTOCORRECT
+          }
         }
       }
     )
@@ -142,7 +149,7 @@ interface Tests : HasDynamicTests {
     lineLength: Int? = lineLengthDefault,
     wrappingStyle: WrappingStyle? = wrappingStyleDefault,
     currentVersion: String? = currentVersionDefault
-  ): List<KtLintTestResult.LintError> = lint(
+  ): List<LintError> = lint(
     text = text,
     script = script,
     includeAllRules = includeAllRules,
@@ -159,9 +166,9 @@ interface Tests : HasDynamicTests {
     script: Boolean = false,
     includeAllRules: Boolean = false,
     editorConfig: EditorConfig?
-  ): List<KtLintTestResult.LintError> = buildList {
+  ): List<LintError> = buildList {
     withEngine(
-      ruleProviders = rules.toKtLintRuleProviders150(),
+      ruleProviders = rules.toKtLintRuleProviders(),
       editorConfig = editorConfig,
       includeAllRules = includeAllRules,
       action = fun KtLintRuleEngine.() {
@@ -169,7 +176,7 @@ interface Tests : HasDynamicTests {
           Code.fromSnippet(content = text.trimIndent(), script = script)
         ) { lintError ->
           add(
-            KtLintTestResult.LintError(
+            LintError(
               line = lintError.line,
               col = lintError.col,
               ruleId = lintError.ruleId.value,
@@ -285,7 +292,7 @@ interface Tests : HasDynamicTests {
 
   data class KtLintTestResult(
     val output: String,
-    val allLintErrors: List<KtLintTestResult.LintError>,
+    val allLintErrors: List<LintError>,
     val editorConfig: EditorConfig
   ) {
 
@@ -323,13 +330,8 @@ interface Tests : HasDynamicTests {
       )
 
       withClue {
-
-        "The next error should be: $expected".asClue {
-          remaining.firstOrNull() kotestShouldBe expected
-        }
+        remaining.removeFirstOrNull() kotestShouldBe expected
       }
-
-      remaining.remove(expected)
     }
 
     fun expectNoErrors() {
@@ -349,7 +351,8 @@ interface Tests : HasDynamicTests {
     }
 
     override fun toString(): String {
-      return """==== KtLintTestResult
+      return """
+        |==== KtLintTestResult
         |
         | -- output with interpuncts
         |${output.dots}

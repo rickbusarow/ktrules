@@ -67,22 +67,14 @@ class NoSinceInKDocRule : RuleCompat(
     }
   }
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (currentVersion != null && !skipAll && node.elementType == ElementType.KDOC_END) {
-      visitKDoc(node, autoCorrect = autoCorrect, emit = emit)
+      visitKDoc(node, emit = emit)
     }
   }
 
-  private fun visitKDoc(
-    kdocNode: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  private fun visitKDoc(kdocNode: ASTNode, emit: EmitWithDecision) {
 
     val kdoc = kdocNode.psi.parent as KDoc
 
@@ -90,11 +82,14 @@ class NoSinceInKDocRule : RuleCompat(
 
     if (tag == null) {
 
-      emit(kdocNode.startOffset, "add `@since $currentVersion` to kdoc", true)
-
-      if (autoCorrect) {
-        kdocNode.addSinceTag(currentVersion!!)
-      }
+      emit(
+        offset = kdocNode.startOffset,
+        errorMessage = "add `@since $currentVersion` to kdoc",
+        canBeAutoCorrected = true
+      )
+        .ifAutocorrectAllowed {
+          kdocNode.addSinceTag(currentVersion!!)
+        }
       return
     }
 
@@ -107,10 +102,9 @@ class NoSinceInKDocRule : RuleCompat(
         "add '$currentVersion' to `@since` tag",
         true
       )
-
-      if (autoCorrect) {
-        tag.addVersionToSinceTag(currentVersion!!)
-      }
+        .ifAutocorrectAllowed {
+          tag.addVersionToSinceTag(currentVersion!!)
+        }
     }
   }
 

@@ -13,7 +13,8 @@
   ],
   packageRules: [
     {
-      matchCurrentVersion: "/(?:1\\.[0-4]\\.[01])|(?:0\\.(?:47|48|49|50|)\\..*)/",
+      // Disable updates for "compat" versions of KtLint
+      matchCurrentVersion: "/(?:1\\.[0-6]\\.\d+)|(?:0\\.(?:47|48|49|50|)\\..*)/",
       enabled: false,
       matchPackageNames: [
         "com.pinterest.ktlint:{/,}**"

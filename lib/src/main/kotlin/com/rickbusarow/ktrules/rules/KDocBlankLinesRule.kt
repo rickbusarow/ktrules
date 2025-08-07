@@ -44,11 +44,7 @@ class KDocBlankLinesRule : RuleCompat(
     mustRunAfter(KDocLeadingAsteriskRule.ID)
   )
 ) {
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.parentsWithSelf().none { it.isKDoc() }) return
 
@@ -66,11 +62,10 @@ class KDocBlankLinesRule : RuleCompat(
     fun emitAndMaybeFix(errorMessage: String) {
 
       emit(previousLeaf.startOffset, errorMessage, true)
-
-      if (autoCorrect) {
-        parent.removeChild(previousLeaf)
-        parent.removeChild(node)
-      }
+        .ifAutocorrectAllowed {
+          parent.removeChild(previousLeaf)
+          parent.removeChild(node)
+        }
     }
 
     when {
@@ -89,8 +84,6 @@ class KDocBlankLinesRule : RuleCompat(
       previousNewline.isKDocWhitespaceAfterLeadingAsterisk() -> {
         emitAndMaybeFix("consecutive blank lines in kdoc")
       }
-
-      else -> return
     }
   }
 

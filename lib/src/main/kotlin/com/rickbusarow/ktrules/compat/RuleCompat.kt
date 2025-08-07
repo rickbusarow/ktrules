@@ -15,6 +15,8 @@
 
 package com.rickbusarow.ktrules.compat
 
+import com.rickbusarow.ktrules.compat.RuleCompat.AutocorrectDecisionCompat
+import com.rickbusarow.ktrules.compat.RuleCompat.EmitWithDecision
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
@@ -31,6 +33,13 @@ fun interface RuleProviderCompat {
    */
   fun createNewRuleInstance(): RuleCompat
 }
+
+/** Compat for the deprecated 'emit' lambdas that return Unit. Use EmitWithDecision instead.*/
+@Deprecated(
+  "Compat for the deprecated 'emit' lambdas that return Unit.  Use EmitWithDecision instead.",
+  ReplaceWith("EmitWithDecision")
+)
+typealias EmitWithUnit = (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
 
 /**
  * A stable compatibility shim for KtLint's `Rule` classes. It's implemented
@@ -57,7 +66,7 @@ abstract class RuleCompat(
    *
    * @since 1.1.1
    */
-  val visitorModifiers: Set<RuleCompat.VisitorModifierCompat> = emptySet(),
+  val visitorModifiers: Set<VisitorModifierCompat> = emptySet(),
 
   /**
    * Set of [EditorConfigProperty]'s that are to provided to the rule.
@@ -73,7 +82,7 @@ abstract class RuleCompat(
    *
    * @since 1.1.1
    */
-  open fun beforeFirstNode(editorConfig: EditorConfigCompat) {}
+  open fun beforeFirstNode(editorConfig: EditorConfigCompat) = Unit
 
   /**
    * This method is called on a node in AST before visiting the child nodes. This is repeated
@@ -84,24 +93,53 @@ abstract class RuleCompat(
    * @param emit a way for rule to notify about a violation (lint error)
    * @since 1.1.1
    */
-  open fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
-  }
+  @Suppress("DEPRECATION")
+  @Deprecated(
+    "Marked for removal in KtLint 2.0.0.  Use the overload without `autoCorrect` parameter instead.",
+    ReplaceWith("beforeVisitChildNodes(node, emit)")
+  )
+  open fun beforeVisitChildNodes(node: ASTNode, autoCorrect: Boolean, emit: EmitWithUnit) = Unit
+
+  /**
+   * This method is called on a node in AST before visiting the child nodes. This is repeated
+   * recursively for the child nodes resulting in a depth first traversal of the AST.
+   *
+   * When a rule overrides this method, the API Consumer can decide per violation
+   * whether the violation needs to be autocorrected. For this the [emit] function
+   * is called, and its result can be used to determine whether the violation
+   * is to be corrected. In lint mode the [emit] should always return false.
+   *
+   * @param node AST node
+   * @param emit a way for rule to notify about a violation (lint error) and get
+   *   approval to actually autocorrect the violation if that is supported by the rule
+   */
+  open fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) = Unit
 
   /**
    * This method is called on a node in AST after all its child nodes have been visited.
    *
    * @since 1.1.1
    */
-  open fun afterVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
-  }
+  @Suppress("DEPRECATION")
+  @Deprecated(
+    "Marked for removal in KtLint 2.0.0.  Use the overload without `autoCorrect` parameter instead.",
+    ReplaceWith("afterVisitChildNodes(node, emit)")
+  )
+  open fun afterVisitChildNodes(node: ASTNode, autoCorrect: Boolean, emit: EmitWithUnit) = Unit
+
+  /**
+   * This method is called on a node in AST after all its child nodes have been visited.
+   *
+   * When a rule overrides this method, the API Consumer can decide per violation
+   * whether the violation needs to be autocorrected. For this the [emit] function
+   * is called, and its result can be used to determine whether the violation
+   * is to be corrected. In lint mode the [emit] should always return false.
+   *
+   * @param node AST node
+   * @param emit a way for rule to notify about a violation (lint error) and get
+   *   approval to actually autocorrect the violation if that is supported by the rule
+   */
+  open fun afterVisitChildNodes(node: ASTNode, emit: EmitWithDecision) = Unit
 
   /**
    * This method is called once after the last node in the AST is
@@ -109,27 +147,27 @@ abstract class RuleCompat(
    *
    * @since 1.1.1
    */
-  open fun afterLastNode() {}
+  open fun afterLastNode() = Unit
 
   /** @since 1.1.1 */
   sealed class VisitorModifierCompat {
     /**
-     * Defines that the [Rule] that declares this [VisitorModifierCompat] will be run
-     * after the [Rule] with rule id [VisitorModifierCompat.RunAfterRuleCompat.ruleId].
+     * Defines that the [RuleCompat] that declares this [VisitorModifierCompat] will be run
+     * after the [RuleCompat] with rule id [VisitorModifierCompat.RunAfterRuleCompat.ruleId].
      *
      * @since 1.1.1
      */
     data class RunAfterRuleCompat(
       /**
-       * The [RuleId] of the [Rule] which should run before the [Rule]
+       * The [RuleId] of the [RuleCompat] which should run before the [RuleCompat]
        * that declares the [VisitorModifierCompat.RunAfterRuleCompat].
        *
        * @since 1.1.1
        */
       val ruleId: RuleId,
       /**
-       * The [ModeCompat] determines whether the [Rule] that declares this
-       * [VisitorModifierCompat] can be run in case the [Rule] with rule id
+       * The [ModeCompat] determines whether the [RuleCompat] that declares this
+       * [VisitorModifierCompat] can be run in case the [RuleCompat] with rule id
        * [VisitorModifierCompat.RunAfterRuleCompat.ruleId] is not loaded or enabled.
        *
        * @since 1.1.1
@@ -139,19 +177,20 @@ abstract class RuleCompat(
       /** @since 1.1.1 */
       enum class ModeCompat {
         /**
-         * Run the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat] regardless
-         * whether the [Rule] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId]
-         * is loaded or disabled. However, if that other rule is loaded and enabled, it runs
-         * before the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat].
+         * Run the [RuleCompat] that declares the [VisitorModifierCompat.RunAfterRuleCompat]
+         * regardless whether the [RuleCompat] with ruleId
+         * [VisitorModifierCompat.RunAfterRuleCompat.ruleId] is loaded or disabled.
+         * However, if that other rule is loaded and enabled, it runs before the
+         * [RuleCompat] that declares the [VisitorModifierCompat.RunAfterRuleCompat].
          *
          * @since 1.1.1
          */
         REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED,
 
         /**
-         * Run the [Rule] that declares the [VisitorModifierCompat.RunAfterRuleCompat] only
-         * in case the [Rule] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId]
-         * is loaded *and* enabled. That other rule runs before the [Rule]
+         * Run the [RuleCompat] that declares the [VisitorModifierCompat.RunAfterRuleCompat] only
+         * in case the [RuleCompat] with ruleId [VisitorModifierCompat.RunAfterRuleCompat.ruleId]
+         * is loaded *and* enabled. That other rule runs before the [RuleCompat]
          * that declares the [VisitorModifierCompat.RunAfterRuleCompat].
          *
          * @since 1.1.1
@@ -161,7 +200,48 @@ abstract class RuleCompat(
     }
 
     /** @since 1.1.1 */
-    object RunAsLateAsPossibleCompat : VisitorModifierCompat()
+    data object RunAsLateAsPossibleCompat : VisitorModifierCompat()
+  }
+
+  /**
+   * A strong type for the `emit` lambdas that return an [AutocorrectDecisionCompat].
+   *
+   * @see RuleCompat.beforeVisitChildNodes
+   * @see RuleCompat.afterVisitChildNodes
+   */
+  fun interface EmitWithDecision : (Int, String, Boolean) -> AutocorrectDecisionCompat {
+    override operator fun invoke(
+      offset: Int,
+      errorMessage: String,
+      canBeAutoCorrected: Boolean
+    ): AutocorrectDecisionCompat
+  }
+
+  /** */
+  enum class AutocorrectDecisionCompat {
+
+    /** */
+    ALLOW_AUTOCORRECT,
+
+    /** */
+    NO_AUTOCORRECT;
+
+    /** */
+    inline fun <T> ifAutocorrectAllowed(function: () -> T): T? =
+      takeIf { this == ALLOW_AUTOCORRECT }
+        ?.let { function() }
+  }
+}
+
+/** */
+fun EmitWithUnit.toEmitWithDecision(autoCorrect: Boolean): EmitWithDecision {
+  return EmitWithDecision { offset, errorMessage, canBeAutoCorrected ->
+    this(offset, errorMessage, canBeAutoCorrected)
+    if (canBeAutoCorrected && autoCorrect) {
+      AutocorrectDecisionCompat.ALLOW_AUTOCORRECT
+    } else {
+      AutocorrectDecisionCompat.NO_AUTOCORRECT
+    }
   }
 }
 

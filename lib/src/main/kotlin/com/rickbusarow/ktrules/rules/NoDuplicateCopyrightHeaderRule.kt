@@ -38,11 +38,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  */
 class NoDuplicateCopyrightHeaderRule : RuleCompat(ID) {
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.elementType == ElementType.FILE) {
 

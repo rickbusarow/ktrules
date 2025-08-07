@@ -28,11 +28,7 @@ import org.jetbrains.kotlin.com.intellij.lang.ASTNode
  */
 class NoLeadingBlankLinesRule : RuleCompat(ID) {
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     val f = ElementType.FILE
 

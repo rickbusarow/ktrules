@@ -29,10 +29,10 @@ import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /** */
-class RuleCompat120(private val ruleCompat: RuleCompat) :
+class RuleCompat170(private val ruleCompat: RuleCompat) :
   Rule(
-    RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
-    About(
+    ruleId = RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
+    about = About(
       maintainer = KtRulesRuleSetProvider.About.MAINTAINER,
       repositoryUrl = KtRulesRuleSetProvider.About.REPOSITORY_URL,
       issueTrackerUrl = KtRulesRuleSetProvider.About.ISSUE_TRACKER_URL
@@ -55,11 +55,11 @@ class RuleCompat120(private val ruleCompat: RuleCompat) :
       }
     },
     usesEditorConfigProperties = ruleCompat.usesEditorConfigProperties
-      .mapToSet { shimProperty -> shimProperty.toKtLintProperty120() }
+      .mapToSet { shimProperty -> shimProperty.toKtLintProperty170() }
   ) {
 
   override fun beforeFirstNode(editorConfig: EditorConfig) {
-    ruleCompat.beforeFirstNode(EditorConfigCompat120(editorConfig))
+    ruleCompat.beforeFirstNode(EditorConfigCompat170(editorConfig))
     super.beforeFirstNode(editorConfig)
   }
 

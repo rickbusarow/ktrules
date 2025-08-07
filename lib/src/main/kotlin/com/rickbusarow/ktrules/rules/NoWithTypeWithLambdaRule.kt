@@ -32,11 +32,7 @@ import org.jetbrains.kotlin.psi.KtLambdaArgument
  */
 class NoWithTypeWithLambdaRule : RuleCompat(ID) {
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
     if (node.elementType != ElementType.CALL_EXPRESSION) return
 
     val callExpression = node.psi as KtCallExpression
@@ -55,27 +51,26 @@ class NoWithTypeWithLambdaRule : RuleCompat(ID) {
       ERROR_MESSAGE,
       true
     )
+      .ifAutocorrectAllowed {
 
-    if (autoCorrect) {
+        callExpression.node.removeChild(lambdaArg.node)
 
-      callExpression.node.removeChild(lambdaArg.node)
-
-      val newExpressionText = buildString {
-        append(dotExpression.text.trim())
-        // If the call used to be `foo.withType<Bar> { ... }`, then we have to add parenthesis
-        if (callExpression.valueArgumentList == null) {
-          append("()")
+        val newExpressionText = buildString {
+          append(dotExpression.text.trim())
+          // If the call used to be `foo.withType<Bar> { ... }`, then we have to add parenthesis
+          if (callExpression.valueArgumentList == null) {
+            append("()")
+          }
+          append(".configureEach ")
+          // Re-use the lambda text.
+          append(lambdaArg.text)
         }
-        append(".configureEach ")
-        // Re-use the lambda text.
-        append(lambdaArg.text)
+
+        val newExpression = callExpression.ktPsiFactory().createExpression(newExpressionText)
+
+        dotExpression.parent.node.addChild(newExpression.node, dotExpression.node)
+        dotExpression.parent.node.removeChild(dotExpression.node)
       }
-
-      val newExpression = callExpression.ktPsiFactory().createExpression(newExpressionText)
-
-      dotExpression.parent.node.addChild(newExpression.node, dotExpression.node)
-      dotExpression.parent.node.removeChild(dotExpression.node)
-    }
   }
 
   internal companion object {

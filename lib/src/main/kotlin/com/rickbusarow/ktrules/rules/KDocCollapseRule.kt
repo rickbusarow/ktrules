@@ -64,11 +64,7 @@ class KDocCollapseRule : RuleCompat(
     super.beforeFirstNode(editorConfig)
   }
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (skipAll) return
     if (!node.isKDoc()) return
@@ -101,59 +97,58 @@ class KDocCollapseRule : RuleCompat(
     if (totalLength > maxLineLength) return
 
     emit(node.startOffset, ERROR_MESSAGE, true)
+      .ifAutocorrectAllowed {
 
-    if (autoCorrect) {
+        // If the second child of the KDoc is a whitespace, that means there's a newline and that
+        //    newline should be removed.
+        //
+        // If there is no newline, the whitespace is included in the default KDOC_SECTION.
+        //
+        // If the first actual content of the KDoc is a tag, there will still be a default section and
+        //    that default section will only contain a single WHITE_SPACE child.
+        node.children()
+          .drop(1)
+          .firstOrNull()
+          .takeIf { it.isWhiteSpace() }
+          ?.let {
+            node.removeChild(it)
+          }
 
-      // If the second child of the KDoc is a whitespace, that means there's a newline and that
-      //    newline should be removed.
-      //
-      // If there is no newline, the whitespace is included in the default KDOC_SECTION.
-      //
-      // If the first actual content of the KDoc is a tag, there will still be a default section and
-      //    that default section will only contain a single WHITE_SPACE child.
-      node.children()
-        .drop(1)
-        .firstOrNull()
-        .takeIf { it.isWhiteSpace() }
-        ?.let {
-          node.removeChild(it)
+        val defaultSection = node.children().first { it.isKDocSection() }
+
+        val defaultSectionText = defaultSection.getKDocTextWithoutLeadingAsterisks()
+          .trimPreservingCodeBlockIndent()
+
+        defaultSection.removeAllChildren()
+
+        val newDefaultSectionText = when {
+          defaultSectionText.startsWith(' ') -> "$defaultSectionText "
+          defaultSectionText.isNotBlank() -> " $defaultSectionText "
+          else -> " "
         }
 
-      val defaultSection = node.children().first { it.isKDocSection() }
+        defaultSection.addChild(LeafPsiElement(ElementType.KDOC_TEXT, newDefaultSectionText), null)
 
-      val defaultSectionText = defaultSection.getKDocTextWithoutLeadingAsterisks()
-        .trimPreservingCodeBlockIndent()
+        val whiteSpaceBeforeEnd = kdocEnd.prevLeaf(includeEmpty = true)
+          .takeIf { it.isWhiteSpace() }
 
-      defaultSection.removeAllChildren()
+        when {
+          // If there is whitespace before the end and only one KDoc section, remove the whitespace
+          whiteSpaceBeforeEnd != null && node.children().count { it.isKDocSection() } == 1 -> {
+            node.removeChild(whiteSpaceBeforeEnd)
+          }
 
-      val newDefaultSectionText = when {
-        defaultSectionText.startsWith(' ') -> "$defaultSectionText "
-        defaultSectionText.isNotBlank() -> " $defaultSectionText "
-        else -> " "
+          // If there is no whitespace before the end and more than one KDoc section, add a space
+          whiteSpaceBeforeEnd == null && node.children().count { it.isKDocSection() } > 1 -> {
+            kdocEnd.upsertWhitespaceBeforeMe(" ")
+          }
+
+          // If there is whitespace before the end and it's a newline, replace it with a space
+          whiteSpaceBeforeEnd != null && whiteSpaceBeforeEnd.isWhiteSpaceWithNewline() -> {
+            node.replaceChild(whiteSpaceBeforeEnd, PsiWhiteSpaceImpl(" "))
+          }
+        }
       }
-
-      defaultSection.addChild(LeafPsiElement(ElementType.KDOC_TEXT, newDefaultSectionText), null)
-
-      val whiteSpaceBeforeEnd = kdocEnd.prevLeaf(includeEmpty = true)
-        .takeIf { it.isWhiteSpace() }
-
-      when {
-        // If there is whitespace before the end and only one KDoc section, remove the whitespace
-        whiteSpaceBeforeEnd != null && node.children().count { it.isKDocSection() } == 1 -> {
-          node.removeChild(whiteSpaceBeforeEnd)
-        }
-
-        // If there is no whitespace before the end and more than one KDoc section, add a space
-        whiteSpaceBeforeEnd == null && node.children().count { it.isKDocSection() } > 1 -> {
-          kdocEnd.upsertWhitespaceBeforeMe(" ")
-        }
-
-        // If there is whitespace before the end and it's a newline, replace it with a space
-        whiteSpaceBeforeEnd != null && whiteSpaceBeforeEnd.isWhiteSpaceWithNewline() -> {
-          node.replaceChild(whiteSpaceBeforeEnd, PsiWhiteSpaceImpl(" "))
-        }
-      }
-    }
   }
 
   private fun String.trimPreservingCodeBlockIndent() = removeRegex("^ {1,3}(?=[^ ])", "\\s$")

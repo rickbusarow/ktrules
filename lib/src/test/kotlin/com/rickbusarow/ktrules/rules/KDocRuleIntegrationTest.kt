@@ -39,8 +39,8 @@ class KDocRuleIntegrationTest : Tests {
       """
     ) {
 
-      expectError(2, 2, KDocContentWrappingRule.ID, "kdoc content wrapping")
       expectError(4, 2, NoSinceInKDocRule.ID, "add `@since 0.2.3` to kdoc")
+      expectError(2, 2, KDocContentWrappingRule.ID, "kdoc content wrapping")
 
       output shouldBe """
       /**

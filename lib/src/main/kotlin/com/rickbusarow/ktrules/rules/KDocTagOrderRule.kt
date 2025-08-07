@@ -42,11 +42,7 @@ class KDocTagOrderRule : RuleCompat(
   )
 ) {
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.elementType == ElementType.KDOC) {
 
@@ -91,18 +87,17 @@ class KDocTagOrderRule : RuleCompat(
             "KDoc tag order is incorrect. $tagName should be sorted.",
             true
           )
+            .ifAutocorrectAllowed {
+              val sortedTag = sortedKdocTags[index].clone() as ASTNode
+              kdocTag.treeParent.replaceChild(kdocTag, sortedTag)
 
-          if (autoCorrect) {
-            val sortedTag = sortedKdocTags[index].clone() as ASTNode
-            kdocTag.treeParent.replaceChild(kdocTag, sortedTag)
-
-            // Ensure correct whitespace before the sorted tag
-            val prevTag = sortedTag.treePrev ?: return@forEachIndexed
-            if (prevTag.isWhiteSpace() && !prevTag.isWhiteSpaceWithNewline()) {
-              val newWhiteSpace = LeafPsiElement(ElementType.WHITE_SPACE, "\n")
-              sortedTag.treeParent.replaceChild(prevTag, newWhiteSpace)
+              // Ensure correct whitespace before the sorted tag
+              val prevTag = sortedTag.treePrev ?: return@forEachIndexed
+              if (prevTag.isWhiteSpace() && !prevTag.isWhiteSpaceWithNewline()) {
+                val newWhiteSpace = LeafPsiElement(ElementType.WHITE_SPACE, "\n")
+                sortedTag.treeParent.replaceChild(prevTag, newWhiteSpace)
+              }
             }
-          }
         }
       }
     }

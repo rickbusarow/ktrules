@@ -15,67 +15,77 @@
 
 package com.rickbusarow.ktrules
 
+import com.pinterest.ktlint.rule.engine.core.api.AutocorrectDecision
 import com.pinterest.ktlint.rule.engine.core.api.Rule
 import com.pinterest.ktlint.rule.engine.core.api.RuleId
 import com.pinterest.ktlint.rule.engine.core.api.editorconfig.EditorConfig
+import com.rickbusarow.ktrules.compat.EmitWithUnit
 import com.rickbusarow.ktrules.compat.RuleCompat
+import com.rickbusarow.ktrules.compat.RuleCompat.AutocorrectDecisionCompat
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAsLateAsPossibleCompat
+import com.rickbusarow.ktrules.compat.toEmitWithDecision
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 
 /** */
-class RuleCompat150(private val ruleCompat: RuleCompat) : Rule(
-  RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
-  About(
-    maintainer = KtRulesRuleSetProvider.About.MAINTAINER,
-    repositoryUrl = KtRulesRuleSetProvider.About.REPOSITORY_URL,
-    issueTrackerUrl = KtRulesRuleSetProvider.About.ISSUE_TRACKER_URL
-  ),
-  visitorModifiers = ruleCompat.visitorModifiers.mapToSet { visitorModifier ->
+class RuleCompat150(private val ruleCompat: RuleCompat) :
+  Rule(
+    ruleId = RuleId("${KtRulesRuleSetProvider.ID}:${ruleCompat.ruleId.value}"),
+    about = About(
+      maintainer = KtRulesRuleSetProvider.About.MAINTAINER,
+      repositoryUrl = KtRulesRuleSetProvider.About.REPOSITORY_URL,
+      issueTrackerUrl = KtRulesRuleSetProvider.About.ISSUE_TRACKER_URL
+    ),
+    visitorModifiers = ruleCompat.visitorModifiers.mapToSet { visitorModifier ->
 
-    when (visitorModifier) {
-      is RunAfterRuleCompat -> VisitorModifier.RunAfterRule(
-        RuleId("${KtRulesRuleSetProvider.ID}:${visitorModifier.ruleId.value}"),
-        when (visitorModifier.mode) {
-          REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED ->
-            VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
+      when (visitorModifier) {
+        is RunAfterRuleCompat -> VisitorModifier.RunAfterRule(
+          ruleId = RuleId("${KtRulesRuleSetProvider.ID}:${visitorModifier.ruleId.value}"),
+          mode = when (visitorModifier.mode) {
+            REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED ->
+              VisitorModifier.RunAfterRule.Mode.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
 
-          ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED ->
-            VisitorModifier.RunAfterRule.Mode.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
-        }
-      )
+            ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED ->
+              VisitorModifier.RunAfterRule.Mode.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
+          }
+        )
 
-      RunAsLateAsPossibleCompat -> VisitorModifier.RunAsLateAsPossible
-    }
-  },
-  usesEditorConfigProperties = ruleCompat.usesEditorConfigProperties.mapToSet { shimProperty ->
-    shimProperty.toKtLintProperty150()
-  }
-) {
+        RunAsLateAsPossibleCompat -> VisitorModifier.RunAsLateAsPossible
+      }
+    },
+    usesEditorConfigProperties = ruleCompat.usesEditorConfigProperties
+      .mapToSet { shimProperty -> shimProperty.toKtLintProperty150() }
+  ) {
 
   override fun beforeFirstNode(editorConfig: EditorConfig) {
     ruleCompat.beforeFirstNode(EditorConfigCompat150(editorConfig))
     super.beforeFirstNode(editorConfig)
   }
 
+  @Suppress("DEPRECATION")
+  @Deprecated("Marked for removal in Ktlint 2.0. Please implement interface RuleAutocorrectApproveHandler.")
   override fun beforeVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
+    emit: EmitWithUnit
   ) {
     ruleCompat.beforeVisitChildNodes(node, autoCorrect, emit)
+    ruleCompat.beforeVisitChildNodes(node, emit.toEmitWithDecision(autoCorrect))
     super.beforeVisitChildNodes(node, autoCorrect, emit)
   }
 
+  @Suppress("DEPRECATION")
+  @Deprecated("Marked for removal in Ktlint 2.0. Please implement interface RuleAutocorrectApproveHandler.")
   override fun afterVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
+    emit: EmitWithUnit
   ) {
     ruleCompat.afterVisitChildNodes(node, autoCorrect, emit)
+    ruleCompat.afterVisitChildNodes(node, emit.toEmitWithDecision(autoCorrect))
     super.afterVisitChildNodes(node, autoCorrect, emit)
   }
 

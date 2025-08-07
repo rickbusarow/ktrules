@@ -18,17 +18,17 @@ package com.rickbusarow.ktrules.compat
 import com.pinterest.ktlint.rule.engine.api.EditorConfigOverride
 import com.pinterest.ktlint.rule.engine.core.api.RuleProvider
 import com.rickbusarow.ktrules.rules.internal.mapToSet
-import com.rickbusarow.ktrules.toKtLintProperty150
-import com.rickbusarow.ktrules.toKtLintRuleProvider150
+import com.rickbusarow.ktrules.toKtLintProperty170
+import com.rickbusarow.ktrules.toKtLintRuleProvider170
 
 fun EditorConfigOverride.Companion.from(
   vararg properties: Pair<EditorConfigProperty<*>, *>
 ): EditorConfigOverride {
   return EditorConfigOverride.from(
-    *properties.map { it.first.toKtLintProperty150() to it.second }.toTypedArray()
+    *properties.map { it.first.toKtLintProperty170() to it.second }.toTypedArray()
   )
 }
 
-fun Set<RuleProviderCompat>.toKtLintRuleProviders150(): Set<RuleProvider> {
-  return mapToSet { it.toKtLintRuleProvider150() }
+fun Set<RuleProviderCompat>.toKtLintRuleProviders(): Set<RuleProvider> {
+  return mapToSet { it.toKtLintRuleProvider170() }
 }

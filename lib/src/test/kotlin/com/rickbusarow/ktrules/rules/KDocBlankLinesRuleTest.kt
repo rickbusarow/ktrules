@@ -96,6 +96,7 @@ class KDocBlankLinesRuleTest : Tests {
       """.trimIndent()
     ) {
       expectError(4, 2, "consecutive blank lines in kdoc")
+      expectError(4, 2, "consecutive blank lines in kdoc")
 
       output shouldBe """
       /**
@@ -163,6 +164,7 @@ class KDocBlankLinesRuleTest : Tests {
       """.trimIndent()
     ) {
       expectError(2, 2, "leading blank line in kdoc")
+      expectError(2, 2, "leading blank line in kdoc")
 
       output shouldBe """
       /**
@@ -229,6 +231,7 @@ class KDocBlankLinesRuleTest : Tests {
       )
       """.trimIndent()
     ) {
+      expectError(5, 2, "trailing blank line in kdoc")
       expectError(5, 2, "trailing blank line in kdoc")
 
       output shouldBe """

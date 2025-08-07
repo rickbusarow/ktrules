@@ -41,11 +41,7 @@ class KDocIndentAfterLeadingAsteriskRule : RuleCompat(
   )
 ) {
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.isKDocLeadingAsterisk() || node.isKDocStart()) {
       val nextLeaf = node.nextLeaf(true) ?: return
@@ -60,15 +56,14 @@ class KDocIndentAfterLeadingAsteriskRule : RuleCompat(
       }
 
       emit(node.startOffset, ERROR_MESSAGE, true)
+        .ifAutocorrectAllowed {
 
-      if (autoCorrect) {
+          val trimmed = nextLeaf.text.trimStart()
 
-        val trimmed = nextLeaf.text.trimStart()
+          val newNode = LeafPsiElement(nextLeaf.elementType, "$leading$trimmed")
 
-        val newNode = LeafPsiElement(nextLeaf.elementType, "$leading$trimmed")
-
-        nextLeaf.parent!!.replaceChild(nextLeaf, newNode)
-      }
+          nextLeaf.parent!!.replaceChild(nextLeaf, newNode)
+        }
     }
   }
 

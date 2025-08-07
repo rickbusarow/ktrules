@@ -18,11 +18,13 @@ package com.rickbusarow.ktrules
 import com.pinterest.ktlint.core.Rule
 import com.pinterest.ktlint.core.api.EditorConfigProperties
 import com.pinterest.ktlint.core.api.UsesEditorConfigProperties
+import com.rickbusarow.ktrules.compat.EmitWithUnit
 import com.rickbusarow.ktrules.compat.RuleCompat
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.ONLY_WHEN_RUN_AFTER_RULE_IS_LOADED_AND_ENABLED
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAfterRuleCompat.ModeCompat.REGARDLESS_WHETHER_RUN_AFTER_RULE_IS_LOADED_OR_DISABLED
 import com.rickbusarow.ktrules.compat.RuleCompat.VisitorModifierCompat.RunAsLateAsPossibleCompat
+import com.rickbusarow.ktrules.compat.toEmitWithDecision
 import com.rickbusarow.ktrules.rules.internal.mapToSet
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import com.pinterest.ktlint.core.api.UsesEditorConfigProperties.EditorConfigProperty as KtLintEditorConfigProperty
@@ -57,21 +59,27 @@ class RuleCompat47(private val ruleCompat: RuleCompat) :
     super.beforeFirstNode(editorConfigProperties)
   }
 
+  @Suppress("DEPRECATION")
+  @Deprecated("Marked for removal in Ktlint 2.0. Please implement interface RuleAutocorrectApproveHandler.")
   override fun beforeVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
+    emit: EmitWithUnit
   ) {
     ruleCompat.beforeVisitChildNodes(node, autoCorrect, emit)
+    ruleCompat.beforeVisitChildNodes(node, emit.toEmitWithDecision(autoCorrect))
     super.beforeVisitChildNodes(node, autoCorrect, emit)
   }
 
+  @Suppress("DEPRECATION")
+  @Deprecated("Marked for removal in Ktlint 2.0. Please implement interface RuleAutocorrectApproveHandler.")
   override fun afterVisitChildNodes(
     node: ASTNode,
     autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
+    emit: EmitWithUnit
   ) {
     ruleCompat.afterVisitChildNodes(node, autoCorrect, emit)
+    ruleCompat.afterVisitChildNodes(node, emit.toEmitWithDecision(autoCorrect))
     super.afterVisitChildNodes(node, autoCorrect, emit)
   }
 

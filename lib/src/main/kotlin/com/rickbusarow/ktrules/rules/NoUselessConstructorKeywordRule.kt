@@ -38,11 +38,7 @@ import org.jetbrains.kotlin.psi.KtPrimaryConstructor
  */
 class NoUselessConstructorKeywordRule : RuleCompat(ID) {
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.elementType == ElementType.CONSTRUCTOR_KEYWORD) {
       val constructorNode = node.parent(ElementType.PRIMARY_CONSTRUCTOR) ?: return

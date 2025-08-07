@@ -38,22 +38,14 @@ import org.jetbrains.kotlin.kdoc.psi.api.KDoc
  * @since 1.0.1
  */
 class KDocLeadingAsteriskRule : RuleCompat(ID) {
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.elementType == ElementType.KDOC) {
-      visitKDoc(node, autoCorrect = autoCorrect, emit = emit)
+      visitKDoc(node, emit = emit)
     }
   }
 
-  private fun visitKDoc(
-    kdocNode: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  private fun visitKDoc(kdocNode: ASTNode, emit: EmitWithDecision) {
 
     val kdoc = kdocNode.psi as KDoc
 
@@ -82,11 +74,10 @@ class KDocLeadingAsteriskRule : RuleCompat(ID) {
         val next = node.nextLeaf(true) ?: return@forEach
 
         emit(next.startOffset, ERROR_MESSAGE, true)
+          .ifAutocorrectAllowed {
 
-        if (autoCorrect) {
-
-          node.fixBlankLines(next, newlineIndent)
-        }
+            node.fixBlankLines(next, newlineIndent)
+          }
       }
   }
 

@@ -92,11 +92,7 @@ class KDocContentWrappingRule : RuleCompat(
     super.beforeFirstNode(editorConfig)
   }
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (!skipAll && node.elementType == ElementType.KDOC) {
 
@@ -109,11 +105,9 @@ class KDocContentWrappingRule : RuleCompat(
         .forEach { (tag, wrapped) ->
 
           emit(tag.startOffset, ERROR_MESSAGE, true)
-
-          if (autoCorrect) {
-
-            tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent)
-          }
+            .ifAutocorrectAllowed {
+              tag.fix(wrapped = wrapped, kdoc = kdoc, starIndent = starIndent)
+            }
         }
     }
   }

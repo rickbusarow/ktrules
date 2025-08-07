@@ -42,11 +42,7 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
     setOf(KDocKnownTag.AT_PARAM, KDocKnownTag.AT_PROPERTY)
   }
 
-  override fun beforeVisitChildNodes(
-    node: ASTNode,
-    autoCorrect: Boolean,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit
-  ) {
+  override fun beforeVisitChildNodes(node: ASTNode, emit: EmitWithDecision) {
 
     if (node.elementType == ElementType.KDOC) {
 
@@ -69,7 +65,7 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
         .toList()
         .forEach { tag ->
 
-          visitKDocTag(tag, paramNameToValOrVar, emit, autoCorrect)
+          visitKDocTag(tag, paramNameToValOrVar, emit)
         }
     }
   }
@@ -77,8 +73,7 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
   private fun visitKDocTag(
     tag: ASTNode,
     paramNameToValOrVar: Map<String, Boolean>,
-    emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit,
-    autoCorrect: Boolean
+    emit: EmitWithDecision
   ) {
     val tagTypeNameNode = tag.findChildByType(ElementType.KDOC_TAG_NAME) ?: return
 
@@ -98,13 +93,12 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
         "The KDoc tag '$tagTypeName $paramName' should use '${KDocKnownTag.AT_PROPERTY}'.",
         true
       )
-
-      if (autoCorrect) {
-        tag.fix(
-          oldTagTypeNameNode = tagTypeNameNode,
-          newTypeNameText = KDocKnownTag.AT_PROPERTY
-        )
-      }
+        .ifAutocorrectAllowed {
+          tag.fix(
+            oldTagTypeNameNode = tagTypeNameNode,
+            newTypeNameText = KDocKnownTag.AT_PROPERTY
+          )
+        }
     } else if (!shouldBeProperty && tagTypeName != KDocKnownTag.AT_PARAM) {
 
       emit(
@@ -112,12 +106,12 @@ class KDocTagParamOrPropertyRule : RuleCompat(ID) {
         "The KDoc tag '$tagTypeName $paramName' should use '${KDocKnownTag.AT_PARAM}'.",
         true
       )
-      if (autoCorrect) {
-        tag.fix(
-          oldTagTypeNameNode = tagTypeNameNode,
-          newTypeNameText = KDocKnownTag.AT_PARAM
-        )
-      }
+        .ifAutocorrectAllowed {
+          tag.fix(
+            oldTagTypeNameNode = tagTypeNameNode,
+            newTypeNameText = KDocKnownTag.AT_PARAM
+          )
+        }
     }
   }
 

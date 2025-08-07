@@ -408,9 +408,9 @@ class KDocTagOrderRuleTest : Tests {
       val throwsDetail = "KDoc tag order is incorrect. @throws should be sorted."
       val sinceDetail = "KDoc tag order is incorrect. @since should be sorted."
 
+      expectError(line = 5, col = 4, NoSinceInKDocRule.ID, "add `@since 0.2.3` to kdoc")
       expectError(line = 4, col = 6, KDocTagOrderRule.ID, throwsDetail)
       expectError(line = 4, col = 24, KDocTagOrderRule.ID, sinceDetail)
-      expectError(line = 5, col = 4, NoSinceInKDocRule.ID, "add `@since 0.2.3` to kdoc")
 
       output shouldBe """
         interface Subject {
@@ -447,14 +447,14 @@ class KDocTagOrderRuleTest : Tests {
       val throwsDetail = "KDoc tag order is incorrect. @throws should be sorted."
       val propertyDetail = "KDoc tag order is incorrect. @property should be sorted."
 
-      expectError(line = 2, col = 4, KDocTagOrderRule.ID, throwsDetail)
-      expectError(line = 2, col = 30, KDocTagOrderRule.ID, propertyDetail)
       expectError(
         line = 3,
         col = 4,
         KDocTagParamOrPropertyRule.ID,
         "The KDoc tag '@param age' should use '@property'."
       )
+      expectError(line = 2, col = 4, KDocTagOrderRule.ID, throwsDetail)
+      expectError(line = 2, col = 30, KDocTagOrderRule.ID, propertyDetail)
 
       output shouldBe """
       /**

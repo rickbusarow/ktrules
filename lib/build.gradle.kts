@@ -16,6 +16,8 @@
 @file:Suppress("PropertyName", "VariableNaming")
 
 import com.rickbusarow.doks.DoksTask
+import com.rickbusarow.kgx.mustRunAfter
+import com.rickbusarow.kgx.withJavaLibraryPlugin
 import com.rickbusarow.ktlint.KtLintTask
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
@@ -30,6 +32,8 @@ import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
 import org.jetbrains.kotlin.gradle.targets.js.npm.SemVer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URL
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.Companion as JvmTargetDsl
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.Companion as KotlinVersionDsl
 
 plugins {
   alias(libs.plugins.detekt)
@@ -52,7 +56,9 @@ val compatSourceSetNames = listOf(
   "compat120",
   "compat130",
   "compat140",
-  "compat150"
+  "compat150",
+  "compat160",
+  "compat170"
 )
 
 dependencyGuard {
@@ -99,13 +105,15 @@ val compat110Api: Configuration by configurations.getting
 val compat120Api: Configuration by configurations.getting
 val compat130Api: Configuration by configurations.getting
 val compat140Api: Configuration by configurations.getting
-
-val compat150: SourceSet by sourceSets.getting
-val compat150Implementation: Configuration by configurations.getting
 val compat150Api: Configuration by configurations.getting
+val compat160Api: Configuration by configurations.getting
+
+val compat170: SourceSet by sourceSets.getting
+val compat170Implementation: Configuration by configurations.getting
+val compat170Api: Configuration by configurations.getting
 
 sourceSets.named("test") {
-  compileClasspath += compat150.output
+  compileClasspath += compat170.output
   runtimeClasspath += output + compileClasspath
 }
 
@@ -140,6 +148,14 @@ dependencies {
   compat150Api(libs.ktlint150.cli.ruleset.core)
   compat150Api(libs.ktlint150.rule.engine.core)
 
+  compat160Api(libs.jetbrains.markdown)
+  compat160Api(libs.ktlint160.cli.ruleset.core)
+  compat160Api(libs.ktlint160.rule.engine.core)
+
+  compat170Api(libs.jetbrains.markdown)
+  compat170Api(libs.ktlint170.cli.ruleset.core)
+  compat170Api(libs.ktlint170.rule.engine.core)
+
   compat47Api(libs.jetbrains.markdown)
   compat47Api(libs.ktlint47.core)
 
@@ -154,19 +170,12 @@ dependencies {
   compat49Api(libs.ktlint49.rule.engine.core)
 
   compat50Api(libs.jetbrains.markdown)
-  compat50Api(libs.ktlint.cli.ruleset.core)
-  compat50Api(libs.ktlint.rule.engine.core)
+  compat50Api(libs.ktlint50.cli.ruleset.core)
+  compat50Api(libs.ktlint50.rule.engine.core)
 
-  "compat100CompileOnly"(libs.google.auto.service.annotations)
-  "compat110CompileOnly"(libs.google.auto.service.annotations)
-  "compat120CompileOnly"(libs.google.auto.service.annotations)
-  "compat130CompileOnly"(libs.google.auto.service.annotations)
-  "compat140CompileOnly"(libs.google.auto.service.annotations)
-  "compat150CompileOnly"(libs.google.auto.service.annotations)
-  "compat47CompileOnly"(libs.google.auto.service.annotations)
-  "compat48CompileOnly"(libs.google.auto.service.annotations)
-  "compat49CompileOnly"(libs.google.auto.service.annotations)
-  "compat50CompileOnly"(libs.google.auto.service.annotations)
+  for (ss in compatSourceSetNames) {
+    "${ss}CompileOnly"(libs.google.auto.service.annotations)
+  }
 
   compileOnly(libs.google.auto.service.annotations)
   compileOnly(libs.kotlin.compiler)
@@ -205,10 +214,8 @@ val VERSION_RELEASED = VERSION_CURRENT
 val GROUP = "com.rickbusarow.ktrules"
 val website = "https://www.github.com/rbusarow/ktrules/"
 
-tasks.withType<DoksTask>().configureEach {
-  mustRunAfter(tasks.withType<KotlinCompile>())
-  mustRunAfter("apiDump")
-}
+tasks.withType<DoksTask>()
+  .mustRunAfter(tasks.withType<KotlinCompile>(), "apiDump")
 
 tasks.named("apiCheck") { mustRunAfter("apiDump") }
 
@@ -267,28 +274,28 @@ kotlin {
     languageVersion.set(JavaLanguageVersion.of(libs.versions.jdk.get().toInt()))
   }
 
-  plugins.withType<PublishingPlugin>().configureEach {
+  plugins.withJavaLibraryPlugin {
+
     extensions.configure<JavaPluginExtension> {
       sourceCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
     }
+
     tasks.withType<JavaCompile>().configureEach {
       options.release.set(libs.versions.jvmTarget.get().substringAfterLast('.').toInt())
     }
   }
 
   tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
+    compilerOptions {
       allWarningsAsErrors = false
 
-      val kotlinMajor = libs.versions.kotlinApi.get()
-      languageVersion = kotlinMajor
-      apiVersion = kotlinMajor
+      val kotlinVersion = KotlinVersionDsl.fromVersion(libs.versions.kotlinApi.get())
+      languageVersion = kotlinVersion
+      apiVersion = kotlinVersion
 
-      jvmTarget = libs.versions.jvmTarget.get()
+      jvmTarget = JvmTargetDsl.fromTarget(libs.versions.jvmTarget.get())
 
-      freeCompilerArgs += listOf(
-        "-opt-in=kotlin.contracts.ExperimentalContracts"
-      )
+      optIn.add("kotlin.contracts.ExperimentalContracts")
     }
   }
 }
@@ -524,7 +531,7 @@ publishing {
       }
 
       tasks.withType(AbstractPublishToMaven::class.java)
-        .matching { it.name.contains(sourceSetName.capitalize()) }
+        .named { it.contains(sourceSetName.replaceFirstChar(Char::titlecase)) }
         .configureEach {
           dependsOn(jarTask)
           dependsOn(sourcesJar)
