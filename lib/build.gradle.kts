@@ -433,7 +433,7 @@ tasks.withType(Sign::class.java).configureEach {
 }
 
 val dokkaJavadocJar by tasks.registering(Jar::class) {
-  val task = tasks.named("dokkaHtml")
+  val task = tasks.named("dokkaGenerateModuleHtml")
   archiveClassifier.set("javadoc")
   dependsOn(task)
   from(task)
