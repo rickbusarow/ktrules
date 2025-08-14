@@ -1,7 +1,7 @@
 org.ec4j.core:ec4j-core:1.1.1
-org.jetbrains.kotlin:kotlin-bom:2.1.0
-org.jetbrains.kotlin:kotlin-reflect:2.1.0
-org.jetbrains.kotlin:kotlin-stdlib:2.1.0
+org.jetbrains.kotlin:kotlin-bom:2.2.10
+org.jetbrains.kotlin:kotlin-reflect:2.2.10
+org.jetbrains.kotlin:kotlin-stdlib:2.2.10
 org.jetbrains:annotations:13.0
 org.jetbrains:markdown-jvm:0.7.3
 org.jetbrains:markdown:0.7.3
