@@ -10,7 +10,7 @@ org.jetbrains.kotlin:kotlin-compiler-embeddable:1.9.24
 org.jetbrains.kotlin:kotlin-daemon-embeddable:1.9.24
 org.jetbrains.kotlin:kotlin-reflect:1.6.10
 org.jetbrains.kotlin:kotlin-script-runtime:1.9.24
-org.jetbrains.kotlin:kotlin-stdlib:2.1.0
+org.jetbrains.kotlin:kotlin-stdlib:2.2.10
 org.jetbrains:annotations:13.0
 org.jetbrains:markdown-jvm:0.7.3
 org.jetbrains:markdown:0.7.3
